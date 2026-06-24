@@ -1,46 +1,51 @@
-const express = require('express')
+const express = require("express");
 
-const app =express()
+const app = express();
 
-const notes=[];
+const notes = [];
 
-// middleware  
-app.use(express.json())
-
+// middleware
+app.use(express.json());
 
 // post request to handle the post request from the client or postman
-app.post('/notes',(req,res)=>{
-    console.log(req.body)
-    notes.push(req.body);
-    res.status(201).json({
-        message:"notes created  succesfully"
-    })
-})
+app.post("/notes", (req, res) => {
+  console.log(req.body);
+  notes.push(req.body);
+  res.status(201).json({
+    message: "notes created  succesfully",
+  });
+});
 
 // get method ,it is use to handle the get request
-app.get('/notes',(req,res)=>{
-    
-    res.status(200).json({
-        message:"notes fetched Successfuly",
-        notes:notes
-    })
-})
+app.get("/notes", (req, res) => {
+  res.status(200).json({
+    message: "notes fetched Successfuly",
+    notes: notes,
+  });
+});
 
 //this is for to handle the delete request
 
-app.delete('/notes/:index',(req,res)=>{
+app.delete("/notes/:index", (req, res) => {
+  const index = req.params.index;
+  delete notes[index];
 
-    const index = req.params.index;
-    delete notes[index]
+  res.status(200).json({
+    messgae: "note delete successful",
+  });
+});
 
-    res.status(200).json({
-        messgae:"note delete successful"
-    })
-})
+// for to handle the updation
 
-// for to handle the updation 
+app.patch("/notes/:index", (req, res) => {
+  const index = req.params.index;
+  const description = req.body.description;
 
-app.pa
+  notes[index].description = description;
 
+  res.status(200).json({
+    message: "notes successfuly updated",
+  });
+});
 
-module.exports=app
+module.exports = app;
