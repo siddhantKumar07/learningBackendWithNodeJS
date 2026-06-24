@@ -26,5 +26,21 @@ app.get('/notes',(req,res)=>{
     })
 })
 
+//this is for to handle the delete request
+
+app.delete('/notes/:index',(req,res)=>{
+
+    const index = req.params.index;
+    delete notes[index]
+
+    res.status(200).json({
+        messgae:"note delete successful"
+    })
+})
+
+// for to handle the updation 
+
+app.pa
+
 
 module.exports=app
