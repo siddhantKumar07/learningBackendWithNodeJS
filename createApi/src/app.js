@@ -19,7 +19,6 @@ app.post('/note',async(req,res)=>{
         message:"note created"
     })
 })
-
 // this is for to handle the get request 
 app.get('/note',async(req,res)=>{
    const note= await noteModel.find()
