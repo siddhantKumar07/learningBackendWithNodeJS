@@ -1,6 +1,8 @@
 const express = require('express')
 const app=express()
 const noteModel = require('./models/note.models')
+
+
 app.use(express.json())
 
 
@@ -19,6 +21,7 @@ app.post('/note',async(req,res)=>{
         message:"note created"
     })
 })
+
 // this is for to handle the get request 
 app.get('/note',async(req,res)=>{
    const note= await noteModel.find()
@@ -30,7 +33,6 @@ app.get('/note',async(req,res)=>{
 
 
 // this is used to handle the delete request 
-
 app.delete('/note/:id',async(req,res)=>{
     const id= req.params.id;
     await noteModel.findOneAndDelete({
