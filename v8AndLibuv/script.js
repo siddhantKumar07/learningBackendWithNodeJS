@@ -1,5 +1,5 @@
 const crpto = require('crypto');
-console.log("helo")
+console.log("heloo")
 crpto.pbkdf2Sync("siddhant",'salt',500000,50,'sha512');
 console.log("key was generated")
 
