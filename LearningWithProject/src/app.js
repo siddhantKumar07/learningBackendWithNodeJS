@@ -3,8 +3,7 @@ const express = require("express");
 const app = express();
 
 app.use(express.json())
-
-const storage=[];
+const storage=[]
 app.get("/user",(req,res)=>{
     // console.log(req.params.userid);
     // console.log(req.params.name);
