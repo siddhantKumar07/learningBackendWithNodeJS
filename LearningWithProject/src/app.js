@@ -4,6 +4,13 @@ const app = express();
 
 app.use(express.json())
 const storage=[]
+const {userAuth,adminAuth} = require("./middleware/auth")
+
+// middleware is used to handle the unauthorized access to the routes
+// it is used to check the authorization of the user before allowing access to the routes
+
+app.use('/admin', adminAuth);
+app.use('/user', userAuth);
 app.get("/user",(req,res)=>{
     // console.log(req.params.userid);
     // console.log(req.params.name);
@@ -32,21 +39,7 @@ app.patch("/user",(req,res)=>{
     })
 })
   
-// middleware is used to handle the unauthorized access to the routes
-// it is used to check the authorization of the user before allowing access to the routes
 
-app.use((req,res,next)=>{
-    const token = "123456789";
-    const isAuthorized =token==="1234567890";
-    if(!isAuthorized){
-    res.status(401).json({
-        message:"unauthorized access"
-    })
-} 
-else{
-    next()
-}   
-})
 
 // for admin also 
 app.get('/admin/addUser',(req,res)=>{
