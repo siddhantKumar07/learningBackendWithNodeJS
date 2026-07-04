@@ -33,4 +33,11 @@ app.patch("/user",(req,res)=>{
 })
   
 
+// for admin also 
+app.get('/admin',(req,res)=>{
+    res.status(200).json({
+        message:"admin fetched successfully"
+    })
+})
+
 module.exports = app;
