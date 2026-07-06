@@ -1,5 +1,5 @@
 const express = require("express");
-
+const userModel = require("./model/user");
 const app = express();
 
 app.use(express.json())
@@ -20,12 +20,27 @@ app.get("/user",(req,res)=>{
         storage:storage
     })
 })
-app.post("/user",(req,res)=>{
-    console.log(req.body);
-    storage.push(req.body);
+app.post("/signUp",async(req,res)=>{
+  try{
+      console.log(req.body);
+    const data = req.body;
+    userModel.create({
+        firstName:data.firstName,
+        lastName:data.lastName,
+        emailId:data.emailId,
+        age:data.age,
+        password:data.password,
+        gender:data.gender
+    })
     res.status(200).json({
         message:"received successfully"
     })
+  }
+  catch(error){
+    res.status(500).json({
+        message:error.message
+    })
+  }
 })
 app.delete("/user",(req,res)=>{
     res.status(200).json({
