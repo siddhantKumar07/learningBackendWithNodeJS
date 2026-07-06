@@ -65,11 +65,14 @@ app.delete("/signUp/:id", async (req, res) => {
   }
 });
 
-app.patch("/user/:id",async(req,res)=>{
+app.patch("/signUp/:id",async(req,res)=>{
   try{
    const id =req.params.id;
    const data = req.body;
-  await userModel.findByIdAndUpdate({_id:id},data,{new:true})
+  await userModel.findByIdAndUpdate({_id:id},data,{new:true});
+  res.status(200).json({
+    message:"successfully updated"
+  })
   }catch(error){
     res.status(500).json({
         message:error.message
