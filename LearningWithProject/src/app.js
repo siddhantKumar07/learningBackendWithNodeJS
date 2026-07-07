@@ -88,7 +88,7 @@ app.post("/signUp",async(req,res)=>{
     })
   }
 })
-app.delete("/signUp/:id", async (req, res) => {
+app.delete("/user/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const deleted = await userModel.findByIdAndDelete(id);
@@ -102,8 +102,32 @@ app.delete("/signUp/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+// update user though gmail 
+app.patch("/user",async(req,res)=>{
+  try{
+    const gmail= req.query.email;
+    const data = req.body;
+    console.log(gmail,data);
+    const updatedUser = await userModel.findOneAndUpdate({emailId:gmail},data,{new:true});
 
-app.patch("/signUp/:id",async(req,res)=>{
+    if(!updatedUser){
+      return res.status(404).json({
+        message:"user not found"
+      })
+  }
+  res.status(200).json({
+    message:"user updated successfully",
+    updatedUser:updatedUser
+  })
+  }catch(error){
+    res.status(500).json({
+      message:error.message
+    })
+  }
+})
+
+// update user through id
+app.patch("/user/:id",async(req,res)=>{
   try{
    const id =req.params.id;
    const data = req.body;
