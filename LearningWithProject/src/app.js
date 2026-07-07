@@ -12,6 +12,7 @@ const {userAuth,adminAuth} = require("./middleware/auth")
 // app.use('/admin', adminAuth);
 // app.use('/user', userAuth);
 
+
 //get user
 app.get("/user",async(req,res)=>{
   const gmail= req.query.email;
@@ -47,6 +48,24 @@ catch(error){
 }
 })
 
+// middleware for signup to check whether the user with this email is already exist 
+app.post("/signUp",async(req,res,next)=>{
+  try{
+    const data = req.body;
+    const existingUser = await userModel.findOne({emailId:data.emailId})
+    if(existingUser){
+      res.status(400).json({
+        message:"user with this email already exist"
+      })
+    }else{
+      next();
+    }
+  }catch(error){
+    res.status(500).json({
+      message:error.message
+    })
+  }
+})
 app.post("/signUp",async(req,res)=>{
   try{
       console.log(req.body);
