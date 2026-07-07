@@ -9,10 +9,28 @@ const {userAuth,adminAuth} = require("./middleware/auth")
 // middleware is used to handle the unauthorized access to the routes
 // it is used to check the authorization of the user before allowing access to the routes
 
-app.use('/admin', adminAuth);
-app.use('/user', userAuth);
+// app.use('/admin', adminAuth);
+// app.use('/user', userAuth);
 
-app.get("/signUp",async(req,res)=>{
+//get user
+app.get("/user",async(req,res)=>{
+  const gmail= req.query.email;
+  const user =await userModel.findOne({emailId:gmail})
+  if(!user){
+    res.status(404).json({
+      message:"user not found"
+    })
+  }
+  else{
+    res.status(200).json({
+      message:"user fetched successfully",
+      user:user
+    })
+  }
+})
+
+// feed Api
+app.get("/feed",async(req,res)=>{
 try{
 
     const storage = await userModel.find()
