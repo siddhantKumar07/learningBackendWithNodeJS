@@ -7,11 +7,11 @@ const userSchema =new mongooes.Schema({
     },
     lastName:{
         type:String,
-        required:true
     },
     emailId:{
         type:String,
-        required:true
+        required:true,
+        unique:true
     },
     age:{
         type:Number,
@@ -24,6 +24,18 @@ const userSchema =new mongooes.Schema({
     gender:{
         type:String,
         required:true
+    },
+    photoUrl:{
+        type:String,
+        default:"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+    },
+    about:{
+        type:String,
+        default:"this is the default about text."
+    },
+    skills:{
+        type:[String],
+        default:[]
     }
 })
 const userModel = mongooes.model("user",userSchema);
