@@ -41,7 +41,7 @@ const userSchema = new mongooes.Schema({
     required: true,
     trim: true,
     minLength:8,
-    maxLength:25,
+    maxLength:150,
     validate(value){
         if(!validator.isStrongPassword(value)){
             throw new Error("password is not strong enoungh")
@@ -81,7 +81,7 @@ const userSchema = new mongooes.Schema({
     default: [],
     validate(value){
      if(value.length>10){
-        throw new Error("skill length must be less than or equal to 10")
+        throw new Error("you can add only 10 skills")
      }
      value.forEach((skill)=>{
    if(skill.length>20){

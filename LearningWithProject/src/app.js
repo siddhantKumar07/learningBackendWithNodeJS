@@ -1,7 +1,8 @@
 const express = require("express");
 const userModel = require("./model/user");
+const bcrpt = require("bcrypt");
 const app = express();
-
+const {checkChanges}= require("./utils/validation");
 app.use(express.json()); //It parses incoming request body (JSON data) and converts it into a JavaScript object. it is works for all the routes in the application, allowing them to access the request body data as a javascript object through req.body. It is important to use this middleware before defining any routes that expect to receive JSON data in the request body, as it ensures that the data is properly parsed and available for use in the route handlers.
 
 const { userAuth, adminAuth } = require("./middleware/auth");
@@ -64,20 +65,20 @@ app.post("/signUp", async (req, res, next) => {
 });
 app.post("/signUp", async (req, res) => {
   try {
-    console.log(req.body);
     const data = req.body;
-
+     const {password}=data;
+     const hashedPassword = await bcrpt.hash(password,10);
    const user =await userModel.create({
       firstName: data.firstName,
       lastName: data.lastName,
       emailId: data.emailId,
       age: data.age,
-      password: data.password,
+      password:hashedPassword,
       gender: data.gender,
       skills: data.skills,
       about:data.about,
       photoUrl:data.photoUrl,
-      
+
     });
     res.status(200).json({
       message: "User created successfully",
@@ -108,14 +109,7 @@ app.patch("/user", async (req, res) => {
   const gmail = req.query.email;
   const data = req.body;
   try {
-    const allowedUpdates=[
-      "photoUrl","skills","about","age","password"
-    ]
-    const isAllowedUpdates = Object.keys(data).every((k)=>allowedUpdates.includes(k));// it will return true if evry keys are available in allowedUpdates
-
-    if(!isAllowedUpdates){
-      throw new Error("Updates are not allowed for some field")
-    }
+    checkChanges(data);//it will check whether the data is allowed to update or not if not then it will throw an error
     const updatedUser = await userModel.findOneAndUpdate(
       { emailId: gmail },
       data,
@@ -142,18 +136,11 @@ app.patch("/user/:id", async (req, res) => {
       const id = req.params?.id;
     const data = req.body;
   try {
-    const allowedUpdates=[
-      "photoUrl","skills","about","age","password"
-    ]
-    const isAllowedUpdates = Object.keys(data).every((k)=>allowedUpdates.includes(k));// it will return true if evry keys are available in allowedUpdates
-
-    if(!isAllowedUpdates){
-      throw new Error("Updates are not allowed for some field")
-    }
-
-    await userModel.findByIdAndUpdate({ _id: id }, data, { new: true,runValidators:true });
+checkChanges(data);//it will check whether the data is allowed to update or not if not then it will throw an error
+   const updatedUser= await userModel.findByIdAndUpdate({ _id: id }, data, { new: true,runValidators:true });
     res.status(200).json({
       message: "successfully updated",
+      updatedUser: updatedUser
     });
   } catch (error) {
     res.status(500).json({
