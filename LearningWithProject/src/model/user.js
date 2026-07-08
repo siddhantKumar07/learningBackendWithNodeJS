@@ -1,4 +1,5 @@
 const mongooes = require("mongoose");
+const validator = require("validator");
 
 const userSchema = new mongooes.Schema({
   firstName: {
@@ -22,12 +23,16 @@ const userSchema = new mongooes.Schema({
     unique: true,
     lowercase: true,
     maxLength:75,
-    minLength:7
+    minLength:7,
+    validate(value) {
+        if (!validator.isEmail(value)) {
+            throw new Error("Invalid email");
+        }
+    }
   },
   age: {
     type: Number,
     required: true,
-    trim: true,
     min:18,
     max:100
   },
@@ -46,7 +51,7 @@ const userSchema = new mongooes.Schema({
     maxLength:15,
     validate(value){
       if(!["male","female","other"].includes(value)){
-        throw new error("gender is not valid")
+        throw new Error("gender is not valid")
       }
     }
   },
@@ -54,7 +59,12 @@ const userSchema = new mongooes.Schema({
     type: String,
     default:
       "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
-  },
+  validate(value){
+    if(!validator.isURL(value)){
+        throw new Error("Invalid URL");
+    }
+}
+    },
   about: {
     type: String,
     default: "this is the default about text.",
@@ -68,6 +78,11 @@ const userSchema = new mongooes.Schema({
      if(value.length>10){
         throw new Error("skill length must be less than or equal to 10")
      }
+     value.forEach((skill)=>{
+   if(skill.lenght>20){
+    throw new Error("skill name must be less than or equal to 20")
+   }
+     })
     }
   },
 },{
