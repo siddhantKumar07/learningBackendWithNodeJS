@@ -106,8 +106,10 @@ app.patch("/user", async (req, res) => {
       "photoUrl","skills","about","age","password"
     ]
     const isAllowedUpdates = Object.keys(data).every((k)=>allowedUpdates.includes(k));// it will return true if evry keys are available in allowedUpdates
-    
-    console.log(gmail, data);
+
+    if(!isAllowedUpdates){
+      throw new Error("Updates are not allowed for some field")
+    }
     const updatedUser = await userModel.findOneAndUpdate(
       { emailId: gmail },
       data,
@@ -131,10 +133,19 @@ app.patch("/user", async (req, res) => {
 
 // update user through id
 app.patch("/user/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
+      const id = req.params?.id;
     const data = req.body;
-    await userModel.findByIdAndUpdate({ _id: id }, data, { new: true });
+  try {
+    const allowedUpdates=[
+      "photoUrl","skills","about","age","password"
+    ]
+    const isAllowedUpdates = Object.keys(data).every((k)=>allowedUpdates.includes(k));// it will return true if evry keys are available in allowedUpdates
+
+    if(!isAllowedUpdates){
+      throw new Error("Updates are not allowed for some field")
+    }
+
+    await userModel.findByIdAndUpdate({ _id: id }, data, { new: true,runValidators:true });
     res.status(200).json({
       message: "successfully updated",
     });

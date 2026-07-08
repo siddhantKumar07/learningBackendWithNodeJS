@@ -21,6 +21,8 @@ const userSchema = new mongooes.Schema({
     required: true,
     unique: true,
     lowercase: true,
+    maxLength:75,
+    minLength:7
   },
   age: {
     type: Number,
@@ -33,6 +35,8 @@ const userSchema = new mongooes.Schema({
     type: String,
     required: true,
     trim: true,
+    minLength:8,
+    maxLength:25
   },
   gender: {
     type: String,
@@ -60,6 +64,11 @@ const userSchema = new mongooes.Schema({
   skills: {
     type: [String],
     default: [],
+    validate(value){
+     if(value.length>10){
+        throw new Error("skill length must be less than or equal to 10")
+     }
+    }
   },
 },{
     timestamps:true
