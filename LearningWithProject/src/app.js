@@ -2,9 +2,9 @@ const express = require("express");
 const userModel = require("./model/user");
 const app = express();
 
-app.use(express.json())//It parses incoming request body (JSON data) and converts it into a JavaScript object. it is works for all the routes in the application, allowing them to access the request body data as a javascript object through req.body. It is important to use this middleware before defining any routes that expect to receive JSON data in the request body, as it ensures that the data is properly parsed and available for use in the route handlers.
+app.use(express.json()); //It parses incoming request body (JSON data) and converts it into a JavaScript object. it is works for all the routes in the application, allowing them to access the request body data as a javascript object through req.body. It is important to use this middleware before defining any routes that expect to receive JSON data in the request body, as it ensures that the data is properly parsed and available for use in the route handlers.
 
-const {userAuth,adminAuth} = require("./middleware/auth")
+const { userAuth, adminAuth } = require("./middleware/auth");
 
 // middleware is used to handle the unauthorized access to the routes
 // it is used to check the authorization of the user before allowing access to the routes
@@ -12,82 +12,77 @@ const {userAuth,adminAuth} = require("./middleware/auth")
 // app.use('/admin', adminAuth);
 // app.use('/user', userAuth);
 
-
 //get user
-app.get("/user",async(req,res)=>{
-  const gmail= req.query.email;
-  const user =await userModel.findOne({emailId:gmail})
-  if(!user){
+app.get("/user", async (req, res) => {
+  const gmail = req.query.email;
+  const user = await userModel.findOne({ emailId: gmail });
+  if (!user) {
     res.status(404).json({
-      message:"user not found"
-    })
-  }
-  else{
+      message: "user not found",
+    });
+  } else {
     res.status(200).json({
-      message:"user fetched successfully",
-      user:user
-    })
+      message: "user fetched successfully",
+      user: user,
+    });
   }
-})
+});
 
 // feed Api
-app.get("/feed",async(req,res)=>{
-try{
-
-    const storage = await userModel.find()
+app.get("/feed", async (req, res) => {
+  try {
+    const storage = await userModel.find();
 
     res.status(200).json({
-        message:"fetched successfully",
-        storage:storage
-    })
-}
-catch(error){
+      message: "fetched successfully",
+      storage: storage,
+    });
+  } catch (error) {
     res.status(500).json({
-        message:error.message
-    })
-}
-})
+      message: error.message,
+    });
+  }
+});
 
-// middleware for signup to check whether the user with this email is already exist 
-app.post("/signUp",async(req,res,next)=>{
-  try{
+// middleware for signup to check whether the user with this email is already exist
+app.post("/signUp", async (req, res, next) => {
+  try {
     const data = req.body;
-    const existingUser = await userModel.findOne({emailId:data.emailId})
-    if(existingUser){
+    const existingUser = await userModel.findOne({ emailId: data.emailId });
+    if (existingUser) {
       res.status(400).json({
-        message:"user with this email already exist"
-      })
-    }else{
+        message: "user with this email already exist",
+      });
+    } else {
       next();
     }
-  }catch(error){
+  } catch (error) {
     res.status(500).json({
-      message:error.message
-    })
+      message: error.message,
+    });
   }
-})
-app.post("/signUp",async(req,res)=>{
-  try{
-      console.log(req.body);
+});
+app.post("/signUp", async (req, res) => {
+  try {
+    console.log(req.body);
     const data = req.body;
     userModel.create({
-        firstName:data.firstName,
-        lastName:data.lastName,
-        emailId:data.emailId,
-        age:data.age,
-        password:data.password,
-        gender:data.gender
-    })
+      firstName: data.firstName,
+      lastName: data.lastName,
+      emailId: data.emailId,
+      age: data.age,
+      password: data.password,
+      gender: data.gender,
+    });
     res.status(200).json({
-        message:"User created successfully"
-    })
-  }
-  catch(error){
+      message: "User created successfully",
+    });
+  } catch (error) {
     res.status(500).json({
-        message:error.message
-    })
+      message: error.message,
+    });
   }
-})
+});
 app.delete("/user/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -102,57 +97,64 @@ app.delete("/user/:id", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-// update user though gmail 
-app.patch("/user",async(req,res)=>{
-  try{
-    const gmail= req.query.email;
-    const data = req.body;
-    console.log(gmail,data);
-    const updatedUser = await userModel.findOneAndUpdate({emailId:gmail},data,{new:true,runValidators:true});
-    if(!updatedUser){
+// update user though gmail
+app.patch("/user", async (req, res) => {
+  const gmail = req.query.email;
+  const data = req.body;
+  try {
+    const allowedUpdates=[
+      "photoUrl","skills","about","age","password"
+    ]
+    const isAllowedUpdates = Object.keys(data).every((k)=>allowedUpdates.includes(k));// it will return true if evry keys are available in allowedUpdates
+    
+    console.log(gmail, data);
+    const updatedUser = await userModel.findOneAndUpdate(
+      { emailId: gmail },
+      data,
+      { new: true, runValidators: true },
+    );
+    if (!updatedUser) {
       return res.status(404).json({
-        message:"user not found"
-      })
-  }
-  res.status(200).json({
-    message:"user updated successfully",
-    updatedUser:updatedUser
-  })
-  }catch(error){
+        message: "user not found",
+      });
+    }
+    res.status(200).json({
+      message: "user updated successfully",
+      updatedUser: updatedUser,
+    });
+  } catch (error) {
     res.status(500).json({
-      message:error.message
-    })
+      message: error.message,
+    });
   }
-})
+});
 
 // update user through id
-app.patch("/user/:id",async(req,res)=>{
-  try{
-   const id =req.params.id;
-   const data = req.body;
-  await userModel.findByIdAndUpdate({_id:id},data,{new:true});
-  res.status(200).json({
-    message:"successfully updated"
-  })
-  }catch(error){
+app.patch("/user/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = req.body;
+    await userModel.findByIdAndUpdate({ _id: id }, data, { new: true });
+    res.status(200).json({
+      message: "successfully updated",
+    });
+  } catch (error) {
     res.status(500).json({
-        message:error.message
-    })
+      message: error.message,
+    });
   }
-})
-  
+});
 
-
-// for admin also 
-app.get('/admin/addUser',(req,res)=>{
-    res.status(200).json({
-        message:"admin fetched successfully"
-    })
-})
-app.get('/admin/deleteUser',(req,res)=>{
-    res.status(200).json({
-        message:"admin fetched successfully"
-    })
-})
+// for admin also
+app.get("/admin/addUser", (req, res) => {
+  res.status(200).json({
+    message: "admin fetched successfully",
+  });
+});
+app.get("/admin/deleteUser", (req, res) => {
+  res.status(200).json({
+    message: "admin fetched successfully",
+  });
+});
 
 module.exports = app;
