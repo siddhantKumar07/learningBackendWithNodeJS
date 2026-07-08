@@ -45,6 +45,34 @@ app.get("/feed", async (req, res) => {
   }
 });
 
+app.post("/login",async (req,res)=>{
+  try{
+const data = req.body;
+const user = await userModel.findOne({emailId:data.emailId});
+if(!user){
+  res.status(404).json({
+    message:"user not found"
+  })
+}
+const isMatch = await bcrpt.compare(data.password,user.password);
+if(!isMatch){
+  res.status(400).json({
+    message:"invalid password"
+  })
+}
+else{
+  res.status(200).json({
+    message:"login successful",
+    user:user
+  })
+
+}
+  }catch(error){
+    res.status(404).json({
+      message:error.message
+    })
+  }
+})
 // middleware for signup to check whether the user with this email is already exist
 app.post("/signUp", async (req, res, next) => {
   try {
