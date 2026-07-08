@@ -47,17 +47,17 @@ app.get("/feed", async (req, res) => {
 
 app.post("/login",async (req,res)=>{
   try{
-const data = req.body;
-const user = await userModel.findOne({emailId:data.emailId});
+const {emailId ,password} = req.body;
+const user = await userModel.findOne({emailId:emailId});
 if(!user){
   res.status(404).json({
-    message:"user not found"
+    message:"invalid Credentials"
   })
 }
-const isMatch = await bcrpt.compare(data.password,user.password);
+const isMatch = await bcrpt.compare(password,user.password);
 if(!isMatch){
   res.status(400).json({
-    message:"invalid password"
+    message:"Invalid Credentials"
   })
 }
 else{
