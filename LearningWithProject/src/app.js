@@ -108,8 +108,7 @@ app.patch("/user",async(req,res)=>{
     const gmail= req.query.email;
     const data = req.body;
     console.log(gmail,data);
-    const updatedUser = await userModel.findOneAndUpdate({emailId:gmail},data,{new:true});
-
+    const updatedUser = await userModel.findOneAndUpdate({emailId:gmail},data,{new:true,runValidators:true});
     if(!updatedUser){
       return res.status(404).json({
         message:"user not found"
