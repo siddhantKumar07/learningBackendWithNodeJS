@@ -41,8 +41,13 @@ const userSchema = new mongooes.Schema({
     required: true,
     trim: true,
     minLength:8,
-    maxLength:25
-  },
+    maxLength:25,
+    validate(value){
+        if(!validator.isStrongPassword(value)){
+            throw new Error("password is not strong enoungh")
+    }
+  }
+},
   gender: {
     type: String,
     required: true,
@@ -79,13 +84,14 @@ const userSchema = new mongooes.Schema({
         throw new Error("skill length must be less than or equal to 10")
      }
      value.forEach((skill)=>{
-   if(skill.lenght>20){
+   if(skill.length>20){
     throw new Error("skill name must be less than or equal to 20")
    }
      })
     }
   },
-},{
+}
+,{
     timestamps:true
 });
 const userModel = mongooes.model("user", userSchema);

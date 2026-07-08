@@ -66,16 +66,22 @@ app.post("/signUp", async (req, res) => {
   try {
     console.log(req.body);
     const data = req.body;
-    userModel.create({
+
+   const user =await userModel.create({
       firstName: data.firstName,
       lastName: data.lastName,
       emailId: data.emailId,
       age: data.age,
       password: data.password,
       gender: data.gender,
+      skills: data.skills,
+      about:data.about,
+      photoUrl:data.photoUrl,
+      
     });
     res.status(200).json({
       message: "User created successfully",
+      user:user,
     });
   } catch (error) {
     res.status(500).json({
