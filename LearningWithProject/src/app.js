@@ -50,6 +50,9 @@ app.get("/feed", async (req, res) => {
   }
 });
 
+
+// for login api we will use json web token to send the user id to the client side in the form of token so that the client can use it to access the protected routes. it generates a token using the user id and the secret key which is stored in the environment variable. the token is then sent to the client side in the form of cookie so that the client can use it to access the protected routes.
+
 app.post("/login",async (req,res)=>{
   try{
 const {emailId ,password} = req.body;
@@ -91,14 +94,22 @@ app.get("/profile",async(req,res)=>{
       res.status(401).json({
         message:"unauthorized access"
       })
+      throw new Error("unauthorized access");
     }
 else{
-
-
+  const user = await userModel.findById(isValid.id);
+  if(!user){
+      res.status(404).json({
+        message:"user not found"
+      })
+      throw new Error("user not found");
+  }
+   else{   
     res.status(200).json({
       message:"profile fetched successfully",
-      user:await userModel.findById(isValid.id)
+      user:user
     })
+  }
   }
   }catch(error){
     res.status(404).json({
