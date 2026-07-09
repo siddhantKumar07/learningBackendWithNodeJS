@@ -10,13 +10,6 @@ app.use(express.json()); //It parses incoming request body (JSON data) and conve
 
 app.use(cookieParser()) //it is used to parse the cookies from the request headers and make them available in the req.cookies object. It is important to use this middleware before defining any routes that expect to access cookies, as it ensures that the cookies are properly parsed and available for use in the route handlers.
  
-const { userAuth, adminAuth } = require("./middleware/auth");
-
-// middleware is used to handle the unauthorized access to the routes
-// it is used to check the authorization of the user before allowing access to the routes
-
-// app.use('/admin', adminAuth);
-// app.use('/user', userAuth);
 
 //get user
 app.get("/user", async (req, res) => {
