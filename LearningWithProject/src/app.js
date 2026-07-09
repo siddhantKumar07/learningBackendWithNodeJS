@@ -2,11 +2,13 @@ const express = require("express");
 const userModel = require("./model/user");
 const bcrpt = require("bcrypt");
 const cookieParser = require("cookie-parser")
+const jsonWebToken = require("jsonwebtoken");
+require("dotenv").config();
 const app = express();
 const {checkChanges}= require("./utils/validation");
 app.use(express.json()); //It parses incoming request body (JSON data) and converts it into a JavaScript object. it is works for all the routes in the application, allowing them to access the request body data as a javascript object through req.body. It is important to use this middleware before defining any routes that expect to receive JSON data in the request body, as it ensures that the data is properly parsed and available for use in the route handlers.
 app.use(cookieParser()) //it is used to parse the cookies from the request headers and make them available in the req.cookies object. It is important to use this middleware before defining any routes that expect to access cookies, as it ensures that the cookies are properly parsed and available for use in the route handlers.
-
+ 
 const { userAuth, adminAuth } = require("./middleware/auth");
 
 // middleware is used to handle the unauthorized access to the routes
@@ -63,7 +65,9 @@ if(!isMatch){
   })
 }
 else{
-  res.cookie("token",user._id);
+  const token = jsonWebToken.sign({id:user._id},process.env.JWT_SECRET);
+  console.log(token);
+  res.cookie("token",token);
   res.status(200).json({
     message:"login successful",
     user:user
@@ -80,10 +84,21 @@ else{
 app.get("/profile",async(req,res)=>{
   try{
     const cookies = req.cookies;
+    const isValid= jsonWebToken.verify(cookies.token,process.env.JWT_SECRET);
+    console.log(isValid);
+    if(!isValid){
+      res.status(401).json({
+        message:"unauthorized access"
+      })
+    }
+else{
+
+
     res.status(200).json({
       message:"profile fetched successfully",
-      user:cookies.token
+      user:await userModel.findById(isValid.id)
     })
+  }
   }catch(error){
     res.status(404).json({
       message:error.message
