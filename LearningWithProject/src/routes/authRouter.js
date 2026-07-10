@@ -78,3 +78,20 @@ authRouter.post("/signUp", async (req, res) => {
     });
   }
 });
+
+// for logout
+authRouter.post("/logout", (req, res) => {
+  try {
+    res.clearCookie("token");
+    res.status(200).json({
+      message: "logout successful",
+    });
+  }
+    catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
+module.exports = authRouter;
