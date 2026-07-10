@@ -1,6 +1,7 @@
 const mongooes = require("mongoose");
 const validator = require("validator");
-
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
 const userSchema = new mongooes.Schema({
   firstName: {
     type: String,
@@ -94,6 +95,11 @@ const userSchema = new mongooes.Schema({
 ,{
     timestamps:true
 });
+userSchema.methods.getJWT= function(){
+  const user = this;
+  const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:"7d"});// json web token is used to send the user id to the client side in the form of token so that the client can use it to access the protected routes. it generates a token using the user id and the secret key which is stored in the environment variable. the token is then sent to the client side in the form of cookie so that the client can use it to access the protected routes.
+  return token;
+}
 const userModel = mongooes.model("user", userSchema);
 
 module.exports = userModel;
