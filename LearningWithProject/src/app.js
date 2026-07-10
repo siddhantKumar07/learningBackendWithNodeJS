@@ -4,6 +4,7 @@ const bcrpt = require("bcrypt");
 const cookieParser = require("cookie-parser")
 const jsonWebToken = require("jsonwebtoken");
 require("dotenv").config();
+const { userAuth } = require("./middleware/auth")
 const app = express();
 const {checkChanges}= require("./utils/validation");
 app.use(express.json()); //It parses incoming request body (JSON data) and converts it into a JavaScript object. it is works for all the routes in the application, allowing them to access the request body data as a javascript object through req.body. It is important to use this middleware before defining any routes that expect to receive JSON data in the request body, as it ensures that the data is properly parsed and available for use in the route handlers.
@@ -67,7 +68,6 @@ else{
   res.cookie("token",token);
   res.status(200).json({
     message:"login successful",
-    user:user
   })
 
 }
@@ -78,38 +78,13 @@ else{
   }
 })
 
-app.get("/profile",async(req,res)=>{
-  try{
-    const cookies = req.cookies;
-    const isValid= jsonWebToken.verify(cookies.token,process.env.JWT_SECRET);// this line is used to verify the token sent by the client side in the form of cookie. it verifies the token using the secret key which is stored in the environment variable. if the token is valid then it returns the user id else it throws an error.
-    console.log(isValid);
-    if(!isValid){
-      res.status(401).json({
-        message:"unauthorized access"
-      })
-      throw new Error("unauthorized access");
-    }
-else{
-  const user = await userModel.findById(isValid.id);
-  if(!user){
-      res.status(404).json({
-        message:"user not found"
-      })
-      throw new Error("user not found");
-  }
-   else{   
-    res.status(200).json({
-      message:"profile fetched successfully",
-      user:user
-    })
-  }
-  }
-  }catch(error){
-    res.status(404).json({
-      message:error.message
-    })
-  }
-})
+app.get("/profile",userAuth,async(req,res)=>{
+   const user = req.user;
+   res.status(200).json({
+    message:"user fetched successfully",
+    user:user
+   })
+  })
 // middleware for signup to check whether the user with this email is already exist
 app.post("/signUp", async (req, res, next) => {
   try {
