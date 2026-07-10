@@ -39,51 +39,7 @@ app.get("/profile",userAuth,async(req,res)=>{
     user:user
    })
   })
-// middleware for signup to check whether the user with this email is already exist
-app.post("/signUp", async (req, res, next) => {
-  try {
-    const data = req.body;
-    const existingUser = await userModel.findOne({ emailId: data.emailId });
-    if (existingUser) {
-      res.status(400).json({
-        message: "user with this email already exist",
-      });
-    } else {
-      next();
-    }
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-});
-app.post("/signUp", async (req, res) => {
-  try {
-    const data = req.body;
-     const {password}=data;
-     const hashedPassword = await bcrpt.hash(password,10);
-   const user =await userModel.create({
-      firstName: data.firstName,
-      lastName: data.lastName,
-      emailId: data.emailId,
-      age: data.age,
-      password:hashedPassword,
-      gender: data.gender,
-      skills: data.skills,
-      about:data.about,
-      photoUrl:data.photoUrl,
 
-    });
-    res.status(200).json({
-      message: "User created successfully",
-      user:user,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-});
 
 app.post("/sendConnectionReuest",userAuth,(req,res)=>{
   try{
