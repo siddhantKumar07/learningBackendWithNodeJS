@@ -49,7 +49,7 @@ profileRouter.delete("/profile/delete",userAuth,async(req,res)=>{
 
   })
 
-  profileRouter.post("/",userAuth,async(req,res)=>{
+  profileRouter.post("/profile/updatePassword",userAuth,async(req,res)=>{
     try{
      const user = req.user;
      const{oldPassword}=req.body;
