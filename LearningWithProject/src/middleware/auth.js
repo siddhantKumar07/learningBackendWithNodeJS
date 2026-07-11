@@ -29,4 +29,22 @@ const userAuth = async (req, res, next) => {
   }
 };
 
-module.exports = { userAuth };
+const signupAuth=async (req, res, next) => {
+  try {
+    const data = req.body;
+    const existingUser = await userModel.findOne({ emailId: data.emailId });
+    if (existingUser) {
+      res.status(400).json({
+        message: "user with this email already exist",
+      });
+    } else {
+      next();
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+module.exports = { userAuth ,signupAuth };

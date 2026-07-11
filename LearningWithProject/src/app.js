@@ -28,33 +28,10 @@ app.get("/feed", async (req, res) => {
 });
 
 
-// for login api we will use json web token to send the user id to the client side in the form of token so that the client can use it to access the protected routes. it generates a token using the user id and the secret key which is stored in the environment variable. the token is then sent to the client side in the form of cookie so that the client can use it to access the protected routes.
 
 
 
-app.get("/profile",userAuth,async(req,res)=>{
-   const user = req.user;
-   res.status(200).json({
-    message:"user fetched successfully",
-    user:user
-   })
-  })
 
-
-app.post("/sendConnectionReuest",userAuth,(req,res)=>{
-  try{
-    const {user}=req;
-    res.status(200).json({
-      message:`${user.firstName} ${user.lastName} is sending connection request`
-    })
-
-
-  }catch(errorr){
-    res.status(500).json({
-      message:error.message
-    })
-  }
-})
 
 // update user though gmail
 app.patch("/user", async (req, res) => {
