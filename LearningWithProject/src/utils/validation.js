@@ -1,3 +1,5 @@
+const validator = require("validator");
+
 const checkChanges=(data)=>{
   const allowedUpdates=[
       "photoUrl","skills","about","age","gender"
@@ -8,6 +10,15 @@ const checkChanges=(data)=>{
       throw new Error("Updates are not allowed for some field")
     }
 }
+const validatePassword = (newPassword)=>{
+  if(!validator.isStrongPassword(newPassword)){
+    throw new Error("password is not strong enough")
+  }
+  else{
+    return true;
+  }
+}
 module.exports={
-    checkChanges
+    checkChanges,
+    validatePassword
 }

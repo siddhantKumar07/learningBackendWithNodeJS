@@ -1,6 +1,6 @@
 const express = require("express");
 const {userAuth} = require("../middleware/auth");
-const {checkChanges} = require("../utils/validation");
+const {checkChanges,validatePassword} = require("../utils/validation");
 const userModel = require("../model/user");
 const bcrypt = require("bcrypt");
 const profileRouter = express.Router();
@@ -62,12 +62,14 @@ profileRouter.delete("/profile/delete",userAuth,async(req,res)=>{
       })
     }
     else{
+      if(validatePassword(newPassword)){
       const hashedNewPassword = await bcrypt.hash(newPassword,10);
       const updatedUser = await userModel.findByIdAndUpdate(user._id,{password:hashedNewPassword},{new:true,runValidators:true});
 
       res.status(200).json({
         message:`${updatedUser.firstName} ${updatedUser.lastName}, your password has been updated successfully`,
       })
+    }
     }
   }
     catch(error){
