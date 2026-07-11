@@ -1,6 +1,6 @@
 const checkChanges=(data)=>{
   const allowedUpdates=[
-      "photoUrl","skills","about","age","password"
+      "photoUrl","skills","about","age","gender"
     ]
     const isAllowedUpdates = Object.keys(data).every((k)=>allowedUpdates.includes(k));// it will return true if evry keys are available in allowedUpdates
 

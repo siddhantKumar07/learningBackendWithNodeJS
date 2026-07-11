@@ -17,3 +17,5 @@ requestRouter.post("/sendConnectionReuest",userAuth,(req,res)=>{
     })
   }
 })
+
+module.exports = requestRouter;

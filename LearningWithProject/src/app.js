@@ -11,6 +11,14 @@ app.use(express.json()); //It parses incoming request body (JSON data) and conve
 
 app.use(cookieParser()) //it is used to parse the cookies from the request headers and make them available in the req.cookies object. It is important to use this middleware before defining any routes that expect to access cookies, as it ensures that the cookies are properly parsed and available for use in the route handlers.
 
+const authRouter = require("./routes/authRouter");
+const profileRouter = require("./routes/profile");
+const requestRouter = require("./routes/request");
+
+
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestRouter);
 // feed Api
 app.get("/feed", async (req, res) => {
   try {
