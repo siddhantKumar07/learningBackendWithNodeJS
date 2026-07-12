@@ -1,11 +1,11 @@
 const mongooes = require("mongoose");
 
 const connectionRequestSchema = new mongooes.Schema({
-    SenderId:{
+    senderId:{
         type: mongooes.Schema.Types.ObjectId,
         required: true,
     },
-    ReceiverId:{
+    receiverId:{
         type: mongooes.Schema.Types.ObjectId,
         required: true,
     },
@@ -13,10 +13,12 @@ const connectionRequestSchema = new mongooes.Schema({
         type: String,
         required: true,
         enum:{
-        values= ["ignored","interested","accepted","rejected"],
+        values: ["ignored","interested","accepted","rejected"],
         message:"{VALUE} is not valid status"
         }
     }
+},{
+    timestamps:true
 })
 const ConnectionRequestModel = mongooes.model("connectionRequest",connectionRequestSchema);
 

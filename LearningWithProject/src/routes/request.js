@@ -2,25 +2,19 @@ const express = require("express");
 const {userAuth} = require("../middleware/auth");
 const ConnectionRequestModel = require("../model/connectionRequest");
 const userModel = require("../model/user");
-
+const checkRequest = require("../middleware/checkRequest") 
 const requestRouter = express.Router();
 
-requestRouter.post("/request/send/:interested/:receiverId",userAuth,async(req,res)=>{
+requestRouter.post("/request/send/:status/:receiverId",userAuth,checkRequest,async(req,res)=>{
   try{
     const senderId = req.user._id;
     const receiverId = req.params.receiverId;
-    const interested = req.params.interested;
+    const status = req.params.status;
    
-    const recieverData= await userModel.findById(receiverId);
-    if(!recieverData){
-      return res.status(404).json({
-        message:"receiver not found"
-      })
-    }
   const data = await ConnectionRequestModel.create({
       senderId:senderId,
       receiverId:receiverId,
-      interested:interested
+      status:status
     });
   
     res.status(200).json({
@@ -28,7 +22,8 @@ requestRouter.post("/request/send/:interested/:receiverId",userAuth,async(req,re
       data:data
     })
 
-  }catch(errorr){
+  }
+  catch(error){
     res.status(500).json({
       message:error.message
     })
