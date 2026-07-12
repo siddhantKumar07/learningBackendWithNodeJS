@@ -13,10 +13,11 @@ const connectionRequestSchema = new mongooes.Schema({
         type: String,
         required: true,
         enum:{
-        values= ["ignore","interested","accepted","rejected"],
+        values= ["ignored","interested","accepted","rejected"],
         message:"{VALUE} is not valid status"
         }
     }
 })
-const connectionRequestModel = mongooes.model("connectionRequest",connectionRequestSchema);
-module.exports = connectionRequestModel;
+const ConnectionRequestModel = mongooes.model("connectionRequest",connectionRequestSchema);
+
+module.exports = ConnectionRequestModel;
