@@ -2,7 +2,7 @@ const userModel = require("../model/user");
 const ConnectionRequestModel = require("../model/connectionRequest");
     const mongoose = require("mongoose");
 
-const checkRequest = async(req,res,next)=>{
+const  checkRequest = async(req,res,next)=>{
     try{
 
     const senderId = req.user._id;
@@ -29,7 +29,6 @@ if (!mongoose.Types.ObjectId.isValid(receiverId)) {
       return res.status(404).json({
         message:"receiver not found"
       })
-      throw new Error("receiver not found");
     }
     // check whether the request is already sent or not
 
@@ -37,16 +36,18 @@ if (!mongoose.Types.ObjectId.isValid(receiverId)) {
       $or:[
         {
           senderId:senderId,
-          receiverId:receiverId
+          receiverId:receiverId,
+          status:status
         },
         {
           senderId:receiverId,
-          receiverId:senderId
+          receiverId:senderId,
+          status:status
         }
       ]
     })
        
-    if(existRequest){
+    if(existRequest&&existRequest.status=="interested"){
         if(existRequest.senderId.toString() === senderId.toString() ){
           return res.status(400).json({
             message:`you already send the request to ${recieverData.firstName} ${recieverData.lastName}`
@@ -56,6 +57,18 @@ if (!mongoose.Types.ObjectId.isValid(receiverId)) {
           message:`${recieverData.firstName} ${recieverData.lastName} already send the request to you`
         })
     }
+
+    if(existRequest&&existRequest.status=="ignored"){
+        if(existRequest.senderId.toString() === senderId.toString() ){
+          return res.status(400).json({
+            message:`you already ignored the request from ${recieverData.firstName} ${recieverData.lastName}`
+          })
+        }
+        return res.status(400).json({
+          message:`${recieverData.firstName} ${recieverData.lastName} already ignored the request from you`
+        })
+    }
+
 
 
     // for to check whether the user is trying to send the request to himself or not
