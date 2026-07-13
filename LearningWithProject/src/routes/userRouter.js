@@ -31,6 +31,10 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
       ],
     }).populate("senderId", userSafeData);
 
+    console.log(connections);
+    const data = connections.map((connec)=>({
+        senderId: connec.senderId,
+    }));
     if (connections.length === 0) {
       return res.status(404).json({
         message: "connections not found",
@@ -39,7 +43,7 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
 
     return res.status(200).json({
       message: "connection is fetched",
-      connections: connections,
+      allConnections:data
     });
   } catch (error) {
     res.status(500).json({
@@ -59,6 +63,10 @@ userRouter.get("/user/pendingRequest", userAuth, async (req, res) => {
       status: "interested",
     }).populate("senderId",userSafeData);
     //. populate is used to get the data from the senderId which is a reference to the user model and we are getting the firstName,lastName,photoUrl,age,gender,skills,about from the user model.
+    
+    const data = pendingRequest.map((req)=>({
+        senderId:req.senderId
+    }))
 
     if (pendingRequest.length === 0) {
       return res.status(404).json({
@@ -67,7 +75,7 @@ userRouter.get("/user/pendingRequest", userAuth, async (req, res) => {
     }
     return res.status(200).json({
       message: "pending request is fetched successfully",
-      pendingRequest: pendingRequest,
+      allPendingRequest: data,
     });
   } catch (error) {
     res.status(500).json({
