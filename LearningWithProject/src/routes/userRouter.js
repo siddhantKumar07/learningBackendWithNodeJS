@@ -5,7 +5,7 @@ const ConnectionRequestModel = require('../model/connectionRequest')
 const userModel = require('../model/user')
 
 // it will return all the connection which is accepted
-userRouter.get("/user/connection",userAuth,async(req,res)=>{
+userRouter.get("/user/connections",userAuth,async(req,res)=>{
    try{
      const loggedInUser = req.user;
     const {_id}= loggedInUser;
@@ -14,7 +14,7 @@ userRouter.get("/user/connection",userAuth,async(req,res)=>{
         status:"accepted"
     })
     if(connections.length===0){
-        res.status(404).json({
+       return res.status(404).json({
             message:"connections not found"
         })
     }
@@ -24,13 +24,14 @@ userRouter.get("/user/connection",userAuth,async(req,res)=>{
     return user.firstName+" "+user.lastName;
    })
 )
-     res.status(200).json({
+    return res.status(200).json({
         message:"connection is fetched",
         connections:connections,
         connectionNames:connectionName
      })
 
-   }catch(error){
+   }
+   catch(error){
     res.status(500).json({
         message:error.message
     })
@@ -39,7 +40,7 @@ userRouter.get("/user/connection",userAuth,async(req,res)=>{
 
 // for to get all the pending connection request for the logged in user
 
-userRouter.get("/user/request",userAuth,async(req,res)=>{
+userRouter.get("/user/pendingRequest",userAuth,async(req,res)=>{
     try{
    const {_id} = req.user;
     const pendingRequest = await ConnectionRequestModel.find({
@@ -47,7 +48,7 @@ userRouter.get("/user/request",userAuth,async(req,res)=>{
         status: "interested"
     })
     if(pendingRequest.length===0){
-        res.status(404).json({
+       return res.status(404).json({
             message:"pending request is not found"
         })
     }
@@ -57,7 +58,7 @@ userRouter.get("/user/request",userAuth,async(req,res)=>{
             return user.firstName+" "+user.lastName;
         })
     )
-    res.status(200).json({
+   return res.status(200).json({
         message:"pending request is fetched successfully",
         pendingRequest:pendingRequest,
         pendingRequestNames:pendingRequestNames
