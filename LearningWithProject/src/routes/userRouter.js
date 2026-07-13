@@ -10,8 +10,16 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
     const loggedInUser = req.user;
     const { _id } = loggedInUser;
     const connections = await ConnectionRequestModel.find({
-      receiverId: _id,
-      status: "accepted",
+     $or:[
+        {
+            senderId:_id,
+            status:"accepted"
+        },
+        {
+            receiverId:_id,
+            status:"accepted"
+        }
+     ]
     }).populate("senderId", [
       "firstName",
       "lastName",
@@ -74,6 +82,7 @@ userRouter.get("/user/pendingRequest", userAuth, async (req, res) => {
     });
   }
 });
+
 
 userRouter.get("/user/feed", userAuth, async (req, res) => {
   try {
