@@ -12,7 +12,7 @@ userRouter.get("/user/connections",userAuth,async(req,res)=>{
     const connections =await ConnectionRequestModel.find({
         receiverId:_id,
         status:"accepted"
-    }).populate("senderId",["firstName","lastName","photoUrl"])
+    }).populate("senderId",["firstName","lastName","photoUrl","age","gender","skills","about"])
 
     if(connections.length===0){
        return res.status(404).json({
@@ -43,7 +43,8 @@ userRouter.get("/user/pendingRequest",userAuth,async(req,res)=>{
     const pendingRequest = await ConnectionRequestModel.find({
         receiverId: _id,
         status: "interested"
-    }).populate("senderId",["firstName","lastName","photoUrl"])
+    }).populate("senderId",["firstName","lastName","photoUrl","age","gender","skills","about"])
+    //. populate is used to get the data from the senderId which is a reference to the user model and we are getting the firstName,lastName,photoUrl,age,gender,skills,about from the user model.
 
     if(pendingRequest.length===0){
        return res.status(404).json({
