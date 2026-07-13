@@ -3,6 +3,7 @@ const mongooes = require("mongoose");
 const connectionRequestSchema = new mongooes.Schema({
     senderId:{
         type: mongooes.Schema.Types.ObjectId,
+        ref: "user",
         required: true,
     },
     receiverId:{

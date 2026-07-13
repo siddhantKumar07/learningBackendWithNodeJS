@@ -12,22 +12,17 @@ userRouter.get("/user/connections",userAuth,async(req,res)=>{
     const connections =await ConnectionRequestModel.find({
         receiverId:_id,
         status:"accepted"
-    })
+    }).populate("senderId",["firstName","lastName","photoUrl"])
+
     if(connections.length===0){
        return res.status(404).json({
             message:"connections not found"
         })
     }
-   const connectionName= await Promise.all(
-    connections.map(async(connection)=>{
-    const user = await userModel.findById(connection.senderId);
-    return user.firstName+" "+user.lastName;
-   })
-)
+
     return res.status(200).json({
         message:"connection is fetched",
         connections:connections,
-        connectionNames:connectionName
      })
 
    }
@@ -43,25 +38,21 @@ userRouter.get("/user/connections",userAuth,async(req,res)=>{
 userRouter.get("/user/pendingRequest",userAuth,async(req,res)=>{
     try{
    const {_id} = req.user;
+
+
     const pendingRequest = await ConnectionRequestModel.find({
         receiverId: _id,
         status: "interested"
-    })
+    }).populate("senderId",["firstName","lastName","photoUrl"])
+
     if(pendingRequest.length===0){
        return res.status(404).json({
             message:"pending request is not found"
         })
     }
-    const pendingRequestNames = await Promise.all(
-        pendingRequest.map(async(request)=>{
-            const user = await userModel.findById(request.senderId);
-            return user.firstName+" "+user.lastName;
-        })
-    )
    return res.status(200).json({
         message:"pending request is fetched successfully",
         pendingRequest:pendingRequest,
-        pendingRequestNames:pendingRequestNames
     })
     } catch(error){
         res.status(500).json({
