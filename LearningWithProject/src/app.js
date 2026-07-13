@@ -14,11 +14,13 @@ app.use(cookieParser()) //it is used to parse the cookies from the request heade
 const authRouter = require("./routes/authRouter");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
+const userRouter = require("./routes/userRouter");
 
 
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
+app.use("/", userRouter);
 // feed Api
 app.get("/feed", async (req, res) => {
   try {
@@ -35,56 +37,6 @@ app.get("/feed", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-// update user though gmail
-app.patch("/user", async (req, res) => {
-  const gmail = req.query.email;
-  const data = req.body;
-  try {
-    checkChanges(data);//it will check whether the data is allowed to update or not if not then it will throw an error
-    const updatedUser = await userModel.findOneAndUpdate(
-      { emailId: gmail },
-      data,
-      { new: true, runValidators: true },
-    );
-    if (!updatedUser) {
-      return res.status(404).json({
-        message: "user not found",
-      });
-    }
-    res.status(200).json({
-      message: "user updated successfully",
-      updatedUser: updatedUser,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-});
-
-// update user through id
-app.patch("/user/:id", async (req, res) => {
-      const id = req.params?.id;
-    const data = req.body;
-  try {
-checkChanges(data);//it will check whether the data is allowed to update or not if not then it will throw an error
-   const updatedUser= await userModel.findByIdAndUpdate({ _id: id }, data, { new: true,runValidators:true });
-    res.status(200).json({
-      message: "successfully updated",
-      updatedUser: updatedUser
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-});
 
 
 
