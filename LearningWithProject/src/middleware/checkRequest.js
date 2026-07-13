@@ -77,7 +77,7 @@ if (!mongoose.Types.ObjectId.isValid(receiverId)) {
         message:"you can't send the request to yourself"
       })
     }
-
+req.recieverData = recieverData;
     next();
     }
     catch(error){

@@ -14,7 +14,7 @@ requestRouter.post(
       const senderId = req.user._id;
       const receiverId = req.params.receiverId;
       const status = req.params.status;
-
+      const recieverData = req.recieverData
       const data = await ConnectionRequestModel.create({
         senderId: senderId,
         receiverId: receiverId,
