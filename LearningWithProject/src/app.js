@@ -21,21 +21,7 @@ app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
-// feed Api
-app.get("/feed", async (req, res) => {
-  try {
-    const storage = await userModel.find();
 
-    res.status(200).json({
-      message: "fetched successfully",
-      storage: storage,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-});
 
 
 
