@@ -91,6 +91,10 @@ userRouter.get("/user/pendingRequest", userAuth, async (req, res) => {
 // for to get all the user data in the feed of the logged in user
 userRouter.get("/user/feed", userAuth, async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    limit =limit>50? 50:limit;
+    const skip = (page - 1) * limit;
     const connections = await ConnectionRequestModel.find({
         $or:[
             {
@@ -113,7 +117,7 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
 const feedUser = await userModel.find({
             _id:{$nin:[...hideFromFeed]}//it will get all the user which is not in the hideFromFeed set
     
-}).select(userSafeData);
+}).select(userSafeData).skip(skip).limit(limit)
 
 if(feedUser.length === 0) {
     return res.status(404).json({
