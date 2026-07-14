@@ -29,12 +29,14 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
           status: "accepted",
         },
       ],
-    }).populate("senderId", userSafeData);
+    }).populate("senderId", userSafeData).populate("receiverId", userSafeData);
 
-    console.log(connections);
-    const data = connections.map((connec)=>({
-        senderId: connec.senderId,
-    }));
+    const data = connections.map((connec)=>{
+        if(connec.senderId._id.toString() === _id.toString()){
+            return connec.receiverId
+        }
+        return connec.senderId
+    });
     if (connections.length === 0) {
       return res.status(404).json({
         message: "connections not found",
@@ -65,6 +67,7 @@ userRouter.get("/user/pendingRequest", userAuth, async (req, res) => {
     //. populate is used to get the data from the senderId which is a reference to the user model and we are getting the firstName,lastName,photoUrl,age,gender,skills,about from the user model.
     
     const data = pendingRequest.map((req)=>({
+        id:req._id,
         senderId:req.senderId
     }))
 
@@ -90,22 +93,23 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
   try {
     const storage = await userModel.find();
 
-    // it will return the user data in the required format and it will not return the password and other sensitive data.
-    const users = storage.map((user) => ({
-      firstName: user.firstName,
-      lastName: user.lastName,
-      photoUrl: user.photoUrl,
-      age: user.age,
-      gender: user.gender,
-      skills: user.skills,
-      about: user.about,
-    }));
+    const notReceivedAnyRequest = await ConnectionRequestModel.find({
+        $and:[
+            {
+                receiverId:{ $ne: req.user._id },
+            },{
+                senderId:{ $ne: req.user._id },
+            }
+        ]
+    }).select("senderId receiverId status").populate("senderId",userSafeData).populate("receiverId",userSafeData)
 
-    if (users.length === 0) {
-      return res.status(404).json({
-        message: "no user found",
-      });
-    }
+
+
+    // if (users.length === 0) {
+    //   return res.status(404).json({
+    //     message: "no user found",
+    //   });
+    // }
 
     if (storage.length === 0) {
       return res.status(404).json({
@@ -115,7 +119,7 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
 
     res.status(200).json({
       message: "fetched successfully",
-      users: users,
+    notReceivedAnyRequest: notReceivedAnyRequest,
     });
   } catch (error) {
     res.status(500).json({
