@@ -91,35 +91,39 @@ userRouter.get("/user/pendingRequest", userAuth, async (req, res) => {
 // for to get all the user data in the feed of the logged in user
 userRouter.get("/user/feed", userAuth, async (req, res) => {
   try {
-    const storage = await userModel.find();
-
-    const notReceivedAnyRequest = await ConnectionRequestModel.find({
-        $and:[
+    const connections = await ConnectionRequestModel.find({
+        $or:[
             {
-                receiverId:{ $ne: req.user._id },
+                receiverId:req.user._id 
             },{
-                senderId:{ $ne: req.user._id },
+                senderId: req.user._id ,
             }
         ]
     }).select("senderId receiverId status").populate("senderId",userSafeData).populate("receiverId",userSafeData)
 
+    const hideFromFeed = new Set();//it will store the unique user id
+
+    connections.forEach((req)=>{
+        hideFromFeed.add(req.senderId._id.toString());
+        hideFromFeed.add(req.receiverId._id.toString());
+    })
 
 
-    // if (users.length === 0) {
-    //   return res.status(404).json({
-    //     message: "no user found",
-    //   });
-    // }
+ hideFromFeed.add(req.user._id.toString());//it will add the logged in user id to the set so that it will not show in the feed
+const feedUser = await userModel.find({
+            _id:{$nin:[...hideFromFeed]}//it will get all the user which is not in the hideFromFeed set
+    
+}).select(userSafeData);
 
-    if (storage.length === 0) {
-      return res.status(404).json({
-        message: "no user found",
-      });
-    }
+if(feedUser.length === 0) {
+    return res.status(404).json({
+        message:"no new user found in the feed"
+    })
+}
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "fetched successfully",
-    notReceivedAnyRequest: notReceivedAnyRequest,
+        feedUser: feedUser,
     });
   } catch (error) {
     res.status(500).json({
