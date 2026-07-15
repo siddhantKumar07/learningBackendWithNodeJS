@@ -1,56 +1,67 @@
 import React, { useState } from "react";
 import { ToastContainer, Bounce, toast } from "react-toastify";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 const Login = () => {
- 
-const [email, setEmail] = useState();
+  const dispatch = useDispatch();
+  const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
   const handleLogin = async () => {
-     try{
-    const response = await axios.post("http://localhost:3000/login", {
-      emailId: email,
-      password: password
-    }, {
-      withCredentials: true
-    });
-    const data = await response.data;
-    console.log(data);
-    setEmail("");
-    setPassword("");
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/login",
+        {
+          emailId: email,
+          password: password,
+        },
+        {
+          withCredentials: true,
+        },
+      );
+      console.log(response.data);
 
-    if (data.message === "login successful") {
-      toast.success("😍Login succesfull!😍", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      const profileResponse = await axios.get(
+        "http://localhost:3000/profile/view",// this is the route to get the user profile data from the backend.
+        {
+          withCredentials: true,
+        },
+      );
+      console.log(profileResponse.data);
+      dispatch(addUser(profileResponse.data.user));
+      setEmail("");
+      setPassword("");
+
+      if (response.data.message === "login successful") {
+        toast.success("😍Login succesfull!😍", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      }
+    } catch (err) {
+      if (err.response && err.response.data && err.response.data.message) {
+        toast.error(`❌${err.response.data.message}❌`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      }
     }
-
-    }
-  catch(err){
-   if(err.response && err.response.data && err.response.data.message){
-    toast.error(`❌${err.response.data.message}❌`, {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    });
-   }
-  }
-  }
-
+  };
 
   return (
     <div className="flex justify-center my-16">
