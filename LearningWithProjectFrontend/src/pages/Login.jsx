@@ -3,8 +3,11 @@ import { ToastContainer, Bounce, toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import { base_url } from "../utils/constants";
+import { useDispatch } from 'react-redux'
+import { addUser } from '../utils/userSlice'
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
@@ -21,6 +24,7 @@ const Login = () => {
         },
       );
       console.log(response.data);
+    await fetchProfile();
       setEmail("");
       setPassword("");
 
@@ -54,6 +58,15 @@ const Login = () => {
       }
     }
   };
+  const fetchProfile = async()=>{
+    const user =await axios.get(base_url+"/profile/view",{
+   withCredentials: true,
+    })
+  if(!user.data){
+    return navigate("/login")
+  }
+    dispatch(addUser(user.data.user))
+  }
 
   return (
     <div className="flex justify-center my-16">

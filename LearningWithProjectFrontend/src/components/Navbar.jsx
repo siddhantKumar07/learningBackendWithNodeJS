@@ -1,12 +1,26 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { base_url } from '../utils/constants';
+import {  removeUser } from '../utils/userSlice';
 const Navbar = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate();
   const loggedInData = useSelector((store) => store.user);
-  console.log(loggedInData);
+
+  const handleLogOut =()=>{
+    dispatch(removeUser())
+    const response = axios.post(base_url+"/logout",{},{
+      withCredentials:true
+    })
+    console.log(response.data);
+    return navigate("/login")
+  }
   return (
       <div className="navbar bg-base-300 shadow-sm">
   <div className="flex-1">
-    <a className="btn btn-ghost text-xl">AnnonymousChat</a>
+    <Link to={'/'} className="btn btn-ghost text-xl">AnnonymousChat</Link>
   </div>
   <div className="flex gap-2">
  {loggedInData&&(
@@ -15,7 +29,7 @@ const Navbar = () => {
       <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
         <div className="w-10 rounded-full">
           <img
-            alt="Tailwind CSS Navbar component"
+            alt="Profile pic"
             src={loggedInData.photoUrl} />
         </div>
       </div>
@@ -23,13 +37,13 @@ const Navbar = () => {
         tabIndex="-1"
         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-16 w-52 p-2 shadow">
         <li>
-          <a className="justify-between">
+          <Link to="/profile" className="justify-between">
             Profile
             <span className="badge">New</span>
-          </a>
+          </Link>
         </li>
         <li><a>Settings</a></li>
-        <li><a>Logout</a></li>
+        <li><a onClick={handleLogOut}>Logout</a></li>
       </ul>
     </div>
  )}

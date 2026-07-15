@@ -19,9 +19,12 @@ profileRouter.get("/profile/view",userAuth,async(req,res)=>{
       const data= req.body;
       checkChanges(data);//it will check whether the data is allowed to update or not if not then it will throw an error
        const updatedUser = await userModel.findByIdAndUpdate(loggedInUser._id,data,{new:true,runValidators:true});
+       const {firstName,lastName,age,gender,photoUrl,about,skills=[]} = updatedUser;
        res.status(200).json({
         message:`${updatedUser.firstName} ${updatedUser.lastName}, your profile has been updated successfully`,
-        updatedUser:updatedUser
+        updatedUser:{
+          firstName,lastName,age,gender,photoUrl,about,skills
+        }
        })
     }catch(error){
       res.status(500).json({
