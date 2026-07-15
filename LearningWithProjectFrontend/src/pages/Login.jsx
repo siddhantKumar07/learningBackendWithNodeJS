@@ -1,25 +1,26 @@
 import React, { useState } from "react";
 import { ToastContainer, Bounce, toast } from "react-toastify";
+import axios from "axios";
 const Login = () => {
-  const [email, setEmail] = useState();
+ 
+const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
   const handleLogin = async () => {
-    console.log(email + " " + password);
-    const response = await fetch("http://localhost:3000/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ emailId: email, password: password }),
+     try{
+    const response = await axios.post("http://localhost:3000/login", {
+      emailId: email,
+      password: password
+    }, {
+      withCredentials: true
     });
-    const data = await response.json();
-    console.log(data.message);
+    const data = await response.data;
+    console.log(data);
     setEmail("");
     setPassword("");
 
     if (data.message === "login successful") {
-      toast.success("Login succesfull!", {
+      toast.success("😍Login succesfull!😍", {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -31,25 +32,30 @@ const Login = () => {
         transition: Bounce,
       });
     }
-    else if(data.message === "invalid Credentials"){
-toast.warn('Invalid credentials!', {
-position: "top-right",
-autoClose: 2000,
-hideProgressBar: false,
-closeOnClick: false,
-pauseOnHover: true,
-draggable: true,
-progress: undefined,
-theme: "light",
-transition: Bounce,
-});
+
     }
-  };
+  catch(err){
+   if(err.response && err.response.data && err.response.data.message){
+    toast.error(`❌${err.response.data.message}❌`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    });
+   }
+  }
+  }
+
 
   return (
     <div className="flex justify-center my-16">
       <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-80 h-96 flex flex-col  border p-4">
-        <h1 className="text-2xl font-bold text-center mb-4">Login</h1>
+        <h1 className="text-2xl font-bold text-center mb-4 underline">Login</h1>
         <label className="label mt-5 font-semibold text-lg ">Email :</label>
         <input
           type="email"
