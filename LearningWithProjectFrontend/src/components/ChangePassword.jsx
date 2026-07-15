@@ -50,7 +50,7 @@ transition: Flip,
           transition: Bounce,
         });
       } else {
-        toast.error("something went wrong", {
+        toast.error(err.response?.data.message, {
           position: "top-right",
           autoClose: 2000,
           hideProgressBar: false,

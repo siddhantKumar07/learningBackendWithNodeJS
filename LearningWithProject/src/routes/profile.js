@@ -69,7 +69,7 @@ profileRouter.delete("/profile/delete",userAuth,async(req,res)=>{
       const hashedNewPassword = await bcrypt.hash(newPassword,10);
       const updatedUser = await userModel.findByIdAndUpdate(user._id,{password:hashedNewPassword},{new:true,runValidators:true});
 
-      res.status(200).json({
+     return res.status(200).json({
         message:`${updatedUser.firstName} ${updatedUser.lastName}, your password has been updated successfully`,
       })
     }
