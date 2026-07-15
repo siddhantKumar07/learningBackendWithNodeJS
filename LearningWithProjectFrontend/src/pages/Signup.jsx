@@ -1,6 +1,69 @@
-import React from 'react'
-
+import axios from 'axios'
+import React, { useState } from 'react'
+import { base_url } from '../utils/constants'
+import { Bounce, toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 const Signup = () => {
+  const navigate = useNavigate()
+  const [data, setData] = useState({
+     firstName: "",
+    lastName: "",
+    emailId: "",
+    password: "",
+    age: "",
+    gender: "",
+    photoUrl: "",
+    skills: "",
+    about: "",
+  })
+  const handleChange=(e)=>{
+    setData((prev)=>({
+      ...prev,
+      [e.target.name]:e.target.value
+    }))
+  }
+  const handleSubmit=async(e)=>{
+    e.preventDefault();
+     const checkeddata ={
+      ...data,
+      skills: data.skills
+        ? data.skills.split(",").map((s) => s.trim())
+        : [],
+     }
+
+     console.log(checkeddata);
+     try{
+    const response = await axios.post(base_url+"/signUp",checkeddata,{
+      withCredentials:true
+     })
+     console.log(response);
+      toast.success("😍Account created succesfully!😍", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    navigate("/login")
+
+     }catch(err){
+      toast.error(err.response?.data.message, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+     }
+  }
 return (
   <div className="min-h-screen text-black bg-gray-100 flex items-center justify-center p-6">
     <div className="bg-white w-full max-w-3xl rounded-3xl shadow-xl p-8">
@@ -8,7 +71,7 @@ return (
         Create Account
       </h1>
 
-      <form className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid md:grid-cols-2 gap-5">
           {/* First Name */}
           <div>
@@ -16,6 +79,8 @@ return (
               First Name
             </label>
             <input
+            onChange={handleChange}
+            value={data.firstName}
               type="text"
               name="firstName"
               placeholder="Enter first name"
@@ -29,6 +94,8 @@ return (
               Last Name
             </label>
             <input
+            onChange={handleChange}
+            value={data.lastName}
               type="text"
               name="lastName"
               placeholder="Enter last name"
@@ -42,6 +109,8 @@ return (
               Email
             </label>
             <input
+            onChange={handleChange}
+            value={data.emailId}
               type="email"
               name="emailId"
               placeholder="Enter email"
@@ -55,6 +124,8 @@ return (
               Password
             </label>
             <input
+            onChange={handleChange}
+            value={data.password}
               type="password"
               name="password"
               placeholder="Enter password"
@@ -68,6 +139,8 @@ return (
               Age
             </label>
             <input
+            onChange={handleChange}
+            value={data.age}
               type="number"
               name="age"
               placeholder="Enter age"
@@ -81,13 +154,15 @@ return (
               Gender
             </label>
             <select
+            onChange={handleChange}
               name="gender"
+              value={data.gender}
               className="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               <option value="">Select Gender</option>
-              <option>Male</option>
-              <option>Female</option>
-              <option>Other</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
             </select>
           </div>
 
@@ -97,6 +172,8 @@ return (
               Photo URL
             </label>
             <input
+            onChange={handleChange}
+            value={data.photoUrl}
               type="text"
               name="photoUrl"
               placeholder="https://example.com/profile.jpg"
@@ -110,6 +187,8 @@ return (
               Skills
             </label>
             <input
+            onChange={handleChange}
+            value={data.skills}
               type="text"
               name="skills"
               placeholder="React, Node.js, MongoDB"
@@ -126,6 +205,8 @@ return (
               About
             </label>
             <textarea
+              onChange={handleChange}
+              value={data.about}
               name="about"
               rows="4"
               placeholder="Tell us something about yourself..."
@@ -136,7 +217,7 @@ return (
 
         <button
           type="submit"
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-semibold transition"
+          className="w-full cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-semibold transition"
         >
           Create Account
         </button>
