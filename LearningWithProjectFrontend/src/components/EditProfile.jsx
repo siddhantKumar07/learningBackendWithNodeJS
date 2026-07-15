@@ -3,6 +3,7 @@ import axios from "axios";
 import { base_url } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { toast, Bounce, ToastContainer, Flip } from "react-toastify";
 const EditProfile = ({ user, setIsEditing }) => {
   const dispatch = useDispatch();
   const {age, gender, photoUrl, about, skills} = user;
@@ -30,7 +31,18 @@ const EditProfile = ({ user, setIsEditing }) => {
       const response  =await axios.patch(base_url+"/profile/edit",updatedUser,{
       withCredentials:true
     })
-    dispatch(addUser(response.data.updatedUser));
+dispatch(addUser(response.data.updatedUser));
+    toast.success("updated succesfully", {
+position: "top-right",
+autoClose: 2000,
+hideProgressBar: false,
+closeOnClick: false,
+pauseOnHover: true,
+draggable: true,
+progress: undefined,
+theme: "light",
+transition: Flip,
+});
     }catch(err){
       console.log(err);
     }

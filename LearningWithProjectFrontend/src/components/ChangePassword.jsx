@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { base_url } from "../utils/constants";
-import { toast, Bounce, ToastContainer } from "react-toastify";
+import { toast, Bounce, ToastContainer,Flip} from "react-toastify";
 const ChangePassword = ({ setIsEditing }) => {
   const [updatePass, setupdatePass] = useState({});
 
@@ -22,6 +22,17 @@ const ChangePassword = ({ setIsEditing }) => {
           withCredentials: true,
         },
       );
+toast.success("updated succesfully", {
+position: "top-right",
+autoClose: 2000,
+hideProgressBar: false,
+closeOnClick: false,
+pauseOnHover: true,
+draggable: true,
+progress: undefined,
+theme: "light",
+transition: Flip,
+});
     setIsEditing(null);
       console.log(response);
     } catch (err) {
