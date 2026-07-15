@@ -7,15 +7,17 @@ import Profile from './pages/profile'
 import { Routes,Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import {store} from './utils/appStore'
+import Feed from './pages/feed'
 const App = () => {
   return (
     <div>
    <Provider store={store}>
        <Routes>
         <Route path='/' element={<Home />} >
-        <Route path='/Login' element={<Login />} />
-        <Route path='/Signup' element={<Signup />} />
-        <Route path='/Profile' element={<Profile />} />
+        <Route path='/' element={<Feed/>} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<Signup />} />
+        <Route path='/profile' element={<Profile />} />
         </Route>
       </Routes>
    </Provider>

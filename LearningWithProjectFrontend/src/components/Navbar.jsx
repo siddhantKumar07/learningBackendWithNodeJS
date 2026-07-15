@@ -10,7 +10,7 @@ const Navbar = () => {
   </div>
   <div className="flex gap-2">
  {loggedInData&&(
-     <div className="dropdown dropdown-end mr-4 flex gap-2 items-center">
+     <div className="dropdown dropdown-end mr-4 flex gap-2 items-center p-1 ">
       <p className='px-4 font-bold text-lg'>Welcome {loggedInData.firstName}</p>
       <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
         <div className="w-10 rounded-full">
@@ -21,7 +21,7 @@ const Navbar = () => {
       </div>
       <ul
         tabIndex="-1"
-        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-16 w-52 p-2 shadow">
         <li>
           <a className="justify-between">
             Profile

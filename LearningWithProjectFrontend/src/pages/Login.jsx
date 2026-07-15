@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { ToastContainer, Bounce, toast } from "react-toastify";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { addUser } from "../utils/userSlice";
+import { useNavigate } from 'react-router-dom';
+import { base_url } from "../utils/constants";
 const Login = () => {
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/login",
+        base_url+"/login",
         {
           emailId: email,
           password: password,
@@ -21,15 +21,6 @@ const Login = () => {
         },
       );
       console.log(response.data);
-
-      const profileResponse = await axios.get(
-        "http://localhost:3000/profile/view",// this is the route to get the user profile data from the backend.
-        {
-          withCredentials: true,
-        },
-      );
-      console.log(profileResponse.data);
-      dispatch(addUser(profileResponse.data.user));
       setEmail("");
       setPassword("");
 
@@ -46,6 +37,7 @@ const Login = () => {
           transition: Bounce,
         });
       }
+      navigate("/");
     } catch (err) {
       if (err.response && err.response.data && err.response.data.message) {
         toast.error(`❌${err.response.data.message}❌`, {
