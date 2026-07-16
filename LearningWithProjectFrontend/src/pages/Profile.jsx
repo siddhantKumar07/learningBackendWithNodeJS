@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import EditProfile from "../components/EditProfile";
 import ChangePassword from "../components/ChangePassword";
-
+import { useNavigate } from "react-router-dom";
 const Profile = () => {
+  const navigate = useNavigate()
   const user = useSelector((store) => store.user);
   const [isEditing, setIsEditing] = useState("");
 
@@ -24,7 +25,8 @@ const Profile = () => {
   }
 
   return (
-    <div className="bg-gray-100 flex h-[90%] items-center justify-center p-6 text-black">
+    <div className="bg-gray-100 flex h-[90%] items-center justify-center p-6 relative text-black">
+      <button onClick={()=>{navigate(-1)}} className="rounded-xl px-8 active:scale-90 py-2 bg-black text-white text-xl cursor-pointer absolute top-2 right-2 ">Back</button>
       <div className="bg-white shadow-xl rounded-3xl overflow-hidden w-full max-w-5xl">
         <div className="grid md:grid-cols-3">
           {/* Left Side */}

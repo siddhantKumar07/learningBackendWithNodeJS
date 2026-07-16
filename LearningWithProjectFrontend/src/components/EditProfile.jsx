@@ -59,7 +59,6 @@ transition: Flip,
         <h1 className="text-3xl font-bold">Edit Profile</h1>
 
         <div className="grid md:grid-cols-2 gap-5">
-
           <input
             type="number"
             name="age"

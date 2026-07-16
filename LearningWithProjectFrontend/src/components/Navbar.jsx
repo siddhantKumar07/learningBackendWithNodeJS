@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -8,6 +8,7 @@ const Navbar = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const loggedInData = useSelector((store) => store.user);
+  const [open, setOpen] = useState(false)
 
   const handleLogOut =()=>{
     dispatch(removeUser())
@@ -16,6 +17,7 @@ const Navbar = () => {
     })
     console.log(response.data);
     return navigate("/login")
+
   }
   return (
       <div className="navbar bg-base-300 shadow-sm">
@@ -26,25 +28,26 @@ const Navbar = () => {
  {loggedInData&&(
      <div className="dropdown dropdown-end mr-4 flex gap-2 items-center p-1 ">
       <p className='px-4 font-bold text-lg'>Welcome {loggedInData.firstName}</p>
-      <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+      <div onClick={()=>{setOpen(!open)}} tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
         <div className="w-10 rounded-full">
           <img
             alt="Profile pic"
             src={loggedInData.photoUrl} />
         </div>
       </div>
-      <ul
+{open&&(
+        <ul
         tabIndex="-1"
         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-16 w-52 p-2 shadow">
         <li>
-          <Link to="/profile" className="justify-between">
+          <Link to="/profile" className="justify-between" onClick={()=>{setOpen(false)}}>
             Profile
-            <span className="badge">New</span>
           </Link>
         </li>
         <li><a>Settings</a></li>
         <li><a onClick={handleLogOut}>Logout</a></li>
       </ul>
+)}
     </div>
  )}
   </div>
