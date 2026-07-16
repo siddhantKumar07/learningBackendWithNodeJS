@@ -47,7 +47,7 @@ const Navbar = () => {
         <li><a>Settings</a></li>
         <li>
           <Link to="/connections" onClick={()=>{setOpen(false)}}>
-            Connections
+            ConnectionsRequst
           </Link>
         </li>
         <li><a onClick={handleLogOut}>Logout</a></li>

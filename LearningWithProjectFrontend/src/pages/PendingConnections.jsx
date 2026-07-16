@@ -11,21 +11,42 @@ const Connections = () => {
         const response = await axios.get(base_url + "/user/pendingRequest", {
           withCredentials: true,
         });
-        console.log(response.data.allPendingRequest);
         setConnections(response.data.allPendingRequest);
       } catch (err) {
         console.log(err.response?.data?.message);
       }
     };
     fetchConnections();
-  }, []);
+  },[]);
 
+  const handleClick = async (status,requestId)=>{
+    try{
+const response = await axios.post(base_url+`/request/review/${status}/${requestId}`,{},{withCredentials:true})
+console.log(response.data.message);
+setConnections((prev)=>prev.filter((connection)=>connection.id!==requestId))
+    }
+    catch(err){
+      console.log(err.response?.data?.message);
+    }
+  }
+  if(!connections || connections.length === 0){
+    return (
+      <div className="h-[90%] px-10 py-10 flex flex-wrap flex-col gap-10 justify-center items-center">
+        <h1 className="text-2xl font-bold text-center mt-8">
+          No pending connection requests.
+        </h1>
+        <p className="text-center mt-4">
+          Please check back later or explore other users to send connection requests.
+        </p>
+      </div>
+    );
+  }
   return (
     <div className="h-[90%] px-10 py-10 flex flex-wrap gap-10 justify-center items-center">
       {connections.map((connection) => (
         <div
           className="relative isolate hover-3d w-80 h-3/4 rounded-2xl bg-base-100 shadow-xl transition-transform duration-300 hover:scale-105"
-          key={connection._id}
+          key={connection.id}
         >
           <figure className="relative w-full rounded-2xl">
             <img
@@ -50,6 +71,7 @@ const Connections = () => {
 
               <div className="pointer-events-auto relative z-50 flex items-center justify-between gap-3 mt-3">
                 <button
+                onClick={()=>{handleClick("accepted",connection?.id);}}
                   type="button"
                   className="transform-gpu cursor-pointer rounded-2xl  bg-green-600 px-4 py-2 text-lg text-black transition-transform duration-150 active:scale-90"
                 >
@@ -58,7 +80,7 @@ const Connections = () => {
 
                 <button
                   type="button"
-                  onClick={() => console.log("reject")}
+                  onClick={() => handleClick("rejected", connection?.id)}
                   className="transform-gpu cursor-pointer rounded-2xl bg-red-600 px-4 py-2 text-lg text-white transition-transform duration-150 active:scale-90"
                 >
                   Reject
