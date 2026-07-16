@@ -17,19 +17,20 @@ const Card = ({ user }) => {
           alt="profile"
         />
         <div className="absolute inset-x-0 top-0  p-4 rounded-b-2xl">
-          <div className="flex justify-between text-white font-semibold mt-1">
-            <span className="px-4 py-2 border-2 border-emerald-600 rounded-3xl text-green-900 font-bold text-xl"><i class="ri-arrow-left-long-line"></i>Interested</span>
-            <span className="px-6 py-2 border-2 border-emerald-600 rounded-3xl text-red-700 font-bold text-xl">Ignore<i class="ri-arrow-right-long-line"></i></span>
+          <div className="flex justify-between text-white font-semibold mt-1 gap-2">
+            <span className="px-3 py-2 border-2 border-emerald-600 rounded-3xl text-green-900 font-bold text-xl"><i class="ri-arrow-left-long-line"></i>Interested</span>
+            <span className="px-4 py-2 border-2 border-emerald-600 rounded-3xl text-red-700 font-bold text-xl">Ignore<i class="ri-arrow-right-long-line"></i></span>
           </div>
         </div>
 
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 rounded-b-2xl">
-          <h1 className="text-white text-3xl font-bold">
+          <h1 className="text-cyan-900 text-3xl font-bold capitalize underline">
             {user.firstName} {user.lastName}
           </h1>
-          <div className="flex justify-between text-white font-semibold mt-2">
-            <span>{user.age}</span>
-            <span>{user.gender}</span>
+          <h1 className="text-white font-bold capitalize">{user.about}</h1>
+          <div className="flex justify-between text-white font-semibold mt-2 px-3.5">
+            <span className="text-lg">{user.age}</span>
+            <span className="capitalize text-lg">{user.gender}</span>
           </div>
         </div>
       </figure>
