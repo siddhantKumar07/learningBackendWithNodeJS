@@ -20,11 +20,19 @@ requestRouter.post(
         receiverId: receiverId,
         status: status,
       });
-
-      res.status(200).json({
-        message: `you send the request to ${recieverData.firstName} ${recieverData.lastName} successfully`,
+       
+       if(status === "interested"){
+        return res.status(200).json({
+          message: `you send the request to ${recieverData.firstName} ${recieverData.lastName} successfully`,
+          data: data,
+        });
+       }else{
+          return res.status(200).json({
+        message: `you ignored the request from ${recieverData.firstName} ${recieverData.lastName} successfully`,
         data: data,
       });
+       }
+
     } catch (error) {
       res.status(500).json({
         message: error.message,

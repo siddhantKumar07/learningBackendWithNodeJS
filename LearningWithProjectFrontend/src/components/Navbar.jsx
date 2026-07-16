@@ -45,6 +45,11 @@ const Navbar = () => {
           </Link>
         </li>
         <li><a>Settings</a></li>
+        <li>
+          <Link to="/connections" onClick={()=>{setOpen(false)}}>
+            Connections
+          </Link>
+        </li>
         <li><a onClick={handleLogOut}>Logout</a></li>
       </ul>
 )}

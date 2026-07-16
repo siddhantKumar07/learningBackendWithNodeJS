@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import { ToastContainer, Bounce, toast } from "react-toastify";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { base_url } from "../utils/constants";
-import { useDispatch } from 'react-redux'
-import { addUser } from '../utils/userSlice'
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
+import { addFeed } from "../utils/feedSlice";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        base_url+"/login",
+        base_url + "/login",
         {
           emailId: email,
           password: password,
@@ -24,7 +24,8 @@ const Login = () => {
         },
       );
       console.log(response.data);
-    await fetchProfile();
+      await fetchProfile();
+      await fetchFeed();
       setEmail("");
       setPassword("");
 
@@ -58,15 +59,26 @@ const Login = () => {
       }
     }
   };
-  const fetchProfile = async()=>{
-    const user =await axios.get(base_url+"/profile/view",{
-   withCredentials: true,
-    })
-  if(!user.data){
-    return navigate("/login")
-  }
-    dispatch(addUser(user.data.user))
-  }
+  const fetchProfile = async () => {
+    const user = await axios.get(base_url + "/profile/view", {
+      withCredentials: true,
+    });
+    if (!user.data) {
+      return navigate("/login");
+    }
+    dispatch(addUser(user.data.user));
+  };
+
+  const fetchFeed = async () => {
+    try {
+      const feed = await axios.get(base_url + "/user/feed", {
+        withCredentials: true,
+      });
+      dispatch(addFeed(feed.data.feedUser));
+    } catch (err) {
+      console.log(err.response?.data?.message);
+    }
+  };
 
   return (
     <div className="flex justify-center my-16">

@@ -25,7 +25,7 @@ const Feed = () => {
           setNoUsers(true);
           return;
         }
-
+      console.log("hello i am feed ")
         dispatch(addFeed(response.data.feedUser));
       } catch (err) {
         if (err.response?.status === 404) {
