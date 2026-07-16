@@ -1,7 +1,7 @@
 import React from "react";
 import { motion as Motion } from "framer-motion";
 
-const Card = ({ user }) => {
+const Card = ({ user}) => {
   return (
     <Motion.div
       className="hover-3d relative w-80 h-[32rem] rounded-2xl bg-white shadow-lg overflow-hidden"
@@ -17,7 +17,7 @@ const Card = ({ user }) => {
           alt="profile"
         />
         <div className="absolute inset-x-0 top-0  p-4 rounded-b-2xl">
-          <div className="flex justify-between text-white font-semibold mt-1 gap-2">
+          <div className={`flex justify-between text-white  font-semibold mt-1 gap-2 `}>
             <span className="px-3 py-2 border-2 border-emerald-600 rounded-3xl text-green-900 font-bold text-xl"><i class="ri-arrow-left-long-line"></i>Interested</span>
             <span className="px-4 py-2 border-2 border-emerald-600 rounded-3xl text-red-700 font-bold text-xl">Ignore<i class="ri-arrow-right-long-line"></i></span>
           </div>

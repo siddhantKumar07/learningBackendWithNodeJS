@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { base_url } from "../utils/constants";
 
-const Connections = () => {
+const PendingConnection = () => {
   const [connections, setConnections] = useState([]);
 
   useEffect(() => {
@@ -93,4 +93,4 @@ setConnections((prev)=>prev.filter((connection)=>connection.id!==requestId))
     </div>
   );
 };
-export default Connections;
+export default PendingConnection;

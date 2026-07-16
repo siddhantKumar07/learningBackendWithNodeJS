@@ -38,19 +38,23 @@ const Navbar = () => {
 {open&&(
         <ul
         tabIndex="-1"
-        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-16 w-52 p-2 shadow">
+        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-32 w-52 p-2 shadow">
         <li>
-          <Link to="/profile" className="justify-between" onClick={()=>{setOpen(false)}}>
+          <Link to="/profile" className="justify-between text-lg" onClick={()=>{setOpen(false)}}>
             Profile
           </Link>
         </li>
-        <li><a>Settings</a></li>
-        <li>
-          <Link to="/connections" onClick={()=>{setOpen(false)}}>
-            ConnectionsRequst
+        <li >
+          <Link className='text-lg' to="/pendingConnections" onClick={()=>{setOpen(false)}}>
+            Pending Connections
           </Link>
         </li>
-        <li><a onClick={handleLogOut}>Logout</a></li>
+        <li >
+          <Link className='text-lg' to="/connections" onClick={()=>{setOpen(false)}}>
+            Connections
+          </Link>
+        </li>
+        <li><a className='text-lg' onClick={handleLogOut}>Logout</a></li>
       </ul>
 )}
     </div>

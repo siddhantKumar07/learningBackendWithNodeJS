@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { base_url } from "../utils/constants";
-import { useDispatch } from "react-redux";
+import { useDispatch} from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { toast, Bounce, ToastContainer, Flip } from "react-toastify";
+import Card from "./Card";
 const EditProfile = ({ user, setIsEditing }) => {
   const dispatch = useDispatch();
   const {age, gender, photoUrl, about, skills} = user;
@@ -51,7 +52,7 @@ transition: Flip,
   };
 
   return (
-    <div className="bg-gray-100 text-black min-h-[90vh] flex justify-center items-center p-6">
+    <div className="bg-gray-100 text-black min-h-[90vh] flex justify-center gap-7 items-center p-6">
       <form
         onSubmit={handleSubmit}
         className="bg-white w-full max-w-3xl rounded-3xl shadow-xl p-8 space-y-5"
@@ -122,6 +123,7 @@ transition: Flip,
           </button>
         </div>
       </form>
+    <Card user={formData} />
     </div>
   );
 };

@@ -7,8 +7,9 @@ import { Routes,Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import {store} from './utils/appStore'
 import Feed from './pages/feed'
-import Connections from './pages/PendingConnections'
+import PendingConnection from './pages/PendingConnections'
 import { ToastContainer, Bounce } from 'react-toastify';
+import Connections from './pages/Connection'
 const App = () => {
   return (
     <div>
@@ -18,6 +19,7 @@ const App = () => {
         <Route path='/' index element={<Feed/>} />
         <Route path='profile' element={<Profile />} />
         <Route path='connections' element={<Connections />} />
+        <Route path='pendingConnections' element={<PendingConnection />} />
         </Route>
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
