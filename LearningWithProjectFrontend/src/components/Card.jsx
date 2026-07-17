@@ -1,7 +1,7 @@
 import React from "react";
 import { motion as Motion } from "framer-motion";
 
-const Card = ({ user}) => {
+const Card = ({firstName,lastName,age,about,gender,show,photoUrl}) => {
   return (
     <Motion.div
       className="hover-3d relative w-80 h-[32rem] rounded-2xl bg-white shadow-lg overflow-hidden"
@@ -13,24 +13,28 @@ const Card = ({ user}) => {
       <figure className="relative w-full h-full">
         <img
           className="w-full h-full object-cover rounded-2xl"
-          src={user.photoUrl}
+          src={photoUrl}
           alt="profile"
         />
         <div className="absolute inset-x-0 top-0  p-4 rounded-b-2xl">
-          <div className={`flex justify-between text-white  font-semibold mt-1 gap-2 `}>
+  {
+    show &&(
+              <div className={`flex justify-between text-white  font-semibold mt-1 gap-2 `}>
             <span className="px-3 py-2 border-2 border-emerald-600 rounded-3xl text-green-900 font-bold text-xl"><i class="ri-arrow-left-long-line"></i>Interested</span>
             <span className="px-4 py-2 border-2 border-emerald-600 rounded-3xl text-red-700 font-bold text-xl">Ignore<i class="ri-arrow-right-long-line"></i></span>
           </div>
+    )
+  }
         </div>
 
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 rounded-b-2xl">
           <h1 className="text-cyan-900 text-3xl font-bold capitalize underline">
-            {user.firstName} {user.lastName}
+            {firstName} {lastName}
           </h1>
-          <h1 className="text-white font-bold capitalize">{user.about}</h1>
+          <h1 className="text-white font-bold capitalize">{about}</h1>
           <div className="flex justify-between text-white font-semibold mt-2 px-3.5">
-            <span className="text-lg">{user.age}</span>
-            <span className="capitalize text-lg">{user.gender}</span>
+            <span className="text-lg">{age}</span>
+            <span className="capitalize text-lg">{gender}</span>
           </div>
         </div>
       </figure>

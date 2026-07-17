@@ -120,7 +120,7 @@ const Feed = () => {
           }}
           style={{ zIndex: 2 }}
         >
-          <Card user={activeUser} />
+          <Card firstName={activeUser.firstName} lastName={activeUser.lastName} about={activeUser.about} age={activeUser.age} gender={activeUser.gender} photoUrl={activeUser.photoUrl} show={true} />
         </Motion.div>
       )}
     </div>

@@ -123,7 +123,7 @@ transition: Flip,
           </button>
         </div>
       </form>
-    <Card user={formData} />
+    <Card firstName={user.firstName} lastName={user.lastName} about={formData.about} age={formData.age} gender={formData.gender} photoUrl={formData.photoUrl} show={false} />
     </div>
   );
 };
