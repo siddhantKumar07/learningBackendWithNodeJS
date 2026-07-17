@@ -3,33 +3,46 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { base_url } from "../utils/constants";
+import { createConnection } from "../utils/socketClient";
+import { Socket } from "socket.io-client";
+const EMPTY_CONNECTIONS = [];
 
 const ChatSection = () => {
   const { id } = useParams();
-  const allConnections = useSelector((store) => store.connections || []);
+  const allConnections = useSelector((store) => store.connections) ?? EMPTY_CONNECTIONS;
+  const sender = useSelector((store) => store.user);
   const [receiver, setReceiver] = useState(null);
-const sender = useSelector((store) => store.user || null);
+  const [newMessage, setNewMessage] = useState("")
+
   useEffect(() => {
+
     const fromStore = allConnections.find((c) => c._id === id);
     if (fromStore) {
       setReceiver(fromStore);
-      return;
+    } else {
+      const loadConnections = async () => {
+        try {
+          const res = await axios.get(base_url + "/user/connections", {
+            withCredentials: true,
+          });
+          const found = (res.data.allConnections || []).find((c) => c._id === id);
+          setReceiver(found || null);
+        } catch (err) {
+          console.log(err.response?.data?.message || "Failed to load receiver");
+        }
+      };
+      loadConnections();
     }
 
-    const loadConnections = async () => {
-      try {
-        const res = await axios.get(base_url + "/user/connections", {
-          withCredentials: true,
-        });
-        const found = (res.data.allConnections || []).find((c) => c._id === id);
-        setReceiver(found || null);
-      } catch (err) {
-        console.log(err.response?.data?.message || "Failed to load receiver");
-      }
-    };
+  }, [id, allConnections]);
 
-    loadConnections();
-  }, [allConnections, id]);
+  useEffect(() => {
+    if (!sender?._id || !receiver?._id) return;
+    const socket = createConnection();
+        console.log(`Joined chat room for sender: ${sender._id} and receiver: ${receiver._id}`);
+    socket.emit("joinChat", { senderId: sender._id, receiverId: receiver._id });
+    return () => socket.disconnect();
+  }, [sender?._id, receiver?._id]);
 
   if (!receiver) {
     return (
@@ -37,6 +50,10 @@ const sender = useSelector((store) => store.user || null);
         Loading chat...
       </div>
     );
+  }
+  const sendMessage = () => {
+  Socket.emit("sendMessage", { senderId: sender._id, receiverId: receiver._id, message: newMessage });
+  setNewMessage("");
   }
 
   return (
@@ -94,11 +111,13 @@ const sender = useSelector((store) => store.user || null);
           <div>some</div>
           <div>some</div>
           <input
+          value={newMessage}
+          onChange={(e)=>{setNewMessage(e.target.value)}}
             className="w-[70%] text-black font-bold text-2xl outline-none h-[90%]"
             type="text"
             placeholder="Enter your Message!!!!!!"
           />
-          <button className="h-[70%] w-20 font-semibold rounded-3xl bg-blue-400 ml-auto text-xl cursor-pointer active:scale-90">
+          <button onClick={sendMessage} className="h-[70%] w-20 font-semibold rounded-3xl bg-blue-400 ml-auto text-xl cursor-pointer active:scale-90">
             Send
           </button>
         </div>
