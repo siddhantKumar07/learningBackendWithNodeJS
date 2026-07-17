@@ -27,6 +27,7 @@ const Navbar = () => {
   <div className="flex gap-2">
  {loggedInData&&(
      <div className="dropdown dropdown-end mr-4 flex gap-2 items-center p-1 ">
+      <Link className='text-2xl text-white font-semibold' to={"/chat"}>Chat</Link>
       <p className='px-4 font-bold text-lg'>Welcome {loggedInData.firstName}</p>
       <div onClick={()=>{setOpen(!open)}} tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
         <div className="w-10 rounded-full">
@@ -56,6 +57,7 @@ const Navbar = () => {
         </li>
         <li><a className='text-lg' onClick={handleLogOut}>Logout</a></li>
       </ul>
+
 )}
     </div>
  )}
