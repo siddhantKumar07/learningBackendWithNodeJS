@@ -38,7 +38,7 @@ const Navbar = () => {
 {open&&(
         <ul
         tabIndex="-1"
-        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-32 w-52 p-2 shadow">
+        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-32 w-72 p-2 shadow">
         <li>
           <Link to="/profile" className="justify-between text-lg" onClick={()=>{setOpen(false)}}>
             Profile

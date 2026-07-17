@@ -29,7 +29,7 @@ const Connection = () => {
   return (
     <div className="bg-gray-100 text-black min-h-[90vh] flex justify-center gap-7 items-center p-6">
       {data && data.length > 0 ? (
-        data.map((connec) => <Card key={connec._id} firstName={connec.firstName} lastName={connec.lastName} about={connec.about} age={connec.age} gender={connec.gender} photoUrl={connec.photoUrl} show={false} />)
+        data.map((connec) => <Card key={connec._id} user={connec} show={false} />)
       ) : (
         <div className="h-[90%] px-10 py-10 flex flex-wrap flex-col gap-10 justify-center items-center">
           <h1 className="text-2xl font-bold text-center mt-8">No connections found.</h1>

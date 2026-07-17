@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ToastContainer, Bounce, toast } from "react-toastify";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { base_url } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
@@ -112,6 +112,9 @@ const Login = () => {
         >
           Login
         </button>
+        <Link to="/signup" className="text-blue-500 hover:underline text-center mt-2">  
+        Don't have an account? Register
+      </Link>
       </fieldset>
       <ToastContainer
         position="top-right"
