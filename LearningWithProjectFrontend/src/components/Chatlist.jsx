@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { base_url } from "../utils/constants";
-
+import { Navigate, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addConnection } from "../utils/connectionSlice";
 const Chatlist = () => {
+    const dispatch = useDispatch();
 const [data, setData] = useState(null)
+const navigate = useNavigate();
+   const handleClick=(id)=>{
+    console.log("clicked",id);
+    navigate(`/chat/${id}`);
+    
+   }
 
   useEffect(() => {
     const loadConnections = async () => {
@@ -12,6 +21,7 @@ const [data, setData] = useState(null)
           withCredentials: true,
         });
         setData(res.data.allConnections);
+        dispatch(addConnection(res.data.allConnections));
       } catch (err) {
         console.log(err.response?.data?.message || "Failed to load connections");
       }
@@ -20,12 +30,13 @@ const [data, setData] = useState(null)
   }, []);
 
   return (
-    <div className="w-[22rem] h-full bg-amber-200 flex items-center scrollbar-none flex-col py-4 justify-start overflow-auto gap-3">
+    <div className="w-[30%] h-full bg-amber-200 flex items-center scrollbar-none flex-col py-4 justify-start overflow-auto gap-3">
       {data && data.length > 0 ? (
         data.map((connection) => (
           <div
+          onClick={()=>{handleClick(connection._id)}}
             key={connection._id}
-            className="w-[96%] shrink-0 h-20 bg-emerald-400 border-2 flex items-center gap-4 px-4 rounded-lg"
+            className={`w-[96%] cursor-pointer bg-blue-400 shrink-0 h-20 border-2 flex items-center gap-4 px-4 rounded-lg`}
           >
             <img
               src={connection.photoUrl}
