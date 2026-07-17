@@ -26,7 +26,7 @@ const Connection = () => {
     handleConnection();
   }, [dispatch]);
   return (
-    <div className="bg-gray-100 text-black min-h-[90vh] flex justify-center gap-7 items-center p-6">
+    <div className="bg-gray-100 text-black min-h-[90vh] flex justify-center flex-wrap gap-7 items-center p-6">
       {data && data.length > 0 ? (
         data.map((connec) => <Card key={connec._id} user={connec} />)
       ) : (

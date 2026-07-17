@@ -7,10 +7,14 @@ import { toast, Bounce, ToastContainer, Flip } from "react-toastify";
 import Card from "./Card";
 const EditProfile = ({ user, setIsEditing }) => {
   const dispatch = useDispatch();
-  const {age, gender, photoUrl, about, skills} = user;
+  const { age, gender, photoUrl, about, skills = [] } = user;
+
   const [formData, setFormData] = useState({
-    age,gender,photoUrl,about,
-    skills: skills.join(", "),
+    age,
+    gender,
+    photoUrl,
+    about,
+    skills: Array.isArray(skills) ? skills.join(", ") : String(skills || ""),
   });
 
   const handleChange = (e) => {
@@ -20,12 +24,15 @@ const EditProfile = ({ user, setIsEditing }) => {
     }));
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const updatedUser = {
       ...formData,
-      skills: formData.skills.split(",").map((s) => s.trim()),
+      skills: formData.skills
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
     };
 
     try{
@@ -123,7 +130,7 @@ transition: Flip,
           </button>
         </div>
       </form>
-    <Card firstName={user.firstName} lastName={user.lastName} about={formData.about} age={formData.age} gender={formData.gender} photoUrl={formData.photoUrl} show={false} />
+    <Card user={formData} />
     </div>
   );
 };

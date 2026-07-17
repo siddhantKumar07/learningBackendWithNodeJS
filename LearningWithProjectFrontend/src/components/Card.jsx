@@ -1,7 +1,9 @@
 import React from "react";
 import { motion as Motion } from "framer-motion";
+import { useSelector } from "react-redux";
 
 const Card = ({ user,show}) => {
+  const storedUser = useSelector((store) => store.user);
   return (
     <Motion.div
       className="hover-3d relative w-80 h-[32rem] rounded-2xl bg-white shadow-lg overflow-hidden"
@@ -29,9 +31,25 @@ const Card = ({ user,show}) => {
 
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 rounded-b-2xl">
           <h1 className="text-cyan-900 text-3xl font-bold capitalize underline">
-            {user.firstName} {user.lastName}
+            {user.firstName?user.firstName:storedUser.firstName} {user.lastName?user.lastName:storedUser.lastName}
           </h1>
           <h1 className="text-white font-bold capitalize">{user.about}</h1>
+          <div>
+            {Array.isArray(user.skills) && user.skills.length > 0 ? (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {user.skills.map((skill, index) => (
+                  <span
+                    key={index}
+                    className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p className="text-white mt-2">No skills listed</p>
+            )}
+          </div>
           <div className="flex justify-between text-white font-semibold mt-2 px-3.5">
             <span className="text-lg">{user.age}</span>
             <span className="capitalize text-lg">{user.gender}</span>
