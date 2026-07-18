@@ -2,7 +2,6 @@ const { userAuth } = require("../middleware/auth");
 const chatModel = require("../model/chat");
 const express = require("express");
 const messageRouter = express.Router();
-
 messageRouter.get("/messages/:senderId/:receiverId",userAuth,async(req,res)=>{
     
 try{

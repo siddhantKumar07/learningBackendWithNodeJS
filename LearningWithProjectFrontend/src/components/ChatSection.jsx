@@ -8,6 +8,7 @@ import { useRef } from "react";
 const EMPTY_CONNECTIONS = [];
 
 const ChatSection = () => {
+  const chatRef = useRef(null);
   const { id } = useParams();
   const allConnections = useSelector((store) => store.connections) ?? EMPTY_CONNECTIONS;
   const sender = useSelector((store) => store.user);
@@ -18,6 +19,8 @@ const ChatSection = () => {
 
   const socketRef = useRef(null);
    useEffect(() => {
+    setReceiver(null);
+    setStoreMessage([]);
     const fromStore = allConnections.find((c) => c._id === id);
 
     if (fromStore) {
@@ -54,14 +57,8 @@ socketRef.current = createConnection();
       console.log(storeMessage);
     });
 
-    return () => {
-      socketRef.current .disconnect();
-    };
-  }, [sender?._id, receiver?._id]);
-   
-
-  useEffect(()=>{
-  try{
+    // for to fetch the previous messages from the database
+      try{
     const fetchMessageOnLoad =async()=>{
       const res = await axios.get(base_url+`/messages/${sender._id}/${receiver._id}`,{
         withCredentials:true
@@ -76,11 +73,28 @@ socketRef.current = createConnection();
       }))
     }
 fetchMessageOnLoad();
+
   }catch(error){
 console.log(error.message);
+ }
 
-  }
-  },[sender?._id, receiver?._id])
+    return () => {
+      socketRef.current .disconnect();
+    };
+  }, [sender?._id, receiver?._id]);
+   
+
+
+useEffect(() => {
+  const chat = chatRef.current;
+
+  if (!chat) return;
+
+  chat.scrollTo({
+    top: chat.scrollHeight,
+    behavior: "smooth",
+  });
+}, [storeMessage]);
 
 
 
@@ -125,7 +139,7 @@ console.log(error.message);
           {receiver.firstName} {receiver.lastName}
         </h1>
       </nav>
-      <section className="h-[80%] w-full bg-green-300 px-7 py-5 flex flex-col gap-3 overflow-auto text-black text-xl">
+      <section ref={chatRef} className="h-[80%] w-full bg-green-300 px-7 py-5 flex flex-col gap-3 overflow-auto text-black text-xl">
         {storeMessage.map((data,index)=>{
           return  (
            data.senderName === sender.firstName ?(
