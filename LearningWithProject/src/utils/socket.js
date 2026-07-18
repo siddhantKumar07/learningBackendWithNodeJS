@@ -22,33 +22,31 @@ io.on("connection",(socket)=>{
         socket.join(roomId);
     })
 
-    socket.on("sendMessage",async({firstName,senderId,receiverId,receiverName,message})=>{
-        const roomId = createRoomId(senderId,receiverId);
-        console.log("message sent to room:"+roomId);
-        console.log("message:"+message+" from:"+firstName );
-       
-        try{
-   const user = await chatModel.findOne({participants:{$all:[senderId,receiverId]}});
-   if(user){
-    user.messages.push({senderId,text:message});
-    user.save();
-   }else{
-    const newChat = await new chatModel({
-        participants:[senderId,receiverId],
-        messages:[{senderId,text:message}]
-    })
-    await newChat.save();
-        io.to(roomId).emit("receiveMessage",{firstName,receiverName,message,timestamp:new Date().toISOString()}); 
+    socket.on("sendMessage", async ({ senderName, senderId, receiverId,receiverName, message }) => {
+        const roomId = createRoomId(senderId, receiverId);
+        try {
+            const user = await chatModel.findOne({ participants: { $all: [senderId, receiverId] } });
 
-   }
+            if (user) {
+                user.messages.push({ senderId, message: message });
+                await user.save();
+            } else {
+                const newChat = new chatModel({
+                    participants: [senderId, receiverId],
+                    messages: [{ senderId, message: message }]
+                });
+                await newChat.save();
+            }
 
-        }catch(err){
+            io.to(roomId).emit("receiveMessage", {
+                senderName,
+                receiverName,
+                message,
+                timestamp: new Date().toISOString()
+            });
+        } catch (err) {
             console.log(err);
         }
-
-
-
-        
     })
 
     socket.on("disconnect",()=>{})

@@ -4,55 +4,93 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { base_url } from "../utils/constants";
 import { createConnection } from "../utils/socketClient";
+import { useRef } from "react";
 const EMPTY_CONNECTIONS = [];
 
 const ChatSection = () => {
   const { id } = useParams();
-  const allConnections =
-    useSelector((store) => store.connections) ?? EMPTY_CONNECTIONS;
+  const allConnections = useSelector((store) => store.connections) ?? EMPTY_CONNECTIONS;
   const sender = useSelector((store) => store.user);
+
   const [receiver, setReceiver] = useState(null);
   const [newMessage, setNewMessage] = useState("");
-  const [storeMessage, setStoreMessage] = useState([])
+  const [storeMessage, setStoreMessage] = useState([]);
 
-  useEffect(() => {
+  const socketRef = useRef(null);
+   useEffect(() => {
     const fromStore = allConnections.find((c) => c._id === id);
+
     if (fromStore) {
       setReceiver(fromStore);
+      console.log("Receiver found in store:", fromStore);
     } else {
       const loadConnections = async () => {
         try {
           const res = await axios.get(base_url + "/user/connections", {
             withCredentials: true,
           });
-          const found = (res.data.allConnections || []).find(
-            (c) => c._id === id,
-          );
+          const found = (res.data.allConnections || []).find((c) => c._id === id);
           setReceiver(found || null);
         } catch (err) {
           console.log(err.response?.data?.message || "Failed to load receiver");
         }
       };
+
       loadConnections();
     }
   }, [id, allConnections]);
 
   useEffect(() => {
     if (!sender?._id || !receiver?._id) return;
-    const socket = createConnection();
-    console.log(
-      `Joined chat room for sender: ${sender._id} and receiver: ${receiver._id}`,
-    );
-    socket.emit("joinChat", { senderId: sender._id, receiverId: receiver._id });
+socketRef.current = createConnection();
 
-    socket.on("receiveMessage", ({ firstName,receiverName, message }) => {
-      console.log( `Received message from ${firstName} : ${message}`,);
-      setStoreMessage((prevMess)=>[...prevMess,{firstName,receiverName,message}]);
+    socketRef.current .emit("joinChat", {
+      senderId: sender._id,
+      receiverId: receiver._id,
     });
 
-    return () => socket.disconnect();
-  }, [sender?._id, receiver?._id,storeMessage]);
+    socketRef.current .on("receiveMessage", ({ senderName, receiverName, message,timestamp }) => {
+      setStoreMessage((prev) => [...prev, { senderName, receiverName, message, timestamp }]);
+      console.log(storeMessage);
+    });
 
+    return () => {
+      socketRef.current .disconnect();
+    };
+  }, [sender?._id, receiver?._id]);
+   
+
+  useEffect(()=>{
+  try{
+    const fetchMessageOnLoad =async()=>{
+      const res = await axios.get(base_url+`/messages/${sender._id}/${receiver._id}`,{
+        withCredentials:true
+      })
+      setStoreMessage(res.data.chat.messages.map((msg)=>{
+        return {
+          senderName:msg.senderId.firstName,
+          receiverName:receiver.firstName,
+          message:msg.message,
+          timestamp:msg.createdAt
+        }
+      }))
+    }
+fetchMessageOnLoad();
+  }catch(error){
+console.log(error.message);
+
+  }
+  },[sender?._id, receiver?._id])
+
+
+
+  if(!storeMessage){
+    return (
+      <div className="h-full w-full flex items-center justify-center text-white">
+        Loading messages...
+      </div>
+    );
+  }
   if (!receiver) {
     return (
       <div className="h-full w-full flex items-center justify-center text-white">
@@ -60,13 +98,14 @@ const ChatSection = () => {
       </div>
     );
   }
+
   const sendMessage = () => {
-    const socket = createConnection();
-    socket.emit("sendMessage", {
-      firstName: sender.firstName,
+    socketRef.current .emit("sendMessage", {
+      senderName: sender.firstName,
       senderId: sender._id,
       receiverId: receiver._id,
       receiverName: receiver.firstName,
+      timestamp: new Date().toISOString(),
       message: newMessage,
     });
     setNewMessage("");
@@ -89,36 +128,36 @@ const ChatSection = () => {
       <section className="h-[80%] w-full bg-green-300 px-7 py-5 flex flex-col gap-3 overflow-auto text-black text-xl">
         {storeMessage.map((data,index)=>{
           return  (
-            receiver.firstName===data.receiverName?(
-        <div className="chat chat-start" key={index}>
-          <div className="chat-image avatar">
-            <div className="w-10 rounded-full">
-              <img
-                alt="img"
-                src={receiver.photoUrl}
-              />
-            </div>
-          </div>
-          <div className="chat-header">
-            {receiver.firstName}
-            <time className="text-xs opacity-50">12:45</time>
-          </div>
-          <div className="chat-bubble">{data.message}</div>
-          <div className="chat-footer opacity-50">Delivered</div>
-        </div>
-            ):(
+           data.senderName === sender.firstName ?(
         <div className="chat chat-end" key={index}>
           <div className="chat-image avatar">
             <div className="w-10 rounded-full">
               <img
                 alt="img"
-                src={sender?.photoUrl || "https://via.placeholder.com/150"}
+                src={sender.photoUrl}
               />
             </div>
           </div>
           <div className="chat-header">
             {sender?.firstName || "You"}
-            <time className="text-xs opacity-50">12:46</time>
+            <time className="text-xs opacity-50">{data.timestamp}</time>
+          </div>
+          <div className="chat-bubble">{data.message}</div>
+          <div className="chat-footer opacity-50">Delivered</div>
+        </div>
+            ):(
+        <div className="chat chat-start" key={index}>
+          <div className="chat-image avatar">
+            <div className="w-10 rounded-full">
+              <img
+                alt="img"
+                src={receiver?.photoUrl || "https://via.placeholder.com/150"}
+              />
+            </div>
+          </div>
+          <div className="chat-header">
+            {receiver?.firstName || "You"}
+            <time className="text-xs opacity-50">{data.timestamp}</time>
           </div>
           <div className="chat-bubble">{data.message}</div>
           <div className="chat-footer opacity-50">Seen at 12:46</div>

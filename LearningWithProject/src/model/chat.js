@@ -6,7 +6,7 @@ const messageSchema = new  mongoose.Schema({
         ref:"user",
         required:true
     },
-    text:{
+    message:{
         type:String,
         required:true
     } 
