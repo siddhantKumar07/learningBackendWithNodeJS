@@ -5,6 +5,7 @@ import axios from "axios";
 import { base_url } from "../utils/constants";
 import { createConnection } from "../utils/socketClient";
 import { useRef } from "react";
+import { Images, Smile,Camera} from "lucide-react";
 const EMPTY_CONNECTIONS = [];
 
 const ChatSection = () => {
@@ -135,7 +136,7 @@ useEffect(() => {
             alt=""
           />
         </div>
-        <h1 className="text-4xl font-semibold text-white capitalize">
+        <h1 className="text-2xl font-semibold text-white capitalize">
           {receiver.firstName} {receiver.lastName}
         </h1>
       </nav>
@@ -156,7 +157,7 @@ useEffect(() => {
             {sender?.firstName || "You"}
             <time className="text-xs opacity-50">{data.timestamp}</time>
           </div>
-          <div className="chat-bubble">{data.message}</div>
+          <div className="chat-bubble bg-red-700 backdrop-blur-3xl shadow-2xl font-semibold max-w-120">{data.message}</div>
           <div className="chat-footer opacity-50">Delivered</div>
         </div>
             ):(
@@ -173,7 +174,7 @@ useEffect(() => {
             {receiver?.firstName || "You"}
             <time className="text-xs opacity-50">{data.timestamp}</time>
           </div>
-          <div className="chat-bubble">{data.message}</div>
+          <div className="chat-bubble backdrop-blur-3xl bg-purple-700 max-w-120 font-semibold shadow-2xl">{data.message}</div>
           <div className="chat-footer opacity-50">Seen at 12:46</div>
         </div>
             )
@@ -184,21 +185,25 @@ useEffect(() => {
       </section>
 
       <section className="h-20 mb-2 px-5 py-2">
-        <div className="w-full h-full rounded-4xl flex items-center bg-gray-500 text-black px-5 gap-10">
-          <div>some</div>
-          <div>some</div>
-          <input
+        <div className="w-full h-full rounded-4xl flex items-center  text-black px-5 gap-10">
+          <div><Camera className="cursor-pointer" size={36} strokeWidth={1.75} /></div>
+          <div><Images className="cursor-pointer"  size={36} strokeWidth={1.75} /></div>
+          <div className="w-[70%] backdrop-blur-3xl bg-black/40 rounded-full  text-white h-[90%] flex items-center gap-3 px-5"
+>
+            <input
             value={newMessage}
             onChange={(e) => {
               setNewMessage(e.target.value);
             }}
-            className="w-[70%] text-black font-bold text-2xl outline-none h-[90%]"
+            className="w-[95%]  rounded-full px-7 text-white font-semibold text-2xl outline-none h-[90%]"
             type="text"
             placeholder="Enter your Message!!!!!!"
           />
+           <Smile className="cursor-pointer" size={36} />
+          </div>
           <button
             onClick={sendMessage}
-            className="h-[70%] w-20 font-semibold rounded-3xl bg-blue-400 ml-auto text-xl cursor-pointer active:scale-90"
+            className="h-[80%] w-40 font-semibold rounded-3xl bg-blue-400 ml-auto text-2xl cursor-pointer active:scale-90"
           >
             Send
           </button>
