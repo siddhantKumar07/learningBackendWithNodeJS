@@ -126,8 +126,8 @@ useEffect(() => {
   };
 
   return (
-    <div className="bg-fuchsia-700 h-full w-full flex flex-col justify-between border-l-4 border-black">
-      <nav className="w-full flex items-center justify-start gap-10 h-16 border-b-2 bg-white text-black px-5">
+    <div className=" h-full w-full flex flex-col backdrop-blur-3xl bg-white/5 justify-between border-l-2 border-black">
+      <nav className="w-full flex items-center justify-start gap-8 h-16 backdrop-blur-3xl   bg-black/40 border-transparent border-2  px-5">
         <div className="w-14 h-14 rounded-full border-2">
           <img
             className="rounded-full h-14 w-14 object-cover border"
@@ -135,11 +135,11 @@ useEffect(() => {
             alt=""
           />
         </div>
-        <h1 className="text-4xl font-semibold text-gray-800 capitalize">
+        <h1 className="text-4xl font-semibold text-white capitalize">
           {receiver.firstName} {receiver.lastName}
         </h1>
       </nav>
-      <section ref={chatRef} className="h-[80%] w-full bg-green-300 px-7 py-5 flex flex-col gap-3 overflow-auto text-black text-xl">
+      <section ref={chatRef} className="h-[80%] w-full  px-7 py-5 flex flex-col gap-3 overflow-auto text-black text-xl">
         {storeMessage.map((data,index)=>{
           return  (
            data.senderName === sender.firstName ?(
