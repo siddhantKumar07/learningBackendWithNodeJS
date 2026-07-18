@@ -30,13 +30,13 @@ const navigate = useNavigate();
   }, []);
 
   return (
-    <div className="w-[30%] h-full bg-amber-200 flex items-center scrollbar-none flex-col py-4 justify-start overflow-auto gap-3">
+    <div className="w-[30%] h-full  flex items-center scrollbar-none flex-col py-4 justify-start overflow-auto gap-3">
       {data && data.length > 0 ? (
         data.map((connection) => (
           <div
           onClick={()=>{handleClick(connection._id)}}
             key={connection._id}
-            className={`w-[96%] cursor-pointer bg-blue-400 shrink-0 h-20 border-2 flex items-center gap-4 px-4 rounded-lg`}
+            className={`w-[96%] cursor-pointer  shrink-0 h-20 border-2 flex items-center gap-4 px-4 rounded-lg`}
           >
             <img
               src={connection.photoUrl}

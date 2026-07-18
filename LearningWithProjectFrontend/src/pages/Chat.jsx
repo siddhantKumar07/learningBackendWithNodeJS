@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom'
 
 const Chat = () => {
   return (
-    <div className='overflow-hidden w-full h-[91%] flex items-center justify-between '>
+    <div className='overflow-hidden bg w-full h-[91%] flex items-center justify-between '>
         <Chatlist/>
           <Outlet/>
     </div>
