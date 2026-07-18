@@ -11,15 +11,16 @@ cors:{
 io.on("connection",(socket)=>{
    
     socket.on("joinChat",({senderId,receiverId})=>{
-        const roomId = [senderId,receiverId].sort.join("_");
+        const roomId = [senderId,receiverId].sort().join("_");
         console.log("user joined room:"+roomId);
         socket.join(roomId);
     })
 
-    socket.on("sendMessage",({senderId,receiverId,message})=>{
+    socket.on("sendMessage",({firstName,senderId,receiverId,receiverName,message})=>{
         const roomId = [senderId,receiverId].sort().join("_");
         console.log("message sent to room:"+roomId);
-        io.to(roomId).emit("receiveMessage",{senderId,receiverId,message}); 
+        console.log("message:"+message+" from:"+firstName );
+        io.to(roomId).emit("receiveMessage",{firstName,receiverName,message}); 
         
     })
 
