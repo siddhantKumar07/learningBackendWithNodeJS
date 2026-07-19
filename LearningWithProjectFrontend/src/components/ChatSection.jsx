@@ -59,6 +59,7 @@ const ChatSection = () => {
     });
 
     socketRef.current.on("receiveMessage", ({ senderId, senderName, receiverName, message, timestamp }) => {
+      
       setStoreMessage((prev) => [
         ...prev,
         {
@@ -114,7 +115,6 @@ const ChatSection = () => {
 
   const sendMessage = () => {
     if (!socketRef.current || !sender?._id || !receiver?._id || !newMessage.trim()) return;
-
     socketRef.current.emit("sendMessage", {
       senderName: sender.firstName,
       senderId: sender._id,

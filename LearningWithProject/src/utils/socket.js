@@ -18,7 +18,6 @@ io.on("connection",(socket)=>{
    
     socket.on("joinChat",({senderId,receiverId})=>{
         const roomId = createRoomId(senderId,receiverId);
-        console.log("user joined room:"+roomId);
         socket.join(roomId);
     })
 
@@ -40,6 +39,7 @@ io.on("connection",(socket)=>{
 
             io.to(roomId).emit("receiveMessage", {
                 senderName,
+                senderId,
                 receiverName,
                 message,
                 timestamp: new Date().toISOString()
