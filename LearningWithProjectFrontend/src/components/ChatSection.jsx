@@ -216,6 +216,12 @@ const ChatSection = () => {
           <div><Images className="cursor-pointer" size={24} strokeWidth={1.75} /></div>
           <div className="w-[70%] backdrop-blur-3xl bg-black/40 rounded-full text-white h-[90%] flex items-center gap-3 px-5">
             <input
+           onKeyDown={(e)=>{
+           if(e.key === "Enter") {
+            e.preventDefault();
+            sendMessage();
+           }
+           }}
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               className="w-[95%] rounded-full px-7 text-white font-semibold text-2xl outline-none h-[90%]"
