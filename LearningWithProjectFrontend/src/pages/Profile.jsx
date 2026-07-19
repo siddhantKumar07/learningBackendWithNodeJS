@@ -25,7 +25,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="bg-gray-100 flex h-[90%] items-center justify-center p-6 relative text-black">
+    <div className="bg-gray-100 flex h-[90%] w-[70%] px-2 items-center justify-center p-6 relative text-black">
       <button onClick={()=>{navigate(-1)}} className="rounded-xl px-8 active:scale-90 py-2 bg-black text-white text-xl cursor-pointer absolute top-2 right-2 ">Back</button>
       <div className="bg-white shadow-xl rounded-3xl overflow-hidden w-full max-w-5xl">
         <div className="grid md:grid-cols-3">

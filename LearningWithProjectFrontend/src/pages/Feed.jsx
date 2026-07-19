@@ -77,12 +77,12 @@ const Feed = () => {
   const activeUser = visibleUsers.length === 2 ? visibleUsers[1] : visibleUsers[0];
 
   return (
-    <div className="relative flex items-center justify-center h-[90%] w-[75%] ">
+    <div className="relative bg-[#0B1326] flex items-center justify-center h-full w-full overflow-hidden">
       {backUser && (
         <Motion.div
           className="absolute"
-          initial={{ scale: 0.92, y: 25, opacity: 0.75 }}
-          animate={{ scale: 0.92, y: 25, opacity: 0.75 }}
+          initial={{ scale: 0.92, y: 12, opacity: 0.75 }}
+          animate={{ scale: 0.92, y: 12, opacity: 0.75 }}
           transition={{ duration: 0.2 }}
           style={{ zIndex: 1 }}
         >

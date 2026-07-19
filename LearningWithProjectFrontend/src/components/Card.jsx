@@ -6,7 +6,7 @@ const Card = ({ user,show}) => {
   const storedUser = useSelector((store) => store.user);
   return (
     <Motion.div
-      className="hover-3d relative w-96 h-[32rem] bg-cover rounded-2xl bg-white shadow-lg overflow-hidden"
+      className="hover-3d relative w-[min(24rem,92vw)] h-[min(32rem,78vh)] bg-cover rounded-2xl bg-white shadow-lg overflow-hidden"
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       whileHover={{ scale: 1.02 }}

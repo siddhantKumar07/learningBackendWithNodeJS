@@ -31,10 +31,12 @@ const Home = () => {
   if (isLoading) return null
 
   return (
-    <div className='h-[100vh] '>
+    <div className='h-[100vh] overflow-hidden '>
         <Navbar/>
+       <div className='flex justify-between items-center h-[92%] w-full'>
         <SideBar/>
         <Outlet/>
+       </div>
     </div>
   )
 }
