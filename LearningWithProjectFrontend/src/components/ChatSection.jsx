@@ -210,10 +210,10 @@ const ChatSection = () => {
 
       </section>  
 
-      <section className="h-20 px-5 py-2 backdrop-blur-3xl bg-black/40">
+      <section className="h-16 px-5 py-2 backdrop-blur-3xl bg-black/40">
         <div className="w-full h-full rounded-4xl flex items-center text-black px-5 gap-10">
-          <div><Camera className="cursor-pointer" size={36} strokeWidth={1.75} /></div>
-          <div><Images className="cursor-pointer" size={36} strokeWidth={1.75} /></div>
+          <div><Camera className="cursor-pointer" size={24} strokeWidth={1.75} /></div>
+          <div><Images className="cursor-pointer" size={24} strokeWidth={1.75} /></div>
           <div className="w-[70%] backdrop-blur-3xl bg-black/40 rounded-full text-white h-[90%] flex items-center gap-3 px-5">
             <input
               value={newMessage}
@@ -222,11 +222,11 @@ const ChatSection = () => {
               type="text"
               placeholder="Enter your Message!!!!!!"
             />
-            <Smile className="cursor-pointer" size={36} />
+            <Smile className="cursor-pointer" size={24} />
           </div>
           <button
             onClick={sendMessage}
-            className="h-[80%] w-40 font-semibold rounded-3xl bg-blue-400 ml-auto text-2xl cursor-pointer active:scale-90"
+            className="h-[80%] w-35 font-semibold rounded-3xl bg-blue-400 ml-auto text-2xl cursor-pointer active:scale-90"
           >
             Send
           </button>
