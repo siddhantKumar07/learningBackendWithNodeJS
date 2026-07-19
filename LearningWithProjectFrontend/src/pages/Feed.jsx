@@ -77,7 +77,7 @@ const Feed = () => {
   const activeUser = visibleUsers.length === 2 ? visibleUsers[1] : visibleUsers[0];
 
   return (
-    <div className="relative flex items-center justify-center h-[90vh] overflow-hidden">
+    <div className="relative flex items-center justify-center h-[90%] w-[75%] ">
       {backUser && (
         <Motion.div
           className="absolute"

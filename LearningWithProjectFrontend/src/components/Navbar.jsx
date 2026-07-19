@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState ,useRef} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -6,6 +6,7 @@ import { base_url } from '../utils/constants';
 import {  removeUser } from '../utils/userSlice';
 import { X } from 'lucide-react';
 const Navbar = () => {
+  const selected = useRef(null)
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const loggedInData = useSelector((store) => store.user);
@@ -30,9 +31,9 @@ const Navbar = () => {
   <div className=" gap-2  px-10 w-[60%] h-full flex items-center">
  {loggedInData&&(
      <div className="dropdown dropdown-end w-full  mr-4 flex gap-2 items-center justify-between  ">
-     <div className="flex gap-4 items-center justify-between w-[25%]">
-       <Link className='text-2xl text-white font-semibold' to={"/"}>Discover</Link>
-      <Link className='text-2xl text-white font-semibold' to={"/chat"}>Chat</Link>
+     <div ref={selected}className="flex gap-4 items-center justify-between w-[25%]">
+       <Link className='hover:scale-110 hover:border-b-4 transition-all duration-300 backdrop-blur-3xl text-2xl text-white font-semibold' to={"/"}>Discover</Link>
+      <Link className='hover:scale-110 hover:border-b-4 transition-all duration-300  text-2xl text-white font-semibold' to={"/chat"}>Chat</Link>
      </div>
       <p className='px-4 font-bold text-2xl capitalize ml-auto'>Welcome {loggedInData.firstName}</p>
       <div onClick={()=>{setOpen(!open)}} tabIndex={0} role="button" className="btn btn-ghost btn-circle  avatar">

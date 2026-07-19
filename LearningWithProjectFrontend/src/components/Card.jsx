@@ -12,7 +12,7 @@ const Card = ({ user,show}) => {
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.2 }}
     >
-      <figure className="relative w-full h-full">
+      <figure className="relative w-full h-full rounded-2xl overflow-hidden ">
         <img
           className="w-full h-full object-cover rounded-2xl"
           src={user.photoUrl}
@@ -40,7 +40,7 @@ const Card = ({ user,show}) => {
                 {user.skills.map((skill, index) => (
                   <span
                     key={index}
-                    className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm"
+                    className="bg-blue-500/30 backdrop-blur-3xl text-white px-3 py-1 rounded-full text-lg"
                   >
                     {skill}
                   </span>
