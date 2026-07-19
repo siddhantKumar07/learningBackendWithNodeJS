@@ -22,7 +22,7 @@ const AboutSection = ({receiver}) => {
             
         </div>
         <h1 className='text-center font-bold text-lg'>Skills :</h1>
-        <div className='flex items-center justify-center'>
+        <div className='flex items-center gap-2.5 justify-center'>
                {receiver.skills.map((skill)=>(
                 <h1 className='text-white text-lg font-semibold border-2 px-3 py-1 rounded-3xl'>{skill}</h1>
                ))}

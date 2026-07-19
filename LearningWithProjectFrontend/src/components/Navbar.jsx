@@ -21,18 +21,24 @@ const Navbar = () => {
 
   }
   return (
-      <div className="navbar bg-base-300 shadow-sm ">
-  <div className="flex-1">
-    <Link to={'/'} className="btn btn-ghost text-xl">AnnonymousChat</Link>
+      <div className="h-15 bg-base-300 flex items-center justify-between w-full">
+  <div className="flex px-20 h-full items-center w-[25%] ">
+    <Link to={'/'} className="btn btn-ghost text-2xl">AnnonymousChat</Link>
   </div>
-  <div className="flex gap-2">
+
+
+  <div className=" gap-2  px-10 w-[60%] h-full flex items-center">
  {loggedInData&&(
-     <div className="dropdown dropdown-end mr-4 flex gap-2 items-center p-1 ">
+     <div className="dropdown dropdown-end w-full  mr-4 flex gap-2 items-center justify-between  ">
+     <div className="flex gap-4 items-center justify-between w-[25%]">
+       <Link className='text-2xl text-white font-semibold' to={"/"}>Discover</Link>
       <Link className='text-2xl text-white font-semibold' to={"/chat"}>Chat</Link>
-      <p className='px-4 font-bold text-lg'>Welcome {loggedInData.firstName}</p>
+     </div>
+      <p className='px-4 font-bold text-2xl capitalize ml-auto'>Welcome {loggedInData.firstName}</p>
       <div onClick={()=>{setOpen(!open)}} tabIndex={0} role="button" className="btn btn-ghost btn-circle  avatar">
         <div className="w-10 rounded-full">
           <img
+          className='bg-cover bg-top'
             alt="Profile pic"
             src={loggedInData.photoUrl} />
         </div>
