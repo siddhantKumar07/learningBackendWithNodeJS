@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { base_url } from '../utils/constants';
 import {  removeUser } from '../utils/userSlice';
+import { X } from 'lucide-react';
 const Navbar = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const Navbar = () => {
      <div className="dropdown dropdown-end mr-4 flex gap-2 items-center p-1 ">
       <Link className='text-2xl text-white font-semibold' to={"/chat"}>Chat</Link>
       <p className='px-4 font-bold text-lg'>Welcome {loggedInData.firstName}</p>
-      <div onClick={()=>{setOpen(!open)}} tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+      <div onClick={()=>{setOpen(!open)}} tabIndex={0} role="button" className="btn btn-ghost btn-circle  avatar">
         <div className="w-10 rounded-full">
           <img
             alt="Profile pic"
@@ -39,7 +40,12 @@ const Navbar = () => {
 {open&&(
         <ul
         tabIndex="-1"
-        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-32 w-72 p-2 shadow">
+        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-42 w-60 p-2 shadow">
+        <li>
+          <li className="ml-auto text-lg" onClick={()=>{setOpen(false)}}>
+         <X size={42} strokeWidth={2.25} />
+          </li>
+        </li>
         <li>
           <Link to="/profile" className="justify-between text-lg" onClick={()=>{setOpen(false)}}>
             Profile
