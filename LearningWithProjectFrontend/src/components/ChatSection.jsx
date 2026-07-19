@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 import axios from "axios";
 import { base_url } from "../utils/constants";
 import { createConnection } from "../utils/socketClient";
 import { Images, Smile, Camera } from "lucide-react";
-
 const EMPTY_CONNECTIONS = [];
 
 const ChatSection = () => {
   const chatRef = useRef(null);
   const socketRef = useRef(null);
+  const navigate = useNavigate();
 
   const { id } = useParams();
   const allConnections = useSelector((store) => store.connections) ?? EMPTY_CONNECTIONS;
@@ -152,6 +152,7 @@ const ChatSection = () => {
         <h1 className="text-2xl font-semibold text-white capitalize">
           {receiver.firstName} {receiver.lastName}
         </h1>
+        <button onClick={()=>{navigate('/')}} className="bg-black/10 backdrop-blur-3xl px-4 py-2 rounded-xl text-lg active:scale-95 cursor-pointer ml-auto">Home</button>
       </nav>
 
       <section
