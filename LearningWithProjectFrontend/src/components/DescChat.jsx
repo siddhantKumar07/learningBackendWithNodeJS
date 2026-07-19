@@ -2,8 +2,8 @@ import React from 'react'
 
 const DescChat = () => {
   return (
-     <div className='w-[75%] bg-red-400 h-full flex items-center justify-center'>
-        <h1 className='text-4xl text-black'>Click any Chat to start chatting </h1>
+     <div className='w-[75%] backdrop-blur-3xl bg-white/5 h-full flex items-center justify-center'>
+        <h1 className='text-4xl text-purple-800 font-bold underline'>Click any Chat to start chatting </h1>
     </div>
   )
 }

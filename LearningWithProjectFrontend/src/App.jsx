@@ -24,12 +24,12 @@ const App = () => {
             <Route path="profile" element={<Profile />} />
             <Route path="connections" element={<Connections />} />
             <Route path="pendingConnections" element={<PendingConnection />} />
-
-            <Route path="chat" element={<Chat />}>
+  </Route>
+            <Route path="/chat" element={<Chat />}>
               <Route index element={<DescChat />} />
               <Route path=":id" element={<ChatSection />} />
             </Route>
-          </Route>
+        
 
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />

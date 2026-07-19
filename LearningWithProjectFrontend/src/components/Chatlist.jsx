@@ -30,8 +30,12 @@ const navigate = useNavigate();
   }, []);
 
   return (
-    <div className="w-[30%] h-full backdrop-blur-3xl bg-white/5 flex items-center scrollbar-none flex-col py-4 justify-start overflow-auto gap-2">
-      {data && data.length > 0 ? (
+    <div className="w-[30%] h-screen backdrop-blur-3xl relative bg-white/5 flex items-center scrollbar-none flex-col pb-4 justify-start overflow-auto gap-2">
+      <div className="h-28 px-4 bg-green-700 fixed to-0 w-full">
+     <input className="py-2 px-2 h-10" type="text" placeholder="Search For user!" />
+      </div>
+<div className="w-full h-full flex-col overflow-scroll scrollbar-none gap-2 flex items-center justify-start mt-32">
+        {data && data.length > 0 ? (
         data.map((connection) => (
           <div
           onClick={()=>{handleClick(connection._id)}}
@@ -51,6 +55,7 @@ const navigate = useNavigate();
       ) : (
         <p className="text-lg text-black">No connections available</p>
       )}
+</div>
     </div>
   );
 };
