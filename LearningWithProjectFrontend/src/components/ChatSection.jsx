@@ -5,6 +5,7 @@ import axios from "axios";
 import { base_url } from "../utils/constants";
 import { createConnection } from "../utils/socketClient";
 import { Images, Smile, Camera } from "lucide-react";
+import AboutSection from "./aboutSection";
 const EMPTY_CONNECTIONS = [];
 
 const ChatSection = () => {
@@ -76,7 +77,6 @@ const ChatSection = () => {
           base_url + `/messages/${sender._id}/${receiver._id}`,
           { withCredentials: true }
         );
-
         const messages = (res.data.chat.messages || []).map((msg) => ({
           senderId: msg.senderId._id || msg.senderId,
           senderName: msg.senderId.firstName || "",
@@ -86,6 +86,10 @@ const ChatSection = () => {
 
         setStoreMessage(messages);
       } catch (err) {
+        if(err.response?.status ===404){
+          setStoreMessage([]);
+          return
+        }
         console.log(err.response?.data?.message || "Failed to load messages");
       }
     };
@@ -140,8 +144,9 @@ const ChatSection = () => {
   }
 
   return (
-    <div className="h-full w-full flex flex-col backdrop-blur-3xl bg-white/5 justify-between border-l-2 border-black overflow-auto scrollbar-thumb-white/50">
-      <nav className="w-full flex items-center justify-start gap-8 h-16 backdrop-blur-3xl bg-black/40 border-transparent border-2 px-5">
+    <div className="h-full w-full flex backdrop-blur-3xl bg-white/5  border-l-2 border-black  ">
+<div className="h-full w-full flex flex-col backdrop-blur-3xl bg-white/5 justify-between   overflow-auto scrollbar-thumb-white/50">
+        <nav className="w-full flex items-center justify-start gap-8 h-16 backdrop-blur-3xl bg-black/40 border-transparent border-2 px-5">
         <div className="w-14 h-14 rounded-full border-2">
           <img
             className="rounded-full h-14 w-14 object-cover border"
@@ -159,7 +164,13 @@ const ChatSection = () => {
         ref={chatRef}
         className="h-[80%] w-full px-7 py-5 flex flex-col gap-3 overflow-auto text-black text-xl"
       >
-        {storeMessage.map((data, index) =>
+     {!storeMessage||storeMessage.length===0 ?(
+     <div className="h-full w-full flex items-center justify-center text-purple-950 text-3xl font-semibold">
+        No messages yet. Start the conversation!
+      </div>
+
+     ):(
+      storeMessage.map((data, index) =>
           data.senderId === sender._id ? (
             <div className="chat chat-end" key={index}>
               <div className="chat-image avatar">
@@ -194,8 +205,10 @@ const ChatSection = () => {
               </div>
             </div>
           )
-        )}
-      </section>
+        )
+     )}
+
+      </section>  
 
       <section className="h-20 px-5 py-2 backdrop-blur-3xl bg-black/40">
         <div className="w-full h-full rounded-4xl flex items-center text-black px-5 gap-10">
@@ -219,6 +232,8 @@ const ChatSection = () => {
           </button>
         </div>
       </section>
+</div>
+   <AboutSection receiver={receiver}/>
     </div>
   );
 };

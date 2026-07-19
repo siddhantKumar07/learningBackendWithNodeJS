@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { base_url } from "../utils/constants";
-import { Navigate, useNavigate,Link } from "react-router-dom";
+import { Navigate, useNavigate,Link} from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addConnection } from "../utils/connectionSlice";
 import { useSelector } from "react-redux";
@@ -12,7 +12,6 @@ const Chatlist = () => {
 const [data, setData] = useState(null)
 const navigate = useNavigate();
    const handleClick=(id)=>{
-    console.log("clicked",id);
     navigate(`/chat/${id}`);
     
    }
