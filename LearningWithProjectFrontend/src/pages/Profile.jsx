@@ -25,75 +25,75 @@ const Profile = () => {
   }
 
   return (
-    <div className="bg-gray-100 flex h-[90%] w-[70%] px-2 items-center justify-center p-6 relative text-black">
-      <button onClick={()=>{navigate(-1)}} className="rounded-xl px-8 active:scale-90 py-2 bg-black text-white text-xl cursor-pointer absolute top-2 right-2 ">Back</button>
-      <div className="bg-white shadow-xl rounded-3xl overflow-hidden w-full max-w-5xl">
-        <div className="grid md:grid-cols-3">
+    <div className="bg-[#0B1326] flex h-full w-full ml-auto mr-auto  px-3 py-3 items-center justify-center  relative text-black">
+      <div className="bg-white shadow-xl rounded-3xl h-[95%] w-[80%] overflow-hidden  max-w-5xl">
+        <div className="grid md:grid-cols-3 gap-2 py-2 px-3">
           {/* Left Side */}
-          <div className="bg-gradient-to-b from-indigo-600 to-blue-500 text-white flex flex-col items-center p-8">
+          <div className="bg-gradient-to-b from-indigo-600 to-blue-500 rounded-2xl text-white flex flex-col items-center p-8">
             <img
               src={user.photoUrl}
               alt="Profile"
-              className="w-40 h-40 rounded-full border-4 border-white object-cover shadow-lg"
+              className="w-45 h-45 rounded-full border-4 border-white object-cover shadow-lg"
             />
 
-            <h2 className="text-2xl font-bold mt-5">
+            <h2 className="text-3xl font-bold mt-5 capitalize">
               {user.firstName} {user.lastName}
             </h2>
 
-            <p className="text-indigo-100 mt-2">{user.emailId}</p>
+            <p className="text-indigo-100 text-xl mt-2">{user.emailId}</p>
 
-            <div className="flex gap-6 mt-8">
-              <div className="text-center">
-                <h3 className="text-xl font-semibold">{user.age}</h3>
-                <p className="text-sm">Age</p>
-              </div>
-
-              <div className="text-center">
-                <h3 className="text-xl font-semibold">{user.gender}</h3>
-                <p className="text-sm">Gender</p>
-              </div>
+        <div className='flex gap-8 w-full justify-center border-2 px-1 py-1 mt-10 rounded-3xl border-white/20'>
+            <div className='flex flex-col gap-1 border-r-2 px-6'>
+                <h1 className='text-white text-lg font-semibold'>Age</h1>
+                <p className='text-white text-lg font-semibold'>{user.age}</p>
             </div>
+            <div className='flex flex-col gap-1'>
+                <h1 className='text-white text-lg font-semibold'>Gender</h1>
+                <p className='text-white text-lg font-semibold capitalize'>{user.gender}</p>
+            </div>
+            
+        </div>
+            
           </div>
 
           {/* Right Side */}
-          <div className="md:col-span-2 p-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-6">
+          <div className="md:col-span-2 p-4">
+            <h1 className="text-3xl font-bold underline text-gray-800 mb-6">
               Profile Information
             </h1>
 
             <div className="mb-8">
-              <h2 className="text-lg font-semibold text-gray-700 mb-2">
+              <h2 className="text-xl font-semibold text-gray-700 mb-2">
                 About
               </h2>
 
-              <p className="text-gray-600 leading-7">{user.about}</p>
+              <p className="text-gray-600 leading-7 capitalize">{user.about}</p>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-5 mb-8">
               <div>
-                <p className="text-gray-500 text-sm">First Name</p>
-                <p>{user.firstName}</p>
+                <p className="text-gray-500 text-lg">First Name</p>
+                <p className="text-xl capitalize">{user.firstName}</p>
               </div>
 
               <div>
-                <p className="text-gray-500 text-sm">Last Name</p>
-                <p>{user.lastName}</p>
+                <p className="text-gray-500 text-lg">Last Name</p>
+                <p className="text-xl capitalize">{user.lastName}</p>
               </div>
 
               <div>
-                <p className="text-gray-500 text-sm">Age</p>
-                <p>{user.age}</p>
+                <p className="text-gray-500 text-lg">Age</p>
+                <p className="text-xl">{user.age}</p>
               </div>
 
               <div>
-                <p className="text-gray-500 text-sm">Gender</p>
-                <p>{user.gender}</p>
+                <p className="text-gray-500 text-lg">Gender</p>
+                <p className="text-xl capitalize">{user.gender}</p>
               </div>
 
               <div className="sm:col-span-2">
-                <p className="text-gray-500 text-sm">Email</p>
-                <p>{user.emailId}</p>
+                <p className="text-gray-500 text-lg">Email</p>
+                <p className="text-xl">{user.emailId}</p>
               </div>
             </div>
 

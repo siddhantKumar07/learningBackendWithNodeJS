@@ -25,7 +25,9 @@ const Feed = () => {
           setNoUsers(true);
           return;
         }
-        dispatch(addFeed(response.data.feedUser));
+        if (response.data.feedUser.length > 0) {
+          dispatch(addFeed(response.data.feedUser));
+        }
       } catch (err) {
         if (err.response?.status === 404) {
           setNoUsers(true);
@@ -36,15 +38,15 @@ const Feed = () => {
     };
 
     loadFeed();
-  }, [dispatch, feedUser.length]);
+  }, [dispatch]);
 
   if (noUsers) {
     return (
-      <div>
-        <h1 className="text-2xl font-bold text-center mt-8">
-          No users available for feed.
+      <div className="bg-[#0B1326] w-full h-full flex items-center justify-center flex-col">
+        <h1 className="text-3xl font-bold text-center mt-8">
+          No New users available for feed.
         </h1>
-        <p className="text-center mt-4">
+        <p className="text-center mt-4 text-3xl">
           Please check back later or update your profile to find more users.
         </p>
       </div>
@@ -77,7 +79,11 @@ const Feed = () => {
   const activeUser = visibleUsers.length === 2 ? visibleUsers[1] : visibleUsers[0];
 
   return (
-    <div className="relative bg-[#0B1326] flex items-center justify-center h-full w-full overflow-hidden">
+<div className="bg-[#0B1326] h-full w-full flex flex-col gap-1">
+  <div className="h-[10%] w-full px-16 py-4">
+    <h1 className="text-3xl text-[#DAE2FD] font-semibold">Discover Connections</h1>
+  </div>
+    <div className="relative  flex items-center justify-center h-[90%] w-full overflow-hidden">
       {backUser && (
         <Motion.div
           className="absolute"
@@ -86,7 +92,7 @@ const Feed = () => {
           transition={{ duration: 0.2 }}
           style={{ zIndex: 1 }}
         >
-          <Card user={backUser} />
+          <Card user={backUser} size={"w-[min(24rem,92vw)] h-[min(32rem,78vh)]"} />
         </Motion.div>
       )}
 
@@ -119,10 +125,11 @@ const Feed = () => {
           }}
           style={{ zIndex: 2 }}
         >
-          <Card user={activeUser} show={true} />
+          <Card user={activeUser} show={true} size={"w-[min(24rem,92vw)] h-[min(32rem,78vh)]"} />
         </Motion.div>
       )}
     </div>
+</div>
   );
 };
 

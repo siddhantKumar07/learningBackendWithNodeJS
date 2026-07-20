@@ -2,11 +2,11 @@ import React from "react";
 import { motion as Motion } from "framer-motion";
 import { useSelector } from "react-redux";
 
-const Card = ({ user,show}) => {
+const Card = ({ user,show,size}) => {
   const storedUser = useSelector((store) => store.user);
   return (
     <Motion.div
-      className="hover-3d relative w-[min(24rem,92vw)] h-[min(32rem,78vh)] bg-cover rounded-2xl bg-white shadow-lg overflow-hidden"
+      className={`${size} hover-3d relative bg-cover rounded-2xl bg-white shadow-lg overflow-hidden`}
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       whileHover={{ scale: 1.02 }}
@@ -22,8 +22,8 @@ const Card = ({ user,show}) => {
 {
   show&&(
               <div className={`flex justify-between text-white  font-semibold mt-1 gap-2 `}>
-            <span className="px-3 py-2 border-2 border-emerald-600 backdrop-blur-3xl bg-white/2 rounded-2xl text-green-900 font-bold text-xl"><i class="ri-arrow-left-long-line text-2xl font-bold"></i> Interested</span>
-            <span className="px-4 py-2 border-2 border-orange-600 backdrop-blur-3xl  bg-white/2 rounded-2xl text-red-700 font-bold text-xl">Ignore <i class="ri-arrow-right-long-line text-2xl font-bold"></i></span>
+            <span className="px-3 py-2 border-2 border-emerald-600 backdrop-blur-3xl bg-white/2 rounded-2xl text-green-900 font-bold text-xl"><i className="ri-arrow-left-long-line text-2xl font-bold"></i> Interested</span>
+            <span className="px-4 py-2 border-2 border-orange-600 backdrop-blur-3xl  bg-white/2 rounded-2xl text-red-700 font-bold text-xl">Ignore <i className="ri-arrow-right-long-line text-2xl font-bold"></i></span>
           </div>
   )
 }

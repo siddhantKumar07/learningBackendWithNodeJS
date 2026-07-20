@@ -31,11 +31,11 @@ setConnections((prev)=>prev.filter((connection)=>connection.id!==requestId))
   }
   if(!connections || connections.length === 0){
     return (
-      <div className="h-[90%] px-10 py-10 flex flex-wrap flex-col gap-10 justify-center items-center">
-        <h1 className="text-2xl font-bold text-center mt-8">
+      <div className="bg-[#0B1326] h-full w-full px-10 py-10 flex flex-wrap flex-col gap-6 justify-center items-center">
+        <h1 className="text-3xl text-white font-bold text-center mt-8">
           No pending connection requests.
         </h1>
-        <p className="text-center mt-4">
+        <p className="text-center text-2xl text-white mt-4">
           Please check back later or explore other users to send connection requests.
         </p>
       </div>

@@ -33,7 +33,7 @@ const Home = () => {
   return (
     <div className='h-[100vh] overflow-hidden '>
         <Navbar/>
-       <div className='flex justify-between items-center h-[92%] w-full'>
+       <div className='flex justify-start items-center h-[92%] w-full'>
         <SideBar/>
         <Outlet/>
        </div>

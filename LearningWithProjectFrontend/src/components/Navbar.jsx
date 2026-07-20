@@ -5,16 +5,18 @@ import axios from 'axios';
 import { base_url } from '../utils/constants';
 import {  removeUser } from '../utils/userSlice';
 import { X } from 'lucide-react';
+import {clearFeed} from '../utils/feedSlice'
 const Navbar = () => {
   const selected = useRef(null)
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const loggedInData = useSelector((store) => store.user);
   const [open, setOpen] = useState(false)
-
-  const handleLogOut =()=>{
+  
+  const handleLogOut =async()=>{
     dispatch(removeUser())
-    const response = axios.post(base_url+"/logout",{},{
+    dispatch(clearFeed())
+    const response =await axios.post(base_url+"/logout",{},{
       withCredentials:true
     })
     console.log(response.data);
@@ -24,7 +26,7 @@ const Navbar = () => {
   return (
       <div className="h-15 bg-[#0B1326] border-b-2 border-[#293058] flex items-center justify-between w-full">
   <div className="flex px-20 h-full items-center w-[25%] ">
-    <Link to={'/'} className="btn btn-ghost text-2xl">AnnonymousChat</Link>
+    <Link to={'/'} className="hover:scale-105 transition-all duration-400 ease-in-out py-2 px-3 text-2xl">AnnonymousChat</Link>
   </div>
 
 

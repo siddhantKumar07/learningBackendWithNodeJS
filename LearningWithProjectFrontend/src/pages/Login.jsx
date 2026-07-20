@@ -23,9 +23,11 @@ const Login = () => {
           withCredentials: true,
         },
       );
-      console.log(response.data);
+      console.log(response.data.message);
+      if(response.data.message === "login successful"){
       await fetchProfile();
       await fetchFeed();
+      }
       setEmail("");
       setPassword("");
 

@@ -26,13 +26,13 @@ const Connection = () => {
     handleConnection();
   }, [dispatch]);
   return (
-    <div className="bg-gray-100 text-black min-h-[90vh] flex justify-center flex-wrap gap-7 items-center p-6">
+    <div className="bg-[#0B1326] text-black h-full overflow-auto scrollbar-thin w-full flex justify-center flex-wrap gap-7 items-center p-6">
       {data && data.length > 0 ? (
-        data.map((connec) => <Card key={connec._id} user={connec} />)
+        data.map((connec) => <Card key={connec._id} user={connec} size={"w-[min(22rem,92vw)] h-[min(28rem,78vh)]"} />)
       ) : (
-        <div className="h-[90%] px-10 py-10 flex flex-wrap flex-col gap-10 justify-center items-center">
-          <h1 className="text-2xl font-bold text-center mt-8">No connections found.</h1>
-          <p className="text-center mt-4">
+        <div className="h-[90%] px-10 py-10 flex flex-wrap flex-col gap-6 justify-center items-center">
+          <h1 className="text-3xl text-white font-bold text-center mt-8">No connections found.</h1>
+          <p className="text-center mt-4 text-3xl text-white">
             Please check back later or explore other users to send connection requests.
           </p>
         </div>
