@@ -1,0 +1,18 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "leanring node js while creating some good project",
+  "license": "ISC",
+  "author": "siddhant",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "npx nodemon server.js",
+    "dev": "npx nodemon server.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.7.4"
+  }
+}
