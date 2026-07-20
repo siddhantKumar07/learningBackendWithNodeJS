@@ -1,10 +1,15 @@
 const mongooes = require("mongoose");
-
+const validate = require("validator")
 const postSchema = new mongooes.Schema({
 imageUrl:{
     type:String,
     required:true,
-    trim:true
+    trim:true,
+    validate(value){
+        if(!validate.isURL(value)){
+            throw new Error("Invalid URL")
+        }
+    }
 },
 caption:{
     type:String,
