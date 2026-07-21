@@ -49,6 +49,24 @@ app.post("/createPost",upload.single("image"),async(req,res)=>{
 })
 
 
+app.get("/getPosts",async(req,res)=>{
+    try{
+    const result = await postModel.find().sort({createdAt:-1});
+    if(!result){
+        return res.status(404).json({
+            message:"No posts found"
+        })
+    }
+    return res.status(200).json({
+        message:"Posts fetched successfully",
+        data:result
+    })
+    }catch(error){
+        res.status(500).json({
+            message:error.message
+        })
+    }
+})
 
 
 
