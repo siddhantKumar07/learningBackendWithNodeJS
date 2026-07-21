@@ -1,11 +1,15 @@
 const express = require("express");
 const axios = require("axios");
 const multer = require("multer");
+const cors = require("cors")
 const postModel = require("./models/post.model");
 const {uploadImage} = require("./services/storage.service");
 const app = express();
 app.use(express.json());// to parse the incoming request as js object
-
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true
+}))
 const upload = multer({//multer is used to upload the file
     storage:multer.memoryStorage(),
     limits:{
