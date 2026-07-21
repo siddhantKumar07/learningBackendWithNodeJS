@@ -8,15 +8,18 @@ const client = new imageKit({
 const uploadImage = async(buffer,fileName)=>{
    try{
     const response = await client.files.upload({
-        file:buffer,
+        file:buffer.toString("base64"),
         fileName:fileName,
     })
-console.log(response);
-return result;
-   }catch(error){
+return response;
+   }
+   catch(error){
     return {
         error:true,
         message:error.message
     }
    }
+}
+module.exports = {
+    uploadImage
 }

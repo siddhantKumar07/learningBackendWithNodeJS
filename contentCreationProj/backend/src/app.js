@@ -1,6 +1,8 @@
 const express = require("express");
 const axios = require("axios");
 const multer = require("multer");
+const postModel = require("./models/post.model");
+const {uploadImage} = require("./services/storage.service");
 const app = express();
 app.use(express.json());// to parse the incoming request as js object
 
@@ -24,8 +26,17 @@ app.post("/createPost",upload.single("image"),async(req,res)=>{
                 message:"Image is required"
             })
         }
-        console.log(image);
-        console.log(caption);
+        const result = await uploadImage(image.buffer,image.originalname);
+        if(result.error){
+            return res.status(500).json({
+                message:result.message
+            })
+        }
+        console.log(result);
+        await postModel.create({
+            imageUrl:result.url,
+            caption:caption
+        })
         return res.status(201).json({
             message:"Post created successfully",
         })
