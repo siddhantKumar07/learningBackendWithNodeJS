@@ -23,7 +23,7 @@ const Feed = () => {
   return (
     <div className='h-screen w-full px-1 py-2 overflow-auto bg-gray-200 flex items-start justify-center flex-wrap gap-2'>
         {data.map((post)=>(
-            <div className='h-[40%] w-[100%] sm:w-[20%] rounded-2xl bg-white px-1 py-2 flex flex-col items-center justify-center gap-2'>
+            <div key={post._id} className='h-[40%] w-[100%] sm:w-[20%] rounded-2xl bg-white px-1 py-2 flex flex-col items-center justify-center gap-2'>
            <div className='w-[95%] h-[80%] border-2 border-white rounded-2xl'> <img className=' rounded-2xl w-full h-full bg-cover' src={post.imageUrl} alt="" /></div>
            <h1 className='font-bold text-xl'>{post.caption}</h1>
         </div>

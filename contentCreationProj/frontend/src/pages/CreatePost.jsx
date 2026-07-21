@@ -1,7 +1,8 @@
 import axios from 'axios'
 import React from 'react'
-
+import { useNavigate } from 'react-router-dom'
 const CreatePost = () => {
+    const navigate = useNavigate()
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
@@ -11,6 +12,7 @@ const CreatePost = () => {
         withCredentials: true
       })
       console.log(response.data)
+      navigate('/feed')
       e.currentTarget.reset()
     } catch (error) {
       console.error(error)
