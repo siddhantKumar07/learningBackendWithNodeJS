@@ -6,20 +6,12 @@ import { Link, useNavigate } from 'react-router-dom'
 const Signup = () => {
   const navigate = useNavigate()
   const [data, setData] = useState({
-     firstName: "",
-    lastName: "",
-    emailId: "",
-    password: "",
-    age: "",
-    gender: "",
-    photoUrl: "",
-    skills: "",
-    about: "",
   })
   const handleChange=(e)=>{
+    const{name,value,type,files} = e.target;
     setData((prev)=>({
       ...prev,
-      [e.target.name]:e.target.value
+      [name]:type=="file"?files[0]:value
     }))
   }
   const handleSubmit=async(e)=>{
@@ -30,10 +22,14 @@ const Signup = () => {
         ? data.skills.split(",").map((s) => s.trim())
         : [],
      }
+     const formData = new FormData();
+    for (const key in checkeddata) {
+      formData.append(key, checkeddata[key]);
+    }
 
      console.log(checkeddata);
      try{
-    const response = await axios.post(base_url+"/signUp",checkeddata,{
+    const response = await axios.post(base_url+"/signUp",formData,{
       withCredentials:true
      })
      console.log(response);
@@ -180,10 +176,8 @@ return (
             <input
             required
             onChange={handleChange}
-            value={data.photoUrl}
-              type="text"
-              name="photoUrl"
-              placeholder="https://example.com/profile.jpg"
+              type="file"
+              name="image"
               className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>

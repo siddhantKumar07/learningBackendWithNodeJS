@@ -7,20 +7,17 @@ import { toast, Bounce, ToastContainer, Flip } from "react-toastify";
 import Card from "./Card";
 const EditProfile = ({ user, setIsEditing }) => {
   const dispatch = useDispatch();
-  const { age, gender, photoUrl, about, skills = [] } = user;
+  const { skills = [] } = user;
 
   const [formData, setFormData] = useState({
-    age,
-    gender,
-    photoUrl,
-    about,
     skills: Array.isArray(skills) ? skills.join(", ") : String(skills || ""),
   });
 
   const handleChange = (e) => {
+    const { name, value,files,type } = e.target;
     setFormData((prev) => ({
        ...prev,
-      [e.target.name]: e.target.value,
+      [name]:type=="file" ?files[0]:value,
     }));
   };
 
@@ -34,9 +31,13 @@ const EditProfile = ({ user, setIsEditing }) => {
         .map((s) => s.trim())
         .filter(Boolean),
     };
+   const formDataToSend = new FormData();
+    for (const key in updatedUser) {
+      formDataToSend.append(key, updatedUser[key]);
+    }
 
     try{
-      const response  =await axios.patch(base_url+"/profile/edit",updatedUser,{
+      const response  =await axios.patch(base_url+"/profile/edit",formDataToSend,{
       withCredentials:true
     })
 dispatch(addUser(response.data.updatedUser));
@@ -88,10 +89,11 @@ transition: Flip,
           </select>
 
           <input
-            name="photoUrl"
-            value={formData.photoUrl}
+              name="image"
+              type="file"
+            // value={formData.photoUrl}
             onChange={handleChange}
-            placeholder="Photo URL"
+            placeholder=""
             className="border rounded-lg p-3"
           />
         </div>

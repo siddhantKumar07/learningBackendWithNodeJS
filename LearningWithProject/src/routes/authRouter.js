@@ -2,6 +2,8 @@ const express = require("express");
 const authRouter = express.Router();
 const userModel = require("../model/user");
 const bcrpt = require("bcrypt");
+const multer = require("multer")
+const uploadImage = require("../service/storage.service");
 const { userAuth,signupAuth} = require("../middleware/auth");
 
 // for login api we will use json web token to send the user id to the client side in the form of token so that the client can use it to access the protected routes. it generates a token using the user id and the secret key which is stored in the environment variable. the token is then sent to the client side in the form of cookie so that the client can use it to access the protected routes.
@@ -36,10 +38,27 @@ else{
   }
 })
 
-
-authRouter.post("/signUp",signupAuth, async (req, res) => {
+const upload = multer({
+  storage:multer.memoryStorage(),
+      limits:{
+        fileSize:5*1024*1024 // 5mb
+    }
+})
+authRouter.post("/signUp",upload.single("image"),signupAuth, async (req, res) => {
   try {
     const data = req.body;
+    const image = req.file;
+    if(!image){
+      return res.status(400).json({
+        message:"Image is required"
+      })
+    }
+    const result = await uploadImage(image.buffer,image.originalname);
+    if(result.error){
+      return res.status(500).json({
+        message:result.message
+      })
+    }
      const {password}=data;
      const hashedPassword = await bcrpt.hash(password,10);
    const user =await userModel.create({
@@ -51,7 +70,7 @@ authRouter.post("/signUp",signupAuth, async (req, res) => {
       gender: data.gender,
       skills: data.skills,
       about:data.about,
-      photoUrl:data.photoUrl,
+      photoUrl:result.url,
 
     });
     res.status(200).json({
