@@ -38,7 +38,7 @@ else{
   }
 })
 
-const upload = multer({
+const upload = multer({// it will store the image in the memory of the server and will not store it in the disk. it will also limit the size of the image to 5mb.
   storage:multer.memoryStorage(),
       limits:{
         fileSize:5*1024*1024 // 5mb
