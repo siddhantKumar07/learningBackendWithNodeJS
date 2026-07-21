@@ -15,7 +15,8 @@ caption:{
     type:String,
     required:true,
     trim:true,
-    maxLength:300
+    maxLength:300,
+    minLength:10
 },
 })
 const postModel=mongooes.model("post",postSchema);
