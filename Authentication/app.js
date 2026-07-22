@@ -2,7 +2,7 @@ const express = require("express");
 const authRouter = require("./src/routes/Auth.routes");
 const app = express();
 app.use(express.json());
-app.use("/",authRouter);
+app.use("/api/auth",authRouter);
 
 
 
