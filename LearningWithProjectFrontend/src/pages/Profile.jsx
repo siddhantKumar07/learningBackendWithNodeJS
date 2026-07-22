@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import EditProfile from "../components/EditProfile";
 import ChangePassword from "../components/ChangePassword";
-import { useNavigate } from "react-router-dom";
 const Profile = () => {
-  const navigate = useNavigate()
   const user = useSelector((store) => store.user);
   const [isEditing, setIsEditing] = useState("");
 
