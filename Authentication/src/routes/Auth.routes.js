@@ -7,7 +7,4 @@ const authRouter = express.Router();
 authRouter.post("/register", authMiddleware, register);
 
 
-
-
-
 module.exports = authRouter;
