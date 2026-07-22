@@ -18,6 +18,10 @@ if(!validator.isEmail(email)){
     return res.status(400).json({
         message:"Invalid email address",
     })}
+
+
+
+
   req.body.name = name.toLowerCase();
   req.body.email = email.toLowerCase();
   req.body.password = hashPass;  
