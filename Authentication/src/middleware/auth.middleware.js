@@ -1,5 +1,6 @@
 const validator = require("validator");
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
+const userModel = require("../model/user.model");
 // middleware is used to validate the request body before it reaches the controller
 const authMiddleware = async(req, res, next) => {
 const {name, email, password} = req.body;
@@ -19,8 +20,13 @@ if(!validator.isEmail(email)){
         message:"Invalid email address",
     })}
 
+    const isUserExist = await userModel.findOne({email:email})
 
-
+    if(isUserExist){
+        return res.status(400).json({
+            message:"User already exists",
+        })
+    }
 
   req.body.name = name.toLowerCase();
   req.body.email = email.toLowerCase();
