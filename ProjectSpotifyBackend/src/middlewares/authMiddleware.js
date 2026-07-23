@@ -1,6 +1,7 @@
 const validator = require("validator");
 const userModel = require("../models/user.model");
-
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const registerAuthMiddleware= (req,res,next)=>{
     const {username,email,password,role} = req.body;
     if(!username || !email || !password || !role) {
@@ -33,9 +34,9 @@ const registerAuthMiddleware= (req,res,next)=>{
 
 const loginAuthMiddleware =async (req,res,next)=>{
     const {email,password,username} = req.body;
-   if(!email || !password ){
+   if((!email && !username) || !password){
     return res.status(400).json({
-        message:"Email and password are required"
+        message:"Email or username and password are required"
     })
    }
     const user = await  userModel.findOne({
