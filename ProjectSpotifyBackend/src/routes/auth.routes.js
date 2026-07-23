@@ -6,4 +6,5 @@ const authRouter = express.Router();
 //post request for register user api = api/auth/register
 authRouter.post("/register", registerAuthMiddleware,registerAuthController);
 
+authRouter.post("/login",)
 module.exports = authRouter;

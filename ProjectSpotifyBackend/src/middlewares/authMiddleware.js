@@ -1,4 +1,6 @@
 const validator = require("validator");
+const userModel = require("../models/user.model");
+
 const registerAuthMiddleware= (req,res,next)=>{
     const {username,email,password,role} = req.body;
     if(!username || !email || !password || !role) {
@@ -26,4 +28,36 @@ const registerAuthMiddleware= (req,res,next)=>{
     }
     next();
 }
-module.exports = registerAuthMiddleware;
+
+// for login 
+
+const loginAuthMiddleware =async (req,res,next)=>{
+    const {email,password,username} = req.body;
+   if(!email || !password ){
+    return res.status(400).json({
+        message:"Email and password are required"
+    })
+   }
+    const user = await  userModel.findOne({
+        $or:[
+            {email:email},
+            {username:username}
+        ]
+    })
+    if(!user){
+        return res.status(400).json({
+            message:"User not found"
+        })
+    }
+
+   const isPasswordValid = await bcrypt.compare(password,user.password);
+   if(!isPasswordValid){
+    return res.status(400).json({
+        message:"Invalid credentials"
+    })
+   }
+   req.user = user;
+   next();
+
+}
+module.exports = { registerAuthMiddleware, loginAuthMiddleware };
