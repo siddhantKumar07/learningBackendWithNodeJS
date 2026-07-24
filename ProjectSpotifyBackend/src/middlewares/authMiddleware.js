@@ -38,6 +38,8 @@ const loginAuthMiddleware =async (req,res,next)=>{
         message:"Email or username and password are required"
     })
    }
+
+   // finding user by email or username
     const user = await  userModel.findOne({
         $or:[
             {email:email},
