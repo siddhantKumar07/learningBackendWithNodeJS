@@ -31,7 +31,6 @@ const registerAuthMiddleware= (req,res,next)=>{
 }
 
 // for login 
-
 const loginAuthMiddleware =async (req,res,next)=>{
     const {email,password,username} = req.body;
    if((!email && !username) || !password){
