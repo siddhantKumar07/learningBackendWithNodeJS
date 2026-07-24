@@ -40,7 +40,6 @@ return res.status(201).json({
     })
 }
 }
-
 // for login 
 const loginAuthController = async(req,res)=>{
     const {email,password,username} = req.body;
@@ -53,7 +52,7 @@ const loginAuthController = async(req,res)=>{
         message:"User logged in successfully",
         user:user
        })
-       
+
     }catch(error){
         return res.status(500).json({
             message:"Error logging in",
