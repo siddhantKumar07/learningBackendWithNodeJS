@@ -45,7 +45,7 @@ const loginAuthController = async(req,res)=>{
     const {email,password,username} = req.body;
     try{
      const {user} = req;
-
+// create jwt token
      const token = jwt.sign({id:user._id,role:user.role},process.env.JWT_SECRET,{expiresIn:"1d"});
        res.cookie("token",token)
        return res.status(200).json({
