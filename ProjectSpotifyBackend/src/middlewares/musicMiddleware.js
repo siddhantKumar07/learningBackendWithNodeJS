@@ -1,0 +1,8 @@
+const jwt = require("jsonwebtoken")
+const createMusicMiddleware = (req,res,next)=>{
+    const cookies = req.cookies;
+    const {token,role} = cookies;
+    console.log("token",token)
+    console.log("role",role)
+}
+module.exports = createMusicMiddleware;
