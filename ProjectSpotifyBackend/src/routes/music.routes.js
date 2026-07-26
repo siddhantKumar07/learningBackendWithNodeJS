@@ -6,7 +6,7 @@ const musicRouter = express.Router();
 musicRouter.post("/createMusic", createMusicMiddleware, (req,res)=>{
     res.status(200).json({
         message:"Music created successfully"
-        g
+        
     })
 })
 
