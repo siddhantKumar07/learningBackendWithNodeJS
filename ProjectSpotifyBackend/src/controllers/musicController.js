@@ -9,6 +9,7 @@ const CreateMusicController = (req,res)=>{
     //         message:"Please provide all required fields"
     //     })
     // }
+    
     console.log(_id,role)
     res.status(200).json({
         message:"Music created successfully"
