@@ -10,8 +10,6 @@ const createMusicMiddleware = (req, res, next) => {
       message: "Unauthorized"
     });
   }
-  
-
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   console.log("decoded", decoded);
 
