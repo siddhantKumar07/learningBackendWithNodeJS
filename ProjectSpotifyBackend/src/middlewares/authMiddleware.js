@@ -2,6 +2,7 @@ const validator = require("validator");
 const userModel = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+
 const registerAuthMiddleware= (req,res,next)=>{
     const {username,email,password,role} = req.body;
     if(!username || !email || !password || !role) {
@@ -39,7 +40,7 @@ const loginAuthMiddleware =async (req,res,next)=>{
     })
    }
 
-   // finding user by email or username
+   // finding user by email or username1q
     const user = await  userModel.findOne({
         $or:[
             {email:email},

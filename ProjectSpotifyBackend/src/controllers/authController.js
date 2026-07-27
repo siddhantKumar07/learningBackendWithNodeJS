@@ -27,7 +27,7 @@ const user = await userModel.create({
 // create jwt token
 
 const token = jwt.sign({id:user._id,role:user.role},process.env.JWT_SECRET,{expiresIn:"1d"});
-res.cookie("token",{token:token,role:user.role})
+res.cookie("token",token)
 return res.status(201).json({
     message:"User created successfully",
     user:user
@@ -47,7 +47,7 @@ const loginAuthController = async(req,res)=>{
      const {user} = req;
 // create jwt token
      const token = jwt.sign({id:user._id,role:user.role},process.env.JWT_SECRET,{expiresIn:"1d"});
-       res.cookie("token",{token:token,role:user.role})
+       res.cookie("token",token)
        return res.status(200).json({
         message:"User logged in successfully",
         user:user
