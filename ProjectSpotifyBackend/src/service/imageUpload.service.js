@@ -9,7 +9,8 @@ const uploadImage = async(buffer,fileName)=>{
 try{
 const response = await client.files.upload({
   file: buffer.toString("base64"),
-  fileName: fileName
+  fileName: fileName,
+  folder:"music"
 });
 
 return response;
