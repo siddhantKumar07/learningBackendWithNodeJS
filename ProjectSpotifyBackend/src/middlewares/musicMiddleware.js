@@ -2,7 +2,14 @@ const jwt = require("jsonwebtoken");
 
 const createMusicMiddleware = (req, res, next) => {
   const { token } = req.cookies || {};
+const file = req.file
+const {title}= req.body
 
+if(!file || !title){
+  return res.status(400).json({
+    message: "file and title are required"
+  });
+}
   if (!token) {
     return res.status(401).json({
       message: "Unauthorized"
