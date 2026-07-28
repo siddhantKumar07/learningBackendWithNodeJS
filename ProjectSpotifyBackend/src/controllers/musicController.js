@@ -3,10 +3,11 @@ const jwt = require('jsonwebtoken');
 const userModel = require("../models/user.model")
 const uploadImage = require("../service/imageUpload.service")
 const musicModel = require("../models/music.model")
+
 const CreateMusicController =async (req,res)=>{
 
 try{
-    const user = req.user;
+const user = req.user;
 const {title}= req.body
 const musicFile = req.file;
 console.log("user",user);
