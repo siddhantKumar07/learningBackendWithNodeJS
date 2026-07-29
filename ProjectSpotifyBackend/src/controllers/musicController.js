@@ -46,6 +46,16 @@ const  CreateAlbumController = async (req, res) => {
     const { title, musicId } = req.params;
 
     const existingAlbum = await albumModel.findOne({ title, artist: user.id });
+    
+    // this will check if the music already exists in the album, if it does, it will return an error message
+    const isMusicExist = existingAlbum? existingAlbum.musics.includes(musicId) : false;
+    if (isMusicExist) {
+      return res.status(400).json({
+        message: "Music already exists in the album",
+      });
+    }
+
+    
 
     if (existingAlbum) {
       existingAlbum.musics.push(musicId);
