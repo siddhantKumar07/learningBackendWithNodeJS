@@ -8,6 +8,7 @@ const albumModel = require("../models/album.model");
 const CreateMusicController =async (req,res)=>{
 try{
 const user = req.user;
+
 const {title}= req.body
 const musicFile = req.file;
     const response = await uploadImage(musicFile.buffer,musicFile.originalname);
@@ -24,12 +25,13 @@ const newMusic= await musicModel.create({
     artist:user.id
 }) 
 
-// const musicWithArtist = await musicModel
-//   .findById(newMusic._id)
-//   .populate("artist",["username"]);
+const musicWithArtist = await musicModel
+  .findById(newMusic._id)
+  .populate("artist",["username"]);
 
 return res.status(200).json({
-        message:"Music created successfully"
+        message:"Music created successfully",
+        music:musicWithArtist
     })
 }catch(err){
 return res.status(500).json({
@@ -39,12 +41,38 @@ return res.status(500).json({
     
 }
 
+const getAllMusicController = async (req, res) => {
+const user = req.user;
+try{
+    const allMusic = await musicModel.find().populate("artist",["username"]);
+    return res.status(200).json({
+        message:"All music fetched successfully",
+        music:allMusic
+    })
+
+}
+catch(err){
+    return res.status(500).json({
+        message:err.message
+    })
+}
+
+
+
+}
+
+
 const  CreateAlbumController = async (req, res) => {
   try {
     let album;
     const user = req.user;
     const { title, musicId } = req.params;
 
+    if(user.role !== "artist"){
+    return res.status(403).json({
+        message:"you are not authorized to create music"
+    })
+  }
     const existingAlbum = await albumModel.findOne({ title, artist: user.id });
     
     // this will check if the music already exists in the album, if it does, it will return an error message
@@ -72,17 +100,15 @@ const  CreateAlbumController = async (req, res) => {
       .findById(album._id)
       .populate("musics", ["title", "url"]);
 
-    // console.log("albumWithMusics", albumWithMusics);
-
     return res.status(200).json({
       message: "Album processed successfully",
       album: albumWithMusics,
     });
-  } catch (err) {
+  } catch(err) {
     return res.status(500).json({
       message: err.message,
     });
   }
 };
 
-module.exports = {CreateMusicController,CreateAlbumController};
+module.exports = {CreateMusicController,CreateAlbumController,getAllMusicController};
