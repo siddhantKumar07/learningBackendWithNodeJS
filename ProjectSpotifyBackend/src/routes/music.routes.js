@@ -13,5 +13,5 @@ const upload = multer({
 //api = /api/music
 musicRouter.post("/createMusic", upload.single("musicFile"), createMusicMiddleware, CreateMusicController);
 
-musicRouter.post("/createAlbum",createAlbumMiddleware,CreateAlbumController);
+musicRouter.post("/createAlbum/:musicId/:title",createAlbumMiddleware,CreateAlbumController);
 module.exports = musicRouter;

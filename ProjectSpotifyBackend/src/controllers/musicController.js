@@ -39,36 +39,40 @@ return res.status(500).json({
     
 }
 
-const  CreateAlbumController = async (req,res)=>{
-try{
-const user = req.user;
-const {title,musicId} = req.body;
+const  CreateAlbumController = async (req, res) => {
+  try {
+    let album;
+    const user = req.user;
+    const { title, musicId } = req.params;
 
-const existingAlbum = await albumModel.findOne({title:title,artist:user.id});
-if(existingAlbum){
-existingAlbum.musics.push(musicId);
-await existingAlbum.save();
-return res.status(200).json({
-    message:"Music added to existing album successfully"
-})
-}
-const newAlbum = await albumModel.create({
-    title:title,
-    musics:[musicId],
-    artist:user.id
-})
-return res.status(200).json({
-    message:"Album created successfully"
-})
+    const existingAlbum = await albumModel.findOne({ title, artist: user.id });
 
+    if (existingAlbum) {
+      existingAlbum.musics.push(musicId);
+      album = await existingAlbum.save();
+    } else {
+      album = await albumModel.create({
+        title,
+        musics: [musicId],
+        artist: user.id,
+      });
+    }
 
-}catch(err){
-    res.status(500).json({
-        message:err.message
-    })
+    const albumWithMusics = await albumModel
+      .findById(album._id)
+      .populate("musics", ["title", "url"]);
 
-}
+    // console.log("albumWithMusics", albumWithMusics);
 
+    return res.status(200).json({
+      message: "Album processed successfully",
+      album: albumWithMusics,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
+};
 
-}
 module.exports = {CreateMusicController,CreateAlbumController};

@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-
+const musicModel = require("../models/music.model");
 const createMusicMiddleware = (req, res, next) => {
   const { token } = req.cookies || {};
   const musicFile = req.file;
@@ -35,11 +35,10 @@ const createMusicMiddleware = (req, res, next) => {
   next();
 };
 
-const createAlbumMiddleware = (req, res, next) => {
+const createAlbumMiddleware = async(req, res, next) => {
 try{
   const { token } = req.cookies || {};
-const {title,musicId} = req.body;
-
+const {musicId,title} = req.params;
 if(!token){
     return res.status(401).json({
         message:"Unauthorized"
@@ -50,17 +49,22 @@ if(!token){
         message:"title and musicId are required"
     })
   }
+  const isMusicExist = await musicModel.findById(musicId);
+if(!isMusicExist){
+    return res.status(404).json({
+        message:"Music not found"
+    })
+}
+
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
 if(decoded.role !== "artist"){
     return res.status(403).json({
         message:"you are not authorized to create music"
     })
+  }
 
     req.user = decoded;
     next();
-  }
-
-
 }catch(err){
     return res.status(500).json({
         message:err.message
