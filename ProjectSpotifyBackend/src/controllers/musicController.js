@@ -44,9 +44,21 @@ try{
 const user = req.user;
 const {title,musicId} = req.body;
 
-const album  = await albumModel.create({
+const existingAlbum = await albumModel.findOne({title:title,artist:user.id});
+if(existingAlbum){
+existingAlbum.musics.push(musicId);
+await existingAlbum.save();
+return res.status(200).json({
+    message:"Music added to existing album successfully"
+})
+}
+const newAlbum = await albumModel.create({
     title:title,
-    music: musicId
+    musics:[musicId],
+    artist:user.id
+})
+return res.status(200).json({
+    message:"Album created successfully"
 })
 
 
