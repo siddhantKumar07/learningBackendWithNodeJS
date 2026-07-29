@@ -2,7 +2,8 @@ const mongoose = require("mongoose")
 const jwt = require('jsonwebtoken');
 const userModel = require("../models/user.model")
 const uploadImage = require("../service/imageUpload.service")
-const musicModel = require("../models/music.model")
+const musicModel = require("../models/music.model");
+const albumModel = require("../models/album.model");
 
 const CreateMusicController =async (req,res)=>{
 try{
@@ -37,4 +38,25 @@ return res.status(500).json({
 }
     
 }
-module.exports = CreateMusicController;
+
+const  CreateAlbumController = async (req,res)=>{
+try{
+const user = req.user;
+const {title,musicId} = req.body;
+
+const album  = await albumModel.create({
+    title:title,
+    music: musicId
+})
+
+
+}catch(err){
+    res.status(500).json({
+        message:err.message
+    })
+
+}
+
+
+}
+module.exports = {CreateMusicController,CreateAlbumController};

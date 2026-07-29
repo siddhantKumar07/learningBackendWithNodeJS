@@ -35,4 +35,36 @@ const createMusicMiddleware = (req, res, next) => {
   next();
 };
 
-module.exports = createMusicMiddleware;
+const createAlbumMiddleware = (req, res, next) => {
+try{
+  const { token } = req.cookies || {};
+const {title,musicId} = req.body;
+
+if(!token){
+    return res.status(401).json({
+        message:"Unauthorized"
+    })
+  }
+  if(!title || !musicId){
+    return res.status(400).json({
+        message:"title and musicId are required"
+    })
+  }
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+if(decoded.role !== "artist"){
+    return res.status(403).json({
+        message:"you are not authorized to create music"
+    })
+
+    req.user = decoded;
+    next();
+  }
+
+
+}catch(err){
+    return res.status(500).json({
+        message:err.message
+    })
+}
+}
+module.exports = {createMusicMiddleware,createAlbumMiddleware}
