@@ -44,7 +44,12 @@ return res.status(500).json({
 const getAllMusicController = async (req, res) => {
 const user = req.user;
 try{
-  
+  if(user.role !== "user") {
+    return res.status(403).json({
+      message: "You are not authorized to view music",
+    });
+  }
+
     const allMusic = await musicModel.find().populate("artist",["username"]);
     return res.status(200).json({
         message:"All music fetched successfully",
