@@ -17,4 +17,5 @@ musicRouter.post("/createMusic", upload.single("musicFile"),isLoggedIn, createMu
 musicRouter.get("/getAllMusic",isLoggedIn,getAllMusicController);
 
 musicRouter.post("/createAlbum/:musicId/:title",isLoggedIn,createAlbumMiddleware,CreateAlbumController);
+musicRouter.get("/getAllAlbums",isLoggedIn,)
 module.exports = musicRouter;

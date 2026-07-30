@@ -49,7 +49,6 @@ try{
       message: "You are not authorized to view music",
     });
   }
-
     const allMusic = await musicModel.find().populate("artist",["username"]);
     return res.status(200).json({
         message:"All music fetched successfully",
