@@ -66,6 +66,9 @@ catch(err){
 
 }
 
+const getAllAlbumsController = async(req,res)=>{
+  
+}
 
 const  CreateAlbumController = async (req, res) => {
   try {
