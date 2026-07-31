@@ -118,7 +118,6 @@ const feedUser = await userModel.find({
             _id:{$nin:[...hideFromFeed]}//it will get all the user which is not in the hideFromFeed set
     
 }).select(userSafeData).skip(skip).limit(limit)
-
 if(feedUser.length === 0) {
     return res.status(404).json({
         message:"no new user found in the feed"
