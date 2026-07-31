@@ -67,6 +67,7 @@ catch(err){
 }
 
 const getAllAlbumsController = async(req,res)=>{
+  
   try{
 const allAlbums = await albumModel.find().populate("musics",["title","url"]).populate("artist",["username"]);
 return res.status(200).json({
