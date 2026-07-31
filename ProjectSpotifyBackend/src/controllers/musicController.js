@@ -129,4 +129,4 @@ const  CreateAlbumController = async (req, res) => {
   }
 };
 
-module.exports = {CreateMusicController,CreateAlbumController,getAllMusicController};
+module.exports = {CreateMusicController,CreateAlbumController,getAllMusicController,getAllAlbumsController};

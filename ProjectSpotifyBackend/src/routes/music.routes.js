@@ -1,6 +1,6 @@
 const express = require('express');
 const {createMusicMiddleware} = require('../middlewares/musicMiddleware');
-const {CreateMusicController} = require('../controllers/musicController');
+const {CreateMusicController, getAllAlbumsController} = require('../controllers/musicController');
 const {createAlbumMiddleware} = require('../middlewares/musicMiddleware');
 const {CreateAlbumController} = require('../controllers/musicController');
 const {isLoggedIn} = require('../middlewares/musicMiddleware');
@@ -17,5 +17,5 @@ musicRouter.post("/createMusic", upload.single("musicFile"),isLoggedIn, createMu
 musicRouter.get("/getAllMusic",isLoggedIn,getAllMusicController);
 
 musicRouter.post("/createAlbum/:musicId/:title",isLoggedIn,createAlbumMiddleware,CreateAlbumController);
-musicRouter.get("/getAllAlbums",isLoggedIn,)
+musicRouter.get("/getAllAlbums",isLoggedIn,getAllAlbumsController)
 module.exports = musicRouter;
