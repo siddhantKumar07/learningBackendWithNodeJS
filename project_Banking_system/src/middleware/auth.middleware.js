@@ -57,24 +57,28 @@ const loginMiddleware = async(req,res,next)=>{
     const {email,password}= req.body;
       
     if(!email||!password){
-        res.status(400).json({
+       return res.status(400).json({
             success:false,
             message:"email and password both required"
         })
     }
     const user = userModel.find({email:email})
     if(!user){
-        res.status(404).json({
+      return  res.status(404).json({
             message:"user with this email is not exists"
         })
     }
     const isPassCorrect = user.comparePass()
     if(!isPassCorrect){
-        res.status(400).json({
+      return  res.status(400).json({
             message:"please enter correct password"
         })
     }
-    console.log(isCoree)
+    console.log(isPassCorrect)
+    return res.status(201).json({
+        message:"login successfull",
+        user: user
+    })
 
 }
 
