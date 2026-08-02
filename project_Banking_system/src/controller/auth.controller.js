@@ -4,9 +4,10 @@ require("dotenv").config()
 const  registerController =async (req,res)=>{
     const {email,password,name}=req.body
 
-    const isUserAlreadyExist = userModel.find({email:email});
+    const isUserAlreadyExist = await userModel.findOne({email:email});
+    console.log(isUserAlreadyExist)
     if(isUserAlreadyExist){
-      return  res.status(400).json({
+      return res.status(400).json({
             success:false,
             message:"user already exist with this email"
         })
@@ -20,7 +21,7 @@ const  registerController =async (req,res)=>{
     await user.save()
     const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:"3d"})
     res.cookie("token",token)
-    res.status(201).json({
+    return res.status(201).json({
  message:"user registered successfull",
  user:{
     _id:user._id,

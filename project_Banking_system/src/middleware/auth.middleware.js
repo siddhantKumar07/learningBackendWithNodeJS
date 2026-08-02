@@ -37,14 +37,14 @@ const registerMiddleware = async(req,res,next)=>{
             message:"Name should be between 4 and 30 characters"
         })
     }
-   if(validator.isEmail(email)){
-    res.status(400).json({
+   if(!validator.isEmail(email)){
+    return res.status(400).json({
         success:false,
         message:"please enter a valid email"
     })
    }
    if(!validator.isStrongPassword(password)){
-    res.status(400).json({
+    return res.status(400).json({
         success:false,
         message:"password should be atleast 8 character long, one uppercase, one symbol and number"
     })
