@@ -30,13 +30,13 @@ const userSchema =new  mongoose.Schema({
 },{
     timestamps:true
 })
-userSchema.pre("save",async function(next){// this will run before saving the user to the database and will hash the password before saving it to the database when user.save() is called
+userSchema.pre("save",async function(){// this will run before saving the user to the database and will hash the password before saving it to the database when user.save() is called
     if(!this.isModified("password")){
-        return next();
+        return ;
     }
 const hash = await bcrypt.hash(this.password,10);
 this.password = hash;
-return next();
+return ;
 
 })
 
@@ -45,5 +45,5 @@ userSchema.methods.comparePass = async function(password){
 }
 
 
-const userModel = mongoose.model("User",userSchema);
+const userModel = mongoose.model("user",userSchema);
 module.exports = userModel;
