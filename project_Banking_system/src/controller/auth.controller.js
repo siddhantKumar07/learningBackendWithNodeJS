@@ -1,17 +1,17 @@
 const userModel = require("../model/user.model")
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
-const  registerController = (req,res)=>{
+const  registerController =async (req,res)=>{
     const {email,password,name}=req.body
 
     const isUserAlreadyExist = userModel.find({email:email});
     if(isUserAlreadyExist){
-        res.status(400).json({
+      return  res.status(400).json({
             success:false,
             message:"user already exist with this email"
         })
     }
-    const user = new user({
+    const user = new userModel({
         email:email,
         name:name,
         password:password

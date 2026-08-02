@@ -22,7 +22,7 @@ const userSchema =new  mongoose.Schema({
     type:String,
     required:[true,"password is required"],
     validate:{
-        validator = validator.isStrongPassword,
+        validator : validator.isStrongPassword,
         message:"password should be atleast 8 character long ,should be one special symbol,  number and one uppercase letter"
     },
     select:false 
