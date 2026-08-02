@@ -63,13 +63,13 @@ const loginMiddleware = async(req,res,next)=>{
             message:"email and password both required"
         })
     }
-    const user = userModel.find({email:email})
+    const user =await userModel.findOne({email:email}).select("+password");
     if(!user){
       return  res.status(404).json({
             message:"user with this email is not exists"
         })
     }
-    const isPassCorrect = user.comparePass()
+        const isPassCorrect =await user.comparePass(password)
     if(!isPassCorrect){
       return  res.status(400).json({
             message:"please enter correct password"
