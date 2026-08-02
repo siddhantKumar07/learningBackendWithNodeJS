@@ -75,14 +75,13 @@ const loginMiddleware = async(req,res,next)=>{
         })
     }
     console.log(isPassCorrect)
-    return res.status(201).json({
-        message:"login successfull",
-        user: user
-    })
+req.user = user;
+next()
 
 }
 
 module.exports ={
     authMiddleware,
-    registerMiddleware
+    registerMiddleware,
+    loginMiddleware
 }

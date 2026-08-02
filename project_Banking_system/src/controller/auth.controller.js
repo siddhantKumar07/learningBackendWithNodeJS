@@ -29,6 +29,20 @@ const  registerController = (req,res)=>{
  }
     })
 }
+
+const loginController = async(req,res)=>{
+const user = req.user;
+const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:"3d"})
+res.cookie("token",token)
+
+return res.status(200).json({
+    success:true,
+    message:"user logged in successfully",
+    user:user
+})
+
+}
 module.exports ={
-    registerController
+    registerController,
+    loginController
 }
