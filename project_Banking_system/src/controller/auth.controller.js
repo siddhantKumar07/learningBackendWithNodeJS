@@ -1,6 +1,11 @@
 const userModel = require("../model/user.model")
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
+
+/**
+ * user registration controller
+ * post request to /api/auth/register
+ */
 const  registerController =async (req,res)=>{
     const {email,password,name}=req.body
 
@@ -31,6 +36,10 @@ const  registerController =async (req,res)=>{
     })
 }
 
+/**
+ * user login controller
+ * post request to /api/auth/login
+ */
 const loginController = async(req,res)=>{
 const user = req.user;
 const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:"3d"})
