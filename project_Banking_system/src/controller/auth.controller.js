@@ -1,6 +1,7 @@
 const userModel = require("../model/user.model")
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
+const {sendRegistrationEmail}= require("../service/email.service")
 
 /**
  * user registration controller
@@ -26,6 +27,10 @@ const  registerController =async (req,res)=>{
     await user.save()
     const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:"3d"})
     res.cookie("token",token)
+    
+    //sending a registration email to the user after successful registration
+    await sendRegistrationEmail(user.email,user.name)
+
     return res.status(201).json({
  message:"user registered successfull",
  user:{

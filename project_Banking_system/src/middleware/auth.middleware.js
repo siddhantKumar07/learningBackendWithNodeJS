@@ -49,7 +49,7 @@ const registerMiddleware = async(req,res,next)=>{
         message:"password should be atleast 8 character long, one uppercase, one symbol and number"
     })
    }
-
+   
    next()
 
 }

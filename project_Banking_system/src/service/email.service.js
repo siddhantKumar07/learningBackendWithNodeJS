@@ -25,7 +25,7 @@ transporter.verify((error, success) => {
 const sendEmail = async (to, subject, text, html) => {
   try {
     const info = await transporter.sendMail({
-      from: `"Your Name" <${process.env.EMAIL_USER}>`, // sender address
+      from: `"bankProject" <${process.env.EMAIL_USER}>`, // sender address
       to, // list of receivers
       subject, // Subject line
       text, // plain text body
@@ -39,8 +39,14 @@ const sendEmail = async (to, subject, text, html) => {
   }
 };
 
+const sendRegistrationEmail = async (userEmail,name)=>{
+    const subject = "Welcome to Our Banking System";
+    const text = `Hello ${name},\n\nThank you for registering with our banking system. We are excited to have you on board! \n\nBest regards,\nThe Banking System Team`;
+    const html = `<p>Hello ${name},</p><p>Thank you for registering with our banking system. We are excited to have you on board!</p> <p>Best regards,<br/>The Banking System Team</p>`;
+    await sendEmail(userEmail, subject, text, html);
+}
+
 module.exports = {
-    sendEmail,
-    transporter
+sendRegistrationEmail
 
 };
