@@ -9,7 +9,8 @@ const authMiddleware =async (req,res,next)=>{
             message:"Please login to access this resource"
         })
     }
-    const decoded =await jwt.verify(token,process.env.JWT_SECRET);
+try{
+        const decoded =await jwt.verify(token,process.env.JWT_SECRET);
     const user = await userModel.findById(decoded._id);
     if(!user){
         return res.status(401).json({
@@ -19,6 +20,12 @@ const authMiddleware =async (req,res,next)=>{
     }
     req.user = user;
     next();
+}catch(error){
+    return res.status(401).json({
+        success:false,
+        message:"Invalid token"
+    })
+}
 }
 
 
