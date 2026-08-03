@@ -39,7 +39,11 @@ res.cookie("token",token)
 return res.status(200).json({
     success:true,
     message:"user logged in successfully",
-    user:user
+    user:{
+        userId:user._id,
+        name:user.name,
+        email:user.email
+    }
 })
 
 }

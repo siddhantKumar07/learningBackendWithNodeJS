@@ -75,7 +75,6 @@ const loginMiddleware = async(req,res,next)=>{
             message:"please enter correct password"
         })
     }
-    console.log(isPassCorrect)
 req.user = user;
 next()
 
