@@ -8,6 +8,7 @@ const {sendRegistrationEmail}= require("../service/email.service")
  * post request to /api/auth/register
  */
 const  registerController =async (req,res)=>{
+try{
     const {email,password,name}=req.body
 
     const isUserAlreadyExist = await userModel.findOne({email:email});
@@ -39,6 +40,13 @@ const  registerController =async (req,res)=>{
     email:user.email
  }
     })
+
+}catch(error){
+    return res.status(500).json({
+        success:false,
+        message:"Internal server error"
+    })
+}
 }
 
 /**
@@ -46,6 +54,7 @@ const  registerController =async (req,res)=>{
  * post request to /api/auth/login
  */
 const loginController = async(req,res)=>{
+try{
 const user = req.user;
 const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:"3d"})
 res.cookie("token",token)
@@ -59,6 +68,12 @@ return res.status(200).json({
         email:user.email
     }
 })
+}catch(error){
+    return res.status(500).json({
+        success:false,
+        message:"Internal server error"
+    })
+}
 
 }
 module.exports ={
