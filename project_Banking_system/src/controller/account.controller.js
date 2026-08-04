@@ -4,6 +4,7 @@ const createAccount = async (req,res)=>{
     const userId = req.user._id;
     try{
         const newAccount = new accountModel({
+            
             user:userId
         })
         await newAccount.save();
