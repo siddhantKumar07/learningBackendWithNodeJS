@@ -10,7 +10,7 @@ const authMiddleware =async (req,res,next)=>{
         })
     }
 try{
-        const decoded =await jwt.verify(token,process.env.JWT_SECRET);
+    const decoded =await jwt.verify(token,process.env.JWT_SECRET);
     const user = await userModel.findById(decoded._id);
     if(!user){
         return res.status(401).json({
