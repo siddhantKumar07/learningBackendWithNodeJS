@@ -4,7 +4,7 @@ const createAccount = async (req,res)=>{
     const userId = req.user._id;
     try{
         const newAccount = new accountModel({
-            
+
             user:userId
         })
         await newAccount.save();
@@ -19,4 +19,7 @@ const createAccount = async (req,res)=>{
             message:error.message || "Internal server error"
         })
     }
+}
+module.exports = {
+    createAccount
 }
