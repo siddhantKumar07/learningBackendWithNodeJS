@@ -6,6 +6,6 @@ const accountRouter = express.Router();
 
 // @route POST request to /api/account
 // @desc create a new account for the authenticated user 
-accountRouter.post("/",authMiddleware,createAccount)
+accountRouter.post("/createAccount",authMiddleware,createAccount)
 
 module.exports = accountRouter;
