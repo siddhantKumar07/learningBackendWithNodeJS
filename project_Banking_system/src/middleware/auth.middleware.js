@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const userModel = require("../model/user.model");
 const validator = require("validator")
-const authMiddleware =async (req,res,next)=>{
+const authMiddleware =async (req,res,next)=>{//this middleware is used to check if the user is authenticated or not
     const {token } = req.cookies;
     if(!token){
         return res.status(401).json({
