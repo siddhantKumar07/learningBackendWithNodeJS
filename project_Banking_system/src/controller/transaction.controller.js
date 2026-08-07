@@ -3,6 +3,7 @@ const accountModel = require("../model/account.model");
 const mongooes = require("mongoose");
 const ledgerModel = require("../model/ledger.model");
 const { sendTransactonEmail } = require("../service/email.service");
+
 const createTransaction = async (req, res) => {
   const { fromAccount, toAccount, amount, idempotencyKey } = req.body;
   if (!fromAccount || !toAccount || !amount || !idempotencyKey) {
@@ -117,3 +118,5 @@ const createTransaction = async (req, res) => {
 
   }
 }
+
+module.exports=createTransaction
