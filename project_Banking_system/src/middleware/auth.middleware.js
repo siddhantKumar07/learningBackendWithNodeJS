@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const userModel = require("../model/user.model");
 const validator = require("validator")
+require("dotenv").config()
 const authMiddleware =async (req,res,next)=>{//this middleware is used to check if the user is authenticated or not
     const {token } = req.cookies;
     if(!token){
@@ -27,6 +28,31 @@ try{
 }
 }
 
+authSystemUserMiddleware = async(req,res,next)=>{
+    const token = req.cookies.token;
+    if(!token){
+        return res.status(401).json({
+            success:false,
+            message:"Please login to access this resource"
+        })
+    }
+    const decoded = await jwt.verify(token,process.env.JWT_SECRET);
+    const user = await userModel.findById(decoded.id).select("+systemUser");
+    if(!user){
+        return res.status(401).json({
+            success:false,
+            message:"User not found"
+        })
+    }
+    if(!user.systemUser){
+        return res.status(403).json({
+            success:false,
+            message:"You are not authorized to access this resource"
+        })
+    }
+    req.user = user;
+    return next();
+}
 
 const registerMiddleware = async(req,res,next)=>{
     const {name,email,password} = req.body;
