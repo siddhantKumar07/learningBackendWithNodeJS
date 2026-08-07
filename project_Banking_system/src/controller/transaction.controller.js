@@ -44,6 +44,19 @@ const createTransaction = async (req, res) => {
         message: "transaction failed previously, please try again",
       });
     }
-    
+    if(isTransactionAlreadyExist.status === "reversed"){
+        return res.status(400).json({
+            success:false,
+            message:"transaction already reversed, please try again"
+        })
+    }
+
+    // checking account status whether it is active or not 
+    if(fromAccountUser.status !== "active" || toAccountUser.status !== "active"){
+        return res.status(400).json({
+            success:false,
+            message:"fromAccount or toAccount is not active"
+        })
+    }
   }
-};
+}
