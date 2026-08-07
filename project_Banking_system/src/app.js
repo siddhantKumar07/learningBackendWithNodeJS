@@ -2,6 +2,7 @@ const express = require('express');
 const cookieParser = require("cookie-parser")
 const authRouter = require('./routes/auth.route');
 const accountRouter = require('./routes/acount.route');
+const transactionRouter = require("./routes/transaction.route")
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
@@ -13,4 +14,7 @@ app.use("/api/auth",authRouter);
 
 // account router
 app.use("/api/account",accountRouter);
+
+// transaction router
+app.use("/api/transaction",transactionRouter);
 module.exports = app;
