@@ -1,4 +1,5 @@
-
+const transactionModel = require("../model/transaction.model");
+const accountModel = require("../model/account.model");
 const createTransaction=async(req,res)=>{
     const {fromAccount,toAccount,amount,idempotencyKey} = req.body;
     if(!fromAccount || !toAccount || !amount || !idempotencyKey){
@@ -7,4 +8,21 @@ const createTransaction=async(req,res)=>{
             message:"Please provide fromAccount,toAccount,amount and idempotencyKey"
         })
     }
+    const fromAccountUser = await accountModel.findOne(
+        {
+            _id:fromAccount,
+        }
+    )
+    const toAccountUser = await accountModel.findOne(
+        {
+            _id:toAccount,
+        }
+    )
+    if(!fromAccountUser || !toAccountUser){
+        return res.status(400).json({
+            success:false,
+            message:"fromAccount or toAccount is invalid"
+        })
+    }
+    
 }
