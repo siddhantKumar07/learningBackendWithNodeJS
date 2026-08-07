@@ -1,5 +1,8 @@
 const transactionModel = require("../model/transaction.model");
 const accountModel = require("../model/account.model");
+const mongooes = require("mongoose");
+const ledgerModel = require("../model/ledger.model");
+const { sendTransactonEmail } = require("../service/email.service");
 const createTransaction = async (req, res) => {
   const { fromAccount, toAccount, amount, idempotencyKey } = req.body;
   if (!fromAccount || !toAccount || !amount || !idempotencyKey) {
@@ -58,5 +61,59 @@ const createTransaction = async (req, res) => {
             message:"fromAccount or toAccount is not active"
         })
     }
+
+    const balance = fromAccountUser.getBalance()
+
+    if(balance < amount){
+        return res.status(400).json({
+            success:false,
+            message:`insufficient balance in fromAccount. Current balance is ${balance},required amount is ${amount}`
+        })
+    }
+
+    const session = await mongooes.startSession();
+    session.startTransaction();
+
+       const newTransaction = await transactionModel.create({
+        fromAccount:fromAccount,
+        toAccount:toAccount,
+        amount:amount,
+        idempotencyKey:idempotencyKey,
+        status:"pending"
+       },{session:session})
+
+       const debitLedgerEntry = await ledgerModel.create({
+        account:fromAccount,
+        type:"debit",
+        amount:amount,
+        transaction:newTransaction._id
+       },{session:session})
+
+       const creditLedgerEntry = await ledgerModel.create({
+        account:toAccount,
+        type:"credit",
+        amount:amount,
+        transaction:newTransaction._id
+       },{session:session})
+  newTransaction.status = "success"
+  await newTransaction.save({session:session})
+
+  await session.commitTransaction();
+  session.endSession();
+
+  // sending email notification
+ await sendTransactonEmail(
+    req.user.email,
+    req.user.name,
+    amount,
+    toAccountUser._id,
+  )
+      
+  return res.status(201).json({
+    success: true,
+    message: "transaction processed successfully",
+    transaction: newTransaction,
+  });
+
   }
 }
