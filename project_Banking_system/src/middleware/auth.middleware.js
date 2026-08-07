@@ -12,7 +12,7 @@ const authMiddleware =async (req,res,next)=>{//this middleware is used to check 
     }
 try{
     const decoded =await jwt.verify(token,process.env.JWT_SECRET);
-    const user = await userModel.findById(decoded.id);
+    const user = await userModel.findById(decoded.id).select("+systemUser");
     if(!user){
         return res.status(401).json({
             success:false,
@@ -28,16 +28,8 @@ try{
 }
 }
 
-authSystemUserMiddleware = async(req,res,next)=>{
-    const token = req.cookies.token;
-    if(!token){
-        return res.status(401).json({
-            success:false,
-            message:"Please login to access this resource"
-        })
-    }
-    const decoded = await jwt.verify(token,process.env.JWT_SECRET);
-    const user = await userModel.findById(decoded.id).select("+systemUser");
+const authSystemUserMiddleware = async(req,res,next)=>{
+  const user = req.user;
     if(!user){
         return res.status(401).json({
             success:false,
@@ -115,5 +107,6 @@ next()
 module.exports ={
     authMiddleware,
     registerMiddleware,
-    loginMiddleware
+    loginMiddleware,
+    authSystemUserMiddleware
 }

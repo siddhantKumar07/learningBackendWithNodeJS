@@ -119,4 +119,8 @@ const createTransaction = async (req, res) => {
   }
 }
 
+const createInitialFundsTransactionController = async(req,res)=>{
+    
+}
+
 module.exports=createTransaction
