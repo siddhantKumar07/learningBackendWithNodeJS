@@ -140,6 +140,48 @@ const createInitialFundsTransactionController = async(req,res)=>{
         systemUser:true
         }
      )
+     if(!fromAccountUser){
+        return res.status(400).json({
+            success:false,
+            message:"system user account not found"
+        })
+     }
+
+     const session = await mongooes.startSession();
+     session.startTransaction();
+
+     const transaction = await transactionModel.create({
+        fromAccount:fromAccountUser._id,
+        toAccount,
+        amount,
+        idempotencyKey,
+        status:"pending"
+     },{session})
+
+        const debitLedgerEntry = await ledgerModel.create({
+            account:fromAccountUser._id, 
+            type:"debit",
+            amount,
+            transaction:transaction._id
+        },{session})
+
+        const creditLedgerEntry = await ledgerModel.create({
+            account:toAccount,
+            type:"credit",
+            amount,
+            transaction:transaction._id
+        },{session})
+
+        transaction.status = "success"
+        await transaction.save({session})
+        await session.commitTransaction();
+        session.endSession();
+
+    return res.status(201).json({
+        success:true,
+        message:"initial funds transaction processed successfully",
+        transaction
+    })
 }
 
 module.exports=createTransaction
