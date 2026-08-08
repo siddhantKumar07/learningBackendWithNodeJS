@@ -118,11 +118,10 @@ const createTransaction = async (req, res) => {
 
   }
 }
-
 const createInitialFundsTransactionController = async(req,res)=>{
     const {toAccount,amount,idempotencyKey} = req.body;
     if(!toAccount || !amount || !idempotencyKey){
-        
+
     return res.status(400).json({
         success:false,
         message:"Please provide toAccount,amount and idempotencyKey"
