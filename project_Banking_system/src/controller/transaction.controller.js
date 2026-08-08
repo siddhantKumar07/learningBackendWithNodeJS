@@ -134,6 +134,12 @@ const createInitialFundsTransactionController = async(req,res)=>{
             message:"toAccount is invalid"
         })
      }
+
+     const fromAccountUser = await accountModel.findOne(
+        {user:req.user._id,
+        systemUser:true
+        }
+     )
 }
 
 module.exports=createTransaction
