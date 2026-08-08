@@ -117,6 +117,7 @@ const createTransaction = async (req, res) => {
 
   }
 }
+
 const createInitialFundsTransactionController = async(req,res)=>{
     const {toAccount,amount,idempotencyKey} = req.body;
     if(!toAccount || !amount || !idempotencyKey){
