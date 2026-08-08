@@ -150,27 +150,27 @@ const createInitialFundsTransactionController = async(req,res)=>{
      const session = await mongooes.startSession();
      session.startTransaction();
 
-     const transaction = await transactionModel.create({
+     const transaction = await transactionModel.create([{
         fromAccount:fromAccountUser._id,
         toAccount,
         amount,
         idempotencyKey,
         status:"pending"
-     },{session})
+     }],{session})
 
-        const debitLedgerEntry = await ledgerModel.create({
+        const debitLedgerEntry = await ledgerModel.create([{
             account:fromAccountUser._id, 
             type:"debit",
             amount,
             transaction:transaction._id
-        },{session})
+        }],{session})
 
-        const creditLedgerEntry = await ledgerModel.create({
+        const creditLedgerEntry = await ledgerModel.create([{
             account:toAccount,
             type:"credit",
             amount,
             transaction:transaction._id
-        },{session})
+        }],{session})
 
         transaction.status = "success"
         await transaction.save({session})
@@ -184,4 +184,5 @@ const createInitialFundsTransactionController = async(req,res)=>{
     })
 }
 
-module.exports=createTransaction
+module.exports={createTransaction
+,createInitialFundsTransactionController}

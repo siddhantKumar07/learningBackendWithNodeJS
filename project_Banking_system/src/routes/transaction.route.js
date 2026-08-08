@@ -13,6 +13,6 @@ transactionRouter.post("/",authMiddleware,createTransaction)
  * @route POST request to /api/system/initial-funds
  * @desc create a intial fund transaction from system user 
  */
-transactionRouter.post("/system/intial-funds",authMiddleware,authSystemUserMiddleware)
+transactionRouter.post("/system/intial-funds",authMiddleware,authSystemUserMiddleware,createTransaction.createInitialFundsTransactionController)
 
 module.exports = transactionRouter;
