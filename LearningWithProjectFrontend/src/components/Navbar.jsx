@@ -28,8 +28,6 @@ const Navbar = () => {
   <div className="flex px-20 h-full items-center w-[25%] ">
     <Link to={'/'} className="hover:scale-105 transition-all duration-400 ease-in-out py-2 px-3 text-2xl">AnnonymousChat</Link>
   </div>
-
-
   <div className=" gap-2  px-10 w-[60%] h-full flex items-center">
  {loggedInData&&(
      <div className="dropdown dropdown-end w-full  mr-4 flex gap-2 items-center justify-between  ">
