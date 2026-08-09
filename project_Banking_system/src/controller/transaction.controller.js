@@ -147,7 +147,7 @@ const createInitialFundsTransactionController = async(req,res)=>{
         })
      }
       
-     // session start 
+     // session start       
      const session = await mongooes.startSession();
      session.startTransaction();
 

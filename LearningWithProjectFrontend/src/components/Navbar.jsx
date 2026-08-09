@@ -24,7 +24,7 @@ const Navbar = () => {
 
   }
   return (
-      <div className="h-15 bg-[#0B1326] border-b-2 border-[#293058] flex items-center justify-between w-full">
+<div className="h-15 bg-[#0B1326] border-b-2 border-[#293058] flex items-center justify-between w-full">
   <div className="flex px-20 h-full items-center w-[25%] ">
     <Link to={'/'} className="hover:scale-105 transition-all duration-400 ease-in-out py-2 px-3 text-2xl">AnnonymousChat</Link>
   </div>
