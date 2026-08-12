@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import { base_url } from '../utils/constants'
 import { addUser, removeUser } from '../utils/userSlice'
 import SideBar from '../components/SideBar'
+
 const Home = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
