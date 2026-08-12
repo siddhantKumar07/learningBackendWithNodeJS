@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-// auth router 
+// auth router which handles the authentication of the user
 app.use("/api/auth",authRouter);
 
 
