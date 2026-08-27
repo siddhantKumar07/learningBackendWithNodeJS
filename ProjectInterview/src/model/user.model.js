@@ -16,12 +16,11 @@ const userSchema = new mongoose.Schema({
     validate:validator.isEmail,
     message:"Please enter a valid email"
  }
-
   },
   password:{
     type:String,
     required:true,
-    minlength:[6,"Password must be at least 6 characters long"],
+    minlength:[8,"Password must be at least 6 characters long"],
     validator:{
         validate:validator.isStrongPassword,
         message:"Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
