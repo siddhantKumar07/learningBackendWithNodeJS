@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const validator = require("validator");
+const bcrypt = require("bcrypt")
 const userSchema = new mongoose.Schema({
   userName:{
     type:String,
@@ -26,6 +27,12 @@ const userSchema = new mongoose.Schema({
         message:"Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
     }
   }
+})
+userSchema.pre("save",async function(){
+  if(!this.isModified("password")){
+    return;
+  }
+  const hash = 
 })
 const userModel = mongoose.model("user",userSchema)
 module.exports = userModel
