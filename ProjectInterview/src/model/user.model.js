@@ -30,6 +30,7 @@ const userSchema = new mongoose.Schema({
     }
   }
 })
+// this will run before saving the user to the database and will hash the password before saving it to the database when user.save() is called
 userSchema.pre("save",async function(){
   if(!this.isModified("password")){
     return;
@@ -38,8 +39,10 @@ userSchema.pre("save",async function(){
   this.password = hash;
   return;
 })
+
+// Generate a JWT token for the user
 userSchema.methods.jwtToken = function(){
-  return jwt.sign({id:this._id},process.env.JWT_SECRET,{expiresIn:"1d"} )
+  return jwt.sign({id:this._id},process.env.JWT_SECRET,{expiresIn:"7d"} )
 }
 
 // Compare the provided password with the hashed password stored in the database
