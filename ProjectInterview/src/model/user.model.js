@@ -1,6 +1,8 @@
 const mongoose = require("mongoose")
 const validator = require("validator");
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
+require("dotenv").config();
 const userSchema = new mongoose.Schema({
   userName:{
     type:String,
@@ -36,5 +38,14 @@ userSchema.pre("save",async function(){
   this.password = hash;
   return;
 })
+userSchema.methods.jwtToken = function(){
+  return jwt.sign({id:this._id},process.env.JWT_SECRET,{expiresIn:"1d"} )
+}
+
+// Compare the provided password with the hashed password stored in the database
+userSchema.methods.comparePassword = async function(password){
+const isMatch =await bcrypt.compare(password,this.password);
+return isMatch;
+}
 const userModel = mongoose.model("user",userSchema)
 module.exports = userModel
