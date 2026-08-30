@@ -11,14 +11,14 @@ const registerController = (req,res)=>{
     });
     const token = user.jwtToken();//this is a mongoose method which returns the token
     
-     res.cookies("token",token,{
+     res.cookie("token",token,{
         httpOnly:true,
      })
 
     user.save()
     return res.status(201).json({user:user,message:"User registered successfully"});
    }catch(err){
-    return res.status(500).json({message:"Internal server error"});
+    return res.status(500).json({message:"Internal server error",error:err.message});
    }
 
 }
