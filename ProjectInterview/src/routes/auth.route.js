@@ -1,5 +1,6 @@
 const express = require('express');
 const {registerMiddleware} = require("../middleware/authMiddleware");
+const {registerController} = require("../controllers/authController")
 const authRouter = express.Router();
 
 /**
@@ -7,7 +8,7 @@ const authRouter = express.Router();
  * @desc Register a new user
  * @access Public
  */
-authRouter.post("/register", registerMiddleware);
+authRouter.post("/register", registerMiddleware, registerController);
 
 
 
