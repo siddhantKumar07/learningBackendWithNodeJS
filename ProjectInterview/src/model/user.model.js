@@ -15,8 +15,8 @@ const userSchema = new mongoose.Schema({
  type:String,
  required:true,
  unique:[true,"Email is already taken"],
- validator:{
-    validate:validator.isEmail,
+ validate:{
+    validator:validator.isEmail,
     message:"Please enter a valid email"
  }
   },
@@ -24,10 +24,11 @@ const userSchema = new mongoose.Schema({
     type:String,
     required:true,
     minlength:[8,"Password must be at least 6 characters long"],
-    validator:{
-        validate:validator.isStrongPassword,
+    validate:{
+        validator:validator.isStrongPassword,
         message:"Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
-    }
+    },
+    select:false
   }
 })
 // this will run before saving the user to the database and will hash the password before saving it to the database when user.save() is called
