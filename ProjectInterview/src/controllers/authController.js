@@ -9,7 +9,7 @@ const registerController = (req,res)=>{
         email:email,
         password:password
     });
-    const token = user.jwtToken();
+    const token = user.jwtToken();//this is a mongoose method which returns the token
     
      res.cookies("token",token,{
         httpOnly:true,
