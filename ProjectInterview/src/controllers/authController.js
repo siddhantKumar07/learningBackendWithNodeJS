@@ -1,3 +1,4 @@
+const blackListToken = require("../model/blackList.model");
 const userModel = require("../model/user.model");
 const registerController = (req,res)=>{
    try{
@@ -36,4 +37,29 @@ const loginController  = async (req,res)=>{
    })
    return res.status(200).json({user:{username:user.userName,email:user.email},message:"User logged in successfully"});
 }
-module.exports = {registerController,loginController};
+
+// logout controller
+
+const logoutController =async (req,res)=>{
+   const {token} = req.cookies;
+   if(!token){
+      return res.status(400).json({message:"User is not logged in"});
+   }
+   if(token){
+   await blackListToken.create({token:token});
+   }
+   res.clearCookie("token");
+   return res.status(200).json({message:"User logged out successfully"});
+}
+
+
+// profile controller
+const profileController = async (req,res)=>{
+   const decoded = req.user;
+   const user = await userModel.findById(decoded.id);
+   if(!user){
+      return res.status(404).json({message:"User not found"});
+   }
+   return res.status(200).json({user:{username:user.userName,email:user.email},message:"User profile fetched successfully"});
+}
+module.exports = {registerController,loginController,logoutController,profileController};

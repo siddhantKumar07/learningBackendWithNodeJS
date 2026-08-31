@@ -1,5 +1,8 @@
 const validator = require("validator");
 const userModel = require("../model/user.model");
+const blackListToken = require("../model/blackList.model");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 const registerMiddleware =async (req,res,next)=>{
 try{
 const {username,email,password} = req.body;
@@ -51,4 +54,26 @@ const loginMiddleware = async (req,res,next)=>{
     }
 
 }
-module.exports = {registerMiddleware,loginMiddleware};
+
+// auth middleware to check if the user is logged in or not
+
+const authMiddleware = async (req,res,next)=>{
+try{
+   const {token} = req.cookies;
+if(!token){
+   return res.status(401).json({message:"User is not logged in"});
+}
+const isBlackListed = await blackListToken.findOne({token:token});
+if(isBlackListed){
+    return res.status(401).json({message:"token is blacklisted, please login again"});
+}
+const decoded = jwt.verify(token,process.env.JWT_SECRET);
+req.user = decoded;
+next() 
+}catch(error){
+    return res.status(401).json({message:"User is not logged in",error:error.message});
+}
+
+
+}
+module.exports = {registerMiddleware,loginMiddleware,authMiddleware};
