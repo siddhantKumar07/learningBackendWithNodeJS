@@ -34,6 +34,6 @@ const loginController  = async (req,res)=>{
    res.cookie("token",token,{
       httpOnly:true,
    })
-   return res.status(200).json({user:user,message:"User logged in successfully"});
+   return res.status(200).json({user:{username:user.userName,email:user.email},message:"User logged in successfully"});
 }
-module.exports = {registerController};
+module.exports = {registerController,loginController};

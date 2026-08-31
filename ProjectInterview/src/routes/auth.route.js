@@ -1,6 +1,6 @@
 const express = require('express');
 const {registerMiddleware} = require("../middleware/authMiddleware");
-const {registerController} = require("../controllers/authController")
+const {registerController, loginController} = require("../controllers/authController")
 const {loginMiddleware} = require("../middleware/authMiddleware");
 const authRouter = express.Router();
 
@@ -18,7 +18,7 @@ authRouter.post("/register", registerMiddleware, registerController);
  * @access Public
  */
 
-authRouter.post("/login", loginMiddleware)
+authRouter.post("/login", loginMiddleware,loginController);
 
 
 module.exports = authRouter;
