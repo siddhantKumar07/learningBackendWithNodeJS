@@ -43,7 +43,7 @@ userSchema.pre("save",async function(){
 
 // Generate a JWT token for the user
 userSchema.methods.jwtToken = function(){
-  return jwt.sign({id:this._id},process.env.JWT_SECRET,{expiresIn:"7d"} )
+  return jwt.sign({id:this._id,username:this.userName},process.env.JWT_SECRET,{expiresIn:"7d"} )
 }
 
 // Compare the provided password with the hashed password stored in the database

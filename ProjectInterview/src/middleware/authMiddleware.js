@@ -26,4 +26,24 @@ if(existingUser){
     return res.status(500).json({message:"Internal server error",error:err.message});
 }
 }
-module.exports = {registerMiddleware}
+
+const loginMiddleware = async (req,res,next)=>{
+    try{
+        const {email,password,username} = req.body;
+    if(!email && !username){
+        return res.status(400).json({message:"Please provide either email or username"});
+    }
+    if(!password){
+        return res.status(400).json({message:"Please provide password"});
+    }
+    const user = await userModel.findOne(
+        {
+            $or:[{userName:username},{email:email}]
+        }).select("+password");
+        
+    }catch(err){
+        return res.status(500).json({message:"Internal server error",error:err.message});
+    }
+  next();
+}
+module.exports = {registerMiddleware,loginMiddleware};
