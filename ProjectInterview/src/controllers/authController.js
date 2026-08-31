@@ -22,4 +22,18 @@ const registerController = (req,res)=>{
    }
 
 }
+
+// login controller
+const loginController  = async (req,res)=>{
+   const user = req.user;
+   const isMatch = user.comparePassword(req.body.password);
+   if(!isMatch){
+      return res.status(400).json({message:"Invalid credentials"});
+   }
+   const token = user.jwtToken();
+   res.cookie("token",token,{
+      httpOnly:true,
+   })
+   return res.status(200).json({user:user,message:"User logged in successfully"});
+}
 module.exports = {registerController};

@@ -40,10 +40,15 @@ const loginMiddleware = async (req,res,next)=>{
         {
             $or:[{userName:username},{email:email}]
         }).select("+password");
-        
+
+        if(!user){
+            return res.status(400).json({message:"Invalid credentials"});
+        }
+         req.user = user;
+          next();
     }catch(err){
         return res.status(500).json({message:"Internal server error",error:err.message});
     }
-  next();
+
 }
 module.exports = {registerMiddleware,loginMiddleware};
