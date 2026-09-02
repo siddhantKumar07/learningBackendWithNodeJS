@@ -9,7 +9,14 @@ const Login = () => {
         <h1 className='text-white text-4xl font-bold'>Login</h1>
         <InputAndLable label="Email :" type="email" placeholder="Enter Your Email" />
         <InputAndLable label="Password :" type="password" placeholder="Enter Password" />
-        <Button name="Login" />
+             <div className="mt-6">
+      <button
+        className="w-full text-center bg-pink-700 text-white font-bold py-2 cursor-pointer active:scale-90 transition-all duration-150 ease-in rounded-3xl text-2xl"
+        type="submit"
+      >
+       Login
+      </button>
+      </div>
       </form>
 
     </main>
