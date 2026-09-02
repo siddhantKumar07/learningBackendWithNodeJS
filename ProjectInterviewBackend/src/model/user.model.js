@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   userName:{
     type:String,
     required:true,
+    lowercase:true,
     unique:[true,"UserName is already taken"],
     minlength:[3,"UserName must be at least 3 characters long"],
     maxlength:[20,"UserName must be at most 20 characters long"]
@@ -14,6 +15,7 @@ const userSchema = new mongoose.Schema({
   email:{
  type:String,
  required:true,
+ lowercase:true,
  unique:[true,"Email is already taken"],
  validate:{
     validator:validator.isEmail,

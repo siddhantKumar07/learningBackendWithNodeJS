@@ -41,7 +41,7 @@ const loginMiddleware = async (req,res,next)=>{
     }
     const user = await userModel.findOne(
         {
-            $or:[{userName:username},{email:email}]
+            $or:[{userName:username.toLowerCase()},{email:email.toLowerCase()}]
         }).select("+password");
 
         if(!user){
