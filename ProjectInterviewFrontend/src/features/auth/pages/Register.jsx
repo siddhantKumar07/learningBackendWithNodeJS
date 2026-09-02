@@ -1,16 +1,17 @@
 import React from 'react'
-import Button from '../components/Button'
 import InputAndLable from '../components/InputAndLable'
 import validator from 'validator'
+import { baseUrl } from '../../../utils/constants'
+import axios from 'axios'
 const Register = () => {
   const [formData, setFormData] = React.useState({
-    userName: "",
+    username: "",
     email: "",
     password: ""
   })
-  const handleSubmit = (e)=>{
+  const handleSubmit =async (e)=>{
     e.preventDefault()
-    if(!formData.userName || !formData.email || !formData.password){
+    if(!formData.username || !formData.email || !formData.password){
       alert("Please fill all the fields")
       return
     }
@@ -22,15 +23,24 @@ const Register = () => {
       alert("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number and one symbol")
       return
     }
-    if(formData.userName.length<3||formData.userName.length>20){
+    if(formData.username.length<3||formData.username.length>20){
       alert("Username must be at least 3 characters long and not more than 20 characters")
       return
     }
+     try{
+  const response = await axios.post(`${baseUrl}/auth/register`,formData,{withCredentials:true})
+  console.log(response?.data?.message)
+     }catch(err){
+      console.error(
+    "Register error:",
+    err.response?.data || err.message
+  );
+     }
     
     console.log("clicked")
     console.log(formData)
     setFormData({
-      userName: "",
+      username: "",
       email: "",
       password: ""
     })
@@ -39,9 +49,9 @@ const Register = () => {
      <main className='flex justify-center  items-center h-screen w-full bg-[#1e1d1d]'>
       <form onSubmit={handleSubmit} className='h-[70%] w-[30%] px-4 py-8'>
         <h1 className='text-white text-4xl font-bold'>Register</h1>
-        <InputAndLable setFormData={setFormData} label="UserName :" type="text" name="userName" placeholder="Enter Your username" />
-        <InputAndLable setFormData={setFormData} label="Email :" type="email" name="email" placeholder="Enter Your Email" />
-        <InputAndLable setFormData={setFormData} label="Password :" type="password" name="password" placeholder="Enter Password" />
+        <InputAndLable setFormData={setFormData} formData={formData} label="UserName :" type="text" name="username" placeholder="Enter Your username" />
+        <InputAndLable setFormData={setFormData} formData={formData} label="Email :" type="email" name="email" placeholder="Enter Your Email" />
+        <InputAndLable setFormData={setFormData} formData={formData} label="Password :" type="password" name="password" placeholder="Enter Password" />
       <div className="mt-6">
       <button
         className="w-full text-center bg-pink-700 text-white font-bold py-2 cursor-pointer active:scale-90 transition-all duration-150 ease-in rounded-3xl text-2xl"

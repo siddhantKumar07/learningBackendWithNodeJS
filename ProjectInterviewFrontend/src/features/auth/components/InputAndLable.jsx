@@ -1,4 +1,4 @@
-const InputAndLable = ({label,type,placeholder,name,setFormData}) => {
+const InputAndLable = ({label,type,placeholder,name,setFormData,formData}) => {
     const handleChange = (e)=>{
         const {name,value} = e.target
         if(setFormData){
@@ -18,6 +18,7 @@ const InputAndLable = ({label,type,placeholder,name,setFormData}) => {
       </label>
       <input
       onChange={handleChange}
+      value={formData[name]}
       required
         className=" bg-white h-12 rounded-3xl outline-none text-xl font-semibold px-4 py-2 w-full"
         placeholder={`${placeholder}`}
