@@ -5,7 +5,11 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const registerMiddleware =async (req,res,next)=>{
 try{
-const {username,email,password} = req.body;
+let {username,email,password} = req.body;
+// convert username and email to lowercase and trim the spaces(data sanitization)
+username = username?.toLowerCase().trim();
+email = email?.toLowerCase().trim();
+
 if(!username || !email || !password){
     return res.status(400).json({message:"Please provide all required fields"});
 }
@@ -32,8 +36,10 @@ if(existingUser){
 
 const loginMiddleware = async (req,res,next)=>{
     try{
-        const {email,password,username} = req.body;
-    if(!email && !username){
+        let {email,password,username} = req.body;
+        email = email?.toLowerCase().trim();
+        username = username?.toLowerCase().trim();
+    if(!email || !username){
         return res.status(400).json({message:"Please provide either email or username"});
     }
     if(!password){
