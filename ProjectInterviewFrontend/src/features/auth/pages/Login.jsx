@@ -4,6 +4,7 @@ import InputAndLable from '../components/InputAndLable'
 import validator from 'validator'
 import { baseUrl } from '../../../utils/constants'
 import axios from 'axios'
+import { Link } from 'react-router'
 
 const Login = () => {
 const [formData, setFormData] = React.useState({
@@ -56,6 +57,9 @@ console.log(response?.data?.message)
        Login
       </button>
       </div>
+      <div className='mt-4 text-center text-white'>
+              <h3 className='text-xl'>Don't have an account ? <Link className='text-pink-700 cursor-pointer font-bold hover:underline ' to="/register">Register</Link></h3>
+            </div>
       </form>
 
     </main>
