@@ -39,7 +39,7 @@ const loginMiddleware = async (req,res,next)=>{
         let {email,password,username} = req.body;
         email = email?.toLowerCase().trim();
         username = username?.toLowerCase().trim();
-    if(!email || !username){
+    if(!email && !username){
         return res.status(400).json({message:"Please provide either email or username"});
     }
     if(!password){
@@ -47,7 +47,7 @@ const loginMiddleware = async (req,res,next)=>{
     }
     const user = await userModel.findOne(
         {
-            $or:[{userName:username.toLowerCase()},{email:email.toLowerCase()}]
+            $or:[{userName:username},{email:email}]
         }).select("+password");
 
         if(!user){

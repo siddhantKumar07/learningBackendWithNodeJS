@@ -1,8 +1,7 @@
 import React from 'react'
 import InputAndLable from '../components/InputAndLable'
 import validator from 'validator'
-import { baseUrl } from '../../../utils/constants'
-import axios from 'axios'
+import { RegisterApi } from '../services/auth.api'
 import { Link } from 'react-router'
 const Register = () => {
   const [formData, setFormData] = React.useState({
@@ -28,16 +27,14 @@ const Register = () => {
       alert("Username must be at least 3 characters long and not more than 20 characters")
       return
     }
-     try{
-  const response = await axios.post(`${baseUrl}/auth/register`,formData,{withCredentials:true})
-  console.log(response?.data?.message)
-     }catch(err){
-      console.error(
-    "Register error:",
-    err.response?.data || err.message
-  );
-     }
+   const response =await  RegisterApi({
+      username:formData.username.toLowerCase(),
+      email:formData.email.toLowerCase(),
+      password:formData.password
+    })
     
+    console.log(response)
+
     console.log("clicked")
     console.log(formData)
     setFormData({

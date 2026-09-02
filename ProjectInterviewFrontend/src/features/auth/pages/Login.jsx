@@ -1,10 +1,8 @@
 import React from 'react'
-import Button from '../components/Button'
 import InputAndLable from '../components/InputAndLable'
 import validator from 'validator'
-import { baseUrl } from '../../../utils/constants'
-import axios from 'axios'
 import { Link } from 'react-router'
+import { LoginApi } from '../services/auth.api'
 
 const Login = () => {
 const [formData, setFormData] = React.useState({
@@ -27,17 +25,13 @@ const [formData, setFormData] = React.useState({
       alert("Please enter a valid email")
       return
     }
-    try{
-  const response = await axios.post(`${baseUrl}/auth/login`,{
+
+   const response =await LoginApi({
     email:formData.email.toLowerCase(),
     password:formData.password
-  },
-{withCredentials:true})
+   })
+   console.log(response)
 
-console.log(response?.data?.message)
-    }catch(err){
-      console.log(err?.response?.data || err.message)
-    }
     setFormData({
       email: "",
       password: ""
