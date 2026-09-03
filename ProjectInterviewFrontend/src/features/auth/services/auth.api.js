@@ -32,3 +32,20 @@ const response = await axios.post(`${baseUrl}/auth/login`,{
   throw err
     }
 }
+export async function LogoutApi(){
+    try{
+   const response = await axios.post(`${baseUrl}/logout`);
+   console.log(response)
+    }catch(error){
+        console.log(error?.data?.message||error.message);
+    }
+}
+// for to handle the profle api which is baseUrl/profile to get the data
+export async function GetProfile(){
+    try{
+ const response = await axios.get(`${baseUrl}/profile`)
+ console.log(response)
+    }catch(error){
+        console.log(error.message ||error?.data.message);
+    }
+}
