@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext,useEffect} from "react";
 import {AuthContextProvider} from "../Auth.Context.jsx";
 import { RegisterApi,LoginApi,LogoutApi,GetProfile } from "../services/auth.api.js";
 
@@ -37,6 +37,17 @@ const context = useContext(AuthContextProvider)
          setUser(null);
          setLoading(false)
     }
+    
+ useEffect(()=>{
+const fetchProfile = async()=>{
+    const data = await GetProfile();
+    if(data?.user){
+        setUser(data?.user)
+    }
+    setLoading(false)
+}
+fetchProfile();
+ },[])
 
     return{
         user,
