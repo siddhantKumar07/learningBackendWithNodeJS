@@ -1,9 +1,12 @@
 import React from 'react'
 import InputAndLable from '../components/InputAndLable'
 import validator from 'validator'
+import { useAuth } from '../hooks/useAuth'
 import { RegisterApi } from '../services/auth.api'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 const Register = () => {
+const navigate = useNavigate()
+  const{loading,handleRegister} = useAuth()
   const [formData, setFormData] = React.useState({
     username: "",
     email: "",
@@ -27,21 +30,25 @@ const Register = () => {
       alert("Username must be at least 3 characters long and not more than 20 characters")
       return
     }
-   const response =await  RegisterApi({
+   await  handleRegister({
       username:formData.username.toLowerCase(),
       email:formData.email.toLowerCase(),
       password:formData.password
     })
-    
-    console.log(response)
-
-    console.log("clicked")
-    console.log(formData)
+  navigate('/')
     setFormData({
       username: "",
       email: "",
       password: ""
     })
+  }
+
+  if(loading){
+    return (
+      <div className='flex justify-center items-center h-screen w-full bg-[#1e1d1d]'>
+        <h1 className='text-white text-4xl font-bold'>Loading...</h1>
+      </div>
+    )
   }
   return (
      <main className='flex justify-center  items-center h-screen w-full bg-[#1e1d1d]'>

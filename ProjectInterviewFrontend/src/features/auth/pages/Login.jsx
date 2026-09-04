@@ -1,18 +1,17 @@
 import React from 'react'
 import InputAndLable from '../components/InputAndLable'
 import validator from 'validator'
-import { Link } from 'react-router'
-import { LoginApi } from '../services/auth.api'
-
+import { Link, useNavigate } from 'react-router'
+import { useAuth } from '../hooks/useAuth'
 const Login = () => {
+  const navigate = useNavigate()
+  const{loading,handleLogin} = useAuth()
 const [formData, setFormData] = React.useState({
     email: "",
     password: ""
   })
   const handleSubmit= async(e)=>{
     e.preventDefault()
-    console.log("clicked")
-    console.log(formData)
     if(!formData.email || !formData.password){
       alert("Please fill all the fields")
       return
@@ -26,16 +25,22 @@ const [formData, setFormData] = React.useState({
       return
     }
 
-   const response =await LoginApi({
+   await handleLogin({
     email:formData.email.toLowerCase(),
     password:formData.password
    })
-   console.log(response)
-
+ navigate("/")
     setFormData({
       email: "",
       password: ""
     })
+  }
+  if(loading){
+    return (
+      <div className='flex justify-center items-center h-screen w-full bg-[#1e1d1d]'>
+        <h1 className='text-white text-4xl font-bold'>Loading...</h1>
+      </div>
+    )
   }
   return (
     <main className='flex justify-center  items-center h-screen w-full bg-[#1e1d1d]'>

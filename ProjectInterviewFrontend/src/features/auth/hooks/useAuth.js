@@ -1,9 +1,9 @@
 import { useContext } from "react";
-import AuthProvider from "../Auth.Context.jsx";
+import {AuthContextProvider} from "../Auth.Context.jsx";
 import { RegisterApi,LoginApi,LogoutApi,GetProfile } from "../services/auth.api.js";
 
 export const useAuth=()=>{
-const context = useContext(AuthProvider)
+const context = useContext(AuthContextProvider)
     const {user,setUser,loading,setLoading} = context;
 
     const handleLogin =async({email,password})=>{
@@ -11,6 +11,8 @@ const context = useContext(AuthProvider)
         try{
             const data = await LoginApi({email,password})
             setUser(data?.user)
+            console.log("User after login",data?.user)
+            console.log("User after login",user)
             setLoading(false)
         }
         catch(err){
