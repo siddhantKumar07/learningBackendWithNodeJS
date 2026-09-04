@@ -1,8 +1,7 @@
 import React from 'react'
 import InputAndLable from '../components/InputAndLable'
-import validator from 'validator'
 import { useAuth } from '../hooks/useAuth'
-import { RegisterApi } from '../services/auth.api'
+import { registerValidation } from '../validation/authValidation'
 import { Link, useNavigate } from 'react-router'
 const Register = () => {
 const navigate = useNavigate()
@@ -14,22 +13,7 @@ const navigate = useNavigate()
   })
   const handleSubmit =async (e)=>{
     e.preventDefault()
-    if(!formData.username || !formData.email || !formData.password){
-      alert("Please fill all the fields")
-      return
-    }
-    if(!validator.isEmail(formData.email)){
-      alert("Please enter a valid email")
-      return
-    }
-    if(formData.password.length<8||!validator.isStrongPassword(formData.password)){
-      alert("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number and one symbol")
-      return
-    }
-    if(formData.username.length<3||formData.username.length>20){
-      alert("Username must be at least 3 characters long and not more than 20 characters")
-      return
-    }
+  if(!registerValidation(formData)) return
    await  handleRegister({
       username:formData.username.toLowerCase(),
       email:formData.email.toLowerCase(),

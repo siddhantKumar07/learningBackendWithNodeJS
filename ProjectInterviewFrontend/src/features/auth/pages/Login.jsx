@@ -1,8 +1,8 @@
 import React from 'react'
 import InputAndLable from '../components/InputAndLable'
-import validator from 'validator'
 import { Link, useNavigate } from 'react-router'
 import { useAuth } from '../hooks/useAuth'
+import { loginValidation } from '../validation/authValidation'
 const Login = () => {
   const navigate = useNavigate()
   const{loading,handleLogin} = useAuth()
@@ -12,18 +12,7 @@ const [formData, setFormData] = React.useState({
   })
   const handleSubmit= async(e)=>{
     e.preventDefault()
-    if(!formData.email || !formData.password){
-      alert("Please fill all the fields")
-      return
-    }
-    if(formData.password.length<8||!validator.isStrongPassword(formData.password)){
-      alert("Password must be at least 8 characters long")
-      return
-    }
-    if(!validator.isEmail(formData.email)){
-      alert("Please enter a valid email")
-      return
-    }
+   if(!loginValidation(formData)) return
 
    await handleLogin({
     email:formData.email.toLowerCase(),

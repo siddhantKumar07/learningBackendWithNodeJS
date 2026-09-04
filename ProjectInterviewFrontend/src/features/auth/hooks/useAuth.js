@@ -11,8 +11,6 @@ const context = useContext(AuthContextProvider)
         try{
             const data = await LoginApi({email,password})
             setUser(data?.user)
-            console.log("User after login",data?.user)
-            console.log("User after login",user)
             setLoading(false)
         }
         catch(err){
