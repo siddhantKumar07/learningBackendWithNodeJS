@@ -10,8 +10,8 @@ try{
   model: "gemini-3-flash-preview ",
   contents: "define love",
 });
-console.log(response.text);
 
+    return response.text;
 }catch(err){
     console.log(err.message)
 }
