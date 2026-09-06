@@ -7,7 +7,11 @@ const ai = new GoogleGenAI({
 
 
 const interviewReportSchema =z.object({
-    technicalQuestions:
+    technicalQuestions:z.array(z.object({
+        question:z.string().description("The technical question  can be ask in the interview"),
+        intention:z.string().description("The intention behind asking this question"),
+        answer:z.string().description("how to answer this questiion, whats point to be kept in mind while answering this question, and what approach to be used to answer this question etc.")
+    }))
 })
 
 async function generateInterviewReport({resume,selfDescription,jobDescription}){
