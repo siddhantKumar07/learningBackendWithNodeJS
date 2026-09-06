@@ -1,6 +1,8 @@
 const app = require('./src/app');
 const connectDb = require('./src/config/db');
-const invokeGemini = require('./src/services/ai.service')
+const { resume, selfDescription, jobDescription } = require('./src/dummy');
+const generateInterviewReport = require('./src/services/ai.service');
+// generateInterviewReport({ resume, selfDescription, jobDescription });
 connectDb();
 
 
