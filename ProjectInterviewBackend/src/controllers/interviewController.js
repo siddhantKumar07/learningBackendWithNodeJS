@@ -1,6 +1,6 @@
-const {generateInterviewReport} = require("../services/ai.service")
+const generateInterviewReport = require("../services/ai.service")
 const pdfParse = require("pdf-parse")
-const interviewReportModel = require("../models/interviewReport.model")
+const interviewReportModel = require("../model/interviewReportSchema")
 const generateInterviewReportController = async(req,res)=>{
 const {selfDescription,jobDescription} = req.body;
 
@@ -12,7 +12,15 @@ try{
         selfDescription,
         jobDescription
     })
-    const savedReport =await interviewReportModel.create()
+    const savedReport =await interviewReportModel.create({
+        user:req.user.id,
+        resume:resume,
+        selfDescription,
+        jobDescription,
+        ...report
+    })
+    return res.status(200).json({message:"Interview report generated successfully",report:savedReport});
+    
 }catch(error){
     return res.status(500).json({message:"Internal server error",error:error.message});
 }
