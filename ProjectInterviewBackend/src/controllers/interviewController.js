@@ -14,13 +14,13 @@ await parser.destroy();
 const resume = parsedPdf.text;
 
     const report = await generateInterviewReport({
-        resume:resume,
+        resume:resume.text,
         selfDescription,
         jobDescription
     })
     const savedReport =await interviewReportModel.create({
         user:req.user.id,
-        resume:resume,
+        resume:resume.textj,
         selfDescription,
         jobDescription,
         ...report
