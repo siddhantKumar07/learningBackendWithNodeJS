@@ -40,11 +40,17 @@ const context = useContext(AuthContextProvider)
     
  useEffect(()=>{
 const fetchProfile = async()=>{
-    const data = await GetProfile();
+    try{
+        const data = await GetProfile();
     if(data?.user){
         setUser(data?.user)
     }
-    setLoading(false)
+    }catch(err){
+        setLoading(false)
+    }
+    finally{
+        setLoading(false)
+    }
 }
 fetchProfile();
  },[])

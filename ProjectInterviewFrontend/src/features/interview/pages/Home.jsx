@@ -1,8 +1,6 @@
-import React from 'react'
-
 const Home = () => {
   return (
-<main>
+<main className="flex justify-center items-center bg-[#65435e] h-screen w-full">
     <div>
         <textarea name="jobDescription" placeholder='enter job description.....'></textarea>
     </div>
