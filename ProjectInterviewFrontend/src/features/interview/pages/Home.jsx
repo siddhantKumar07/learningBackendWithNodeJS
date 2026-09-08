@@ -18,9 +18,6 @@ const Home = () => {
               Share the role and your experience. We&apos;ll turn them into a focused preparation report.
             </p>
           </div>
-          <div className="hidden rounded-full border border-slate-800 bg-slate-900 px-4 py-2 text-xs text-slate-400 sm:block">
-            Step 1 <span className="mx-2 text-slate-600">/</span> Your profile
-          </div>
         </header>
 
         <form className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
@@ -64,7 +61,7 @@ const Home = () => {
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-400/10 text-cyan-300">↑</span>
                 <span>
                   <span className="block text-sm font-semibold">{resume ? resume.name : "Upload your resume"}</span>
-                  <span className="mt-1 block text-xs text-slate-500">PDF, DOC or DOCX · max 10 MB</span>
+                  <span className="mt-1 block text-xs text-slate-500">PDF, DOC or DOCX · max 5 MB</span>
                 </span>
               </span>
               <span className="text-xs font-semibold text-cyan-300">Browse</span>
