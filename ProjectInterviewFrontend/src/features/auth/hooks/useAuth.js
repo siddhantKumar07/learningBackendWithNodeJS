@@ -18,7 +18,6 @@ const context = useContext(AuthContextProvider)
             throw err
         }
     }
-
     const handleRegister = async ({username,email,password})=>{
         setLoading(true);
         try{
