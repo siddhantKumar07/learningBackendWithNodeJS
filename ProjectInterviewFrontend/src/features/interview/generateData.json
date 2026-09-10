@@ -1,5 +1,4 @@
 {
-
   "matchScore": 85,
   "technicalQuestions": [
     {
@@ -110,8 +109,4 @@
   "createdAt": {
     "$date": "2026-09-07T16:34:04.403Z"
   },
-  "updatedAt": {
-    "$date": "2026-09-07T16:34:04.403Z"
-  },
-  "__v": 0
 }
