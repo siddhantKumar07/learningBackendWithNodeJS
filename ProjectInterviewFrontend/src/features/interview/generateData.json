@@ -1,0 +1,117 @@
+{
+
+  "matchScore": 85,
+  "technicalQuestions": [
+    {
+      "question": "Explain the lifecycle of a JWT (JSON Web Token) during an authentication flow in a MERN application.",
+      "intention": "The Job Description specifically mentions JWT. The interviewer wants to ensure the candidate understands secure authentication, token storage, and how the backend verifies identity.",
+      "answer": "Start by explaining that when a user logs in, the server creates a JWT signed with a secret key and sends it to the client. The client stores it (usually in cookies or localStorage). For subsequent requests, the token is sent in the Authorization header. Mention the structure (Header, Payload, Signature) and the importance of not storing sensitive data in the payload as it is only Base64 encoded, not encrypted. Finally, explain how Express middleware verifies the signature before granting access to protected routes."
+    },
+    {
+      "question": "How do you manage state in a complex React application? Have you used tools beyond built-in hooks?",
+      "intention": "The JD lists 'Redux' as a preferred skill. The interviewer wants to see if the candidate has hit the limits of 'Prop Drilling' or 'Context API' and has explored Redux or similar libraries.",
+      "answer": "Discuss 'useState' and 'useContext' for local and simple global state. Then, pivot to Redux or Redux Toolkit, explaining that it provides a predictable state container. Mention concepts like Actions, Reducers, and the Store. If you haven't used Redux extensively, explain how you structured the state in your 'JobPrep' or 'JustChat' projects to keep it maintainable."
+    },
+    {
+      "question": "What is the 'Event Loop' in Node.js, and how does it handle asynchronous operations?",
+      "intention": "To evaluate deep understanding of Node.js performance, which is a core requirement of the JD.",
+      "answer": "Explain that Node.js is single-threaded but handles concurrency via the Event Loop. Describe how it offloads I/O tasks to the system kernel or thread pool. Mention the phases (Timers, I/O callbacks, Poll, Check) and how 'Promises' (Microtask queue) take priority over 'setTimeout' (Macrotask queue). This shows you understand how to write non-blocking code."
+    },
+    {
+      "question": "How do you design a schema in MongoDB for a social application like 'JustChat' to ensure performance?",
+      "intention": "The interviewer wants to see if the candidate understands NoSQL data modeling—specifically Embedding vs. Referencing.",
+      "answer": "Explain that for a chat app, you might 'embed' the last few messages in a Conversation document for fast rendering, but 'reference' older messages in a separate collection to avoid hitting the 16MB document limit. Discuss indexing frequently queried fields like 'timestamp' or 'userId' to improve search performance."
+    },
+    {
+      "question": "How would you migrate a JavaScript project to TypeScript, and what are the benefits?",
+      "intention": "The JD lists TypeScript as a preferred skill. They want to gauge the candidate's readiness to adopt it.",
+      "answer": "Focus on 'Type Safety' and 'Developer Experience.' Explain that you would start by configuring 'tsconfig.json,' renaming files to .ts/.tsx, and using 'any' sparingly while gradually defining Interfaces and Types for API responses and component props. Mention that it catches errors at compile-time rather than run-time."
+    }
+  ],
+  "behavioralQuestions": [
+    {
+      "question": "Describe a difficult bug you encountered in your 'JustChat' project and how you resolved it.",
+      "intention": "To evaluate problem-solving skills and persistence.",
+      "answer": "Use the STAR method (Situation, Task, Action, Result). Focus on the technical debugging process—did you use Chrome DevTools, Postman, or server logs? Explain the 'Action' you took to fix it and the 'Result' (e.g., 20% faster load time or zero crashes)."
+    },
+    {
+      "question": "How do you handle a situation where a product manager asks for a feature that is technically unfeasible within the deadline?",
+      "intention": "To evaluate communication and collaboration skills (JD requirement).",
+      "answer": "Emphasize transparency and negotiation. Explain that you would present the technical constraints, offer a 'Minimum Viable Product' (MVP) version of the feature, or suggest an alternative approach that meets the business goal without compromising code quality."
+    },
+    {
+      "question": "The JD mentions participating in code reviews. How do you approach giving and receiving feedback?",
+      "intention": "To assess team fit and openness to learning.",
+      "answer": "State that you view code reviews as a learning opportunity. When giving feedback, focus on the code, not the person, and explain the 'why' behind suggestions. When receiving feedback, stay open-minded and ask clarifying questions to improve your skills."
+    }
+  ],
+  "skillGaps": [
+    {
+      "skill": "TypeScript",
+      "severity": "medium"
+    },
+    {
+      "skill": "Redux / Advanced State Management",
+      "severity": "medium"
+    },
+    {
+      "skill": "Docker & AWS",
+      "severity": "high"
+    },
+    {
+      "skill": "Automated Testing (Jest/Cypress)",
+      "severity": "medium"
+    },
+    {
+      "skill": "CI/CD Pipelines",
+      "severity": "low"
+    }
+  ],
+  "preparationPlan": [
+    {
+      "day": "Day 1",
+      "focus": "Core JavaScript and React Internals",
+      "plan": "Review ES6+ features (Closures, Hoisting, Promises). Practice advanced React patterns like HOCs, Custom Hooks, and the useMemo/useCallback hooks to demonstrate performance optimization skills. (Time: 6 hours)"
+    },
+    {
+      "day": "Day 2",
+      "focus": "Node.js and Express Backend Mastery",
+      "plan": "Deep dive into Node.js architecture (Event Loop, Streams). Build a sample Express middleware for JWT authentication and error handling. Practice designing RESTful routes for a CRUD application. (Time: 6 hours)"
+    },
+    {
+      "day": "Day 3",
+      "focus": "Database (MongoDB) and Authentication",
+      "plan": "Review MongoDB aggregation pipelines and indexing strategies. Practice writing complex Mongoose queries. Deep dive into JWT security best practices (Refresh tokens, HttpOnly cookies). (Time: 5 hours)"
+    },
+    {
+      "day": "Day 4",
+      "focus": "Addressing Skill Gaps: TypeScript & Redux",
+      "plan": "Watch a 'TypeScript in 2 Hours' crash course. Convert a small React component from your portfolio to TS. Study Redux Toolkit basics (slices, store, provider) to show you are familiar with the concepts even if you haven't used them professionally. (Time: 7 hours)"
+    },
+    {
+      "day": "Day 5",
+      "focus": "DevOps Foundations (Docker/AWS) & Git",
+      "plan": "Learn basic Docker commands (build, run, images). Understand what an EC2 instance and an S3 bucket are on AWS. Review advanced Git commands like 'rebase', 'cherry-pick', and 'merge conflict resolution'. (Time: 5 hours)"
+    },
+    {
+      "day": "Day 6",
+      "focus": "Testing and System Design",
+      "plan": "Learn the basics of Unit Testing with Jest. Practice a few System Design questions (e.g., 'How would you design a URL shortener?'). This helps for Software Developer roles in Bangalore tech hubs. (Time: 5 hours)"
+    },
+    {
+      "day": "Day 7",
+      "focus": "Soft Skills and Project Review",
+      "plan": "Prepare STAR stories for your projects (JustChat and JobPrep). Practice explaining your 'JobPrep' architecture clearly. Do a mock interview focusing on 'Why this company?' and 'Your strengths'. (Time: 4 hours)"
+    }
+  ],
+  "user": {
+    "$oid": "6a943f617b0b78f85b7c2cba"
+  },
+  "createdAt": {
+    "$date": "2026-09-07T16:34:04.403Z"
+  },
+  "updatedAt": {
+    "$date": "2026-09-07T16:34:04.403Z"
+  },
+  "__v": 0
+}
