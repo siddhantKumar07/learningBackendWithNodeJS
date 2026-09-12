@@ -3,6 +3,7 @@ import { RouterProvider } from "react-router";
 import AuthProvider from "./features/auth/Auth.Context.jsx";
 const App = () => {
   return (
+    <interviewProvider>
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
