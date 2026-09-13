@@ -33,10 +33,19 @@ const resume = parsedPdf.text;
 }
 
 const getInterviewReportController = async(req,res)=>{
-    const {id} = req.params;
+   try {
+     const {interviewId} = req.params;
     if(!id){
         return res.status(400).json({message:"Report ID is required"});
     }
-    
+    const interviewReport = await interviewReportModel.findById(_id=interviewId,user=req.user.id);
+    if(!interviewReport){
+        return res.status(404).json({message:"Report not found"});
+    }
+    return res.status(200).json({message:"Report retrieved successfully",report:interviewReport});
+   }catch (error) {
+    return res.status(500).json({message:"Internal server error",error:error.message});
+   }
+
 }
 module.exports = {generateInterviewReportController}
