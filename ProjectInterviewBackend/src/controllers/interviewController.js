@@ -31,4 +31,12 @@ const resume = parsedPdf.text;
     return res.status(500).json({message:"Internal server error",error:error.message});
 }
 }
+
+const getInterviewReportController = async(req,res)=>{
+    const {id} = req.params;
+    if(!id){
+        return res.status(400).json({message:"Report ID is required"});
+    }
+    
+}
 module.exports = {generateInterviewReportController}
