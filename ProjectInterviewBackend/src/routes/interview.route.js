@@ -20,6 +20,12 @@ const upload = multer({
 interviewRouter.post("/",authMiddleware,upload.single("resume"),generateInterviewReportController)
 
 
+/**
+ * @route GET /api/interview/report/:id
+ * @description This route is used to retrieve a previously generated interview report by its ID. It returns the report in the response.
+ * @access private
+ */
+
 
 
 
