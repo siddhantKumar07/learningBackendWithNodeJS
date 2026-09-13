@@ -1,9 +1,14 @@
 import axios from "axios"
 import { baseUrl } from "../../../utils/constants"
 
+const api = axios.create({
+    baseURL: baseUrl,
+    withCredentials: true,
+}
+)
 export async function interviewApiHandle({resume,selfDescription,jobDescription}){
 try{
-const response = await axios.post(`${baseUrl}/api/interview`,{resume,selfDescription,jobDescription},{ withCredentials:true})
+const response = await api.post(`${baseUrl}/api/interview`,{resume,selfDescription,jobDescription},{ withCredentials:true})
 if(!response){
     console.log("no response generated")
 }
