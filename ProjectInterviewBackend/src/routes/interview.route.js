@@ -1,6 +1,6 @@
 const express = require("express");
 const { authMiddleware } = require("../middleware/authMiddleware");
-const { generateInterviewReportController } = require("../controllers/interviewController");
+const { generateInterviewReportController, getInterviewReportController } = require("../controllers/interviewController");
 const multer =require("multer")
 const interviewRouter = express.Router();
 
@@ -25,7 +25,7 @@ interviewRouter.post("/",authMiddleware,upload.single("resume"),generateIntervie
  * @description This route is used to retrieve a previously generated interview report by its ID. It returns the report in the response.
  * @access private
  */
-interviewRouter.get("/report/:id",authMiddleware)
+interviewRouter.get("/report/:interviewId",authMiddleware,getInterviewReportController)
 
 
 

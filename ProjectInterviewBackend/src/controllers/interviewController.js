@@ -35,10 +35,13 @@ const resume = parsedPdf.text;
 const getInterviewReportController = async(req,res)=>{
    try {
      const {interviewId} = req.params;
-    if(!id){
+    if(!interviewId){
         return res.status(400).json({message:"Report ID is required"});
     }
-    const interviewReport = await interviewReportModel.findById(_id=interviewId,user=req.user.id);
+    const interviewReport = await interviewReportModel.findOne({
+  _id: interviewId,
+  user: req.user.id,
+});
     if(!interviewReport){
         return res.status(404).json({message:"Report not found"});
     }
@@ -48,4 +51,4 @@ const getInterviewReportController = async(req,res)=>{
    }
 
 }
-module.exports = {generateInterviewReportController}
+module.exports = {generateInterviewReportController,getInterviewReportController}
