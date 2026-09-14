@@ -1,7 +1,21 @@
 import { useState } from "react";
 
 const Home = () => {
+
   const [resume, setResume] = useState(null);
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  // Handle form submission logic here
+  const formData = new FormData(e.target);
+  console.log("Job Description:", formData.get("jobDescription"));
+  console.log("Self Description:", formData.get("selfDescription"));
+  console.log("Resume File:", resume);
+  // You can send the form data to your backend or perform any other actions here
+  formData.values("")
+
+}
+
 
   return (
     <main className="min-h-screen bg-slate-950 px-4 py-8 text-slate-100 sm:px-8 lg:px-12">
@@ -20,7 +34,10 @@ const Home = () => {
           </div>
         </header>
 
-        <form className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+        <form className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]"
+        
+        onSubmit={handleSubmit}
+        >
           <section className="rounded-3xl border border-slate-800 bg-slate-900/80 p-5 shadow-2xl shadow-slate-950/40 sm:p-7">
             <div className="mb-5 flex items-start gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-fuchsia-500/15 text-fuchsia-400">
@@ -35,6 +52,7 @@ const Home = () => {
               Job description
             </label>
             <textarea
+            required
               name="jobDescription"
               id="jobDescription"
               placeholder="e.g. We are looking for a frontend engineer..."
@@ -72,6 +90,7 @@ const Home = () => {
               name="resume"
               accept=".pdf,.doc,.docx"
               className="hidden"
+              required
               onChange={(event) => setResume(event.target.files?.[0] ?? null)}
             />
 
@@ -79,6 +98,7 @@ const Home = () => {
               Tell us about yourself
             </label>
             <textarea
+            required
               name="selfDescription"
               id="selfDescription"
               placeholder="Mention your experience, strengths, and the areas you want to improve..."

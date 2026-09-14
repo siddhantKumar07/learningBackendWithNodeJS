@@ -6,7 +6,7 @@ const api = axios.create({
     withCredentials: true,
 }
 )
-export async function interviewApiHandle({resume,selfDescription,jobDescription}){
+export async function generateInterviewReport({resume,selfDescription,jobDescription}){
 try{
 const response = await api.post(`${baseUrl}/api/interview`,{resume,selfDescription,jobDescription},{ withCredentials:true})
 if(!response){
