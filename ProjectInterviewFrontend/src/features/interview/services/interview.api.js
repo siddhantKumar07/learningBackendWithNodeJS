@@ -25,3 +25,23 @@ export async function generateInterviewReport({
 
   return response.data;
 }
+/**
+ * @description this will return the report according to the interviewId provided
+ */
+export const getInterviewReportById=async(interviewId)=>{
+ try{
+        const response = await api.get(`/interview/report/${interviewId}`);
+    return response.data;
+ }catch(error){
+    console.log(error.message)
+ }
+}
+
+export const getAllInterviewReportsOfLoggedInUser=async()=>{
+    try{
+        const response = await api.get("/interview");
+        return response.data;
+    }catch(error){
+        console.log(error.message)
+    }
+}
