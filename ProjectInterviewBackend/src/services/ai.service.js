@@ -180,14 +180,14 @@ const interviewReportJsonSchema = {
                     "plan"
                 ]
             }
-        }
-    },
-    title:{
+        },
+         title:{
         type: "string",
         description:"The title of the job for which the interview report is generated."
-
+       },
     },
     required: [
+        "title",
         "matchScore",
         "technicalQuestions",
         "behavioralQuestions",

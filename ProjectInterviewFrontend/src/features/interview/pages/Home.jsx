@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { generateInterviewReport } from "../services/interview.api";
 const Home = () => {
 
   const [resume, setResume] = useState(null);
@@ -7,12 +7,22 @@ const Home = () => {
 const handleSubmit = (e) => {
   e.preventDefault();
   // Handle form submission logic here
-  const formData = new FormData(e.target);
-  console.log("Job Description:", formData.get("jobDescription"));
-  console.log("Self Description:", formData.get("selfDescription"));
-  console.log("Resume File:", resume);
-  // You can send the form data to your backend or perform any other actions here
-  formData.values("")
+  const formData = new FormData(e.currentTarget);
+
+  try{
+   const response = generateInterviewReport({
+    resume:resume,
+    selfDescription:formData.get("selfDescription"),
+    jobDescription:formData.get("jobDescription")
+   })
+
+   
+    e.currentTarget.reset();
+    setResume(null);
+
+  }catch(error){
+    console.log(error)
+  }
 
 }
 

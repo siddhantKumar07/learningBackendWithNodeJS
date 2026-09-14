@@ -1,20 +1,27 @@
-import axios from "axios"
-import { baseUrl } from "../../../utils/constants"
+import axios from "axios";
+import { baseUrl } from "../../../utils/constants";
 
 const api = axios.create({
-    baseURL: baseUrl,
-    withCredentials: true,
-}
-)
-export async function generateInterviewReport({resume,selfDescription,jobDescription}){
-try{
-const response = await api.post(`${baseUrl}/api/interview`,{resume,selfDescription,jobDescription},{ withCredentials:true})
-if(!response){
-    console.log("no response generated")
-}
-return response.data
+  baseURL: baseUrl,
+  withCredentials: true,
+});
 
-}catch(error){
-    console.log(error.response?.data?.message || error.message)
-}
+export async function generateInterviewReport({
+  resume,
+  selfDescription,
+  jobDescription,
+}) {
+  const formData = new FormData();
+
+  formData.append("resume", resume);
+  formData.append("selfDescription", selfDescription);
+  formData.append("jobDescription", jobDescription);
+
+  const response = await api.post("/interview", formData,{
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return response.data;
 }
