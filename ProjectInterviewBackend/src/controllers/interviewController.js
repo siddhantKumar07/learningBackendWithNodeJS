@@ -51,4 +51,17 @@ const getInterviewReportController = async(req,res)=>{
    }
 
 }
-module.exports = {generateInterviewReportController,getInterviewReportController}
+
+const getAllInterviewReportsOfLoggedInUserController=async(req,res)=>{
+    const userId = req.user.id;
+    try{
+      const reports = await interviewReportModel.find({user:userId});
+      if(!reports || reports.length === 0){
+        return res.status(404).json({message:"No reports found for the user"});
+      }
+        return res.status(200).json({message:"Reports retrieved successfully",reports});
+    }catch(error){
+        return res.status(500).json({message:"Internal server error",error:error.message});
+    }
+}
+module.exports = {generateInterviewReportController,getInterviewReportController,getAllInterviewReportsOfLoggedInUserController}
