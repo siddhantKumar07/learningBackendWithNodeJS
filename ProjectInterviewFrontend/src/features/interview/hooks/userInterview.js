@@ -4,9 +4,11 @@ import {
   getInterviewReportById,
   getAllInterviewReportsOfLoggedInUser,
 } from "../services/interview.api";
-import InterviewProvider from "../Interview.context";
+
+import { interviewContext } from "../Interview.context.jsx";
+
 const useInterview = () => {
-  const context = useContext(InterviewProvider);
+  const context = useContext(interviewContext);
   if (!context) {
     throw new Error("useInterview must be used within an InterviewProvider");
   }
@@ -63,8 +65,12 @@ const useInterview = () => {
     }
   };
   return {
+    loading,
+    report,
+    reports,
     getAllLoggedinReport,
     getReportById,
     generateReport,
   };
 };
+export default useInterview;

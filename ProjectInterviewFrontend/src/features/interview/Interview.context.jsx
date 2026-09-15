@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 
 
-const interviewContextProvider = createContext()
+export const interviewContext = createContext(null)
 
 const InterviewProvider = ({children})=>{
     const [report, Setreport] = useState(null)
@@ -9,9 +9,9 @@ const InterviewProvider = ({children})=>{
     const [reports , Setreports] = useState([])
 
     return(
-        <interviewContextProvider.Provider value={{report,Setreport,loading,Setloading,reports,Setreports}}>
+        <interviewContext.Provider value={{report,Setreport,loading,Setloading,reports,Setreports}}>
             {children}
-        </interviewContextProvider.Provider>
+        </interviewContext.Provider>
     )
 }
 export default InterviewProvider

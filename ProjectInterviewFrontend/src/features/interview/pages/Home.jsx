@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { generateInterviewReport } from "../services/interview.api";
+import useInterview from "../hooks/userInterview";
+import {useNavigate} from "react-router"
 const Home = () => {
+  const navigate = useNavigate()
+  const {  loading,report, generateReport,} = useInterview();
 
   const [resume, setResume] = useState(null);
 
@@ -10,7 +13,7 @@ const handleSubmit = (e) => {
   const formData = new FormData(e.currentTarget);
 
   try{
-   const response = generateInterviewReport({
+   const response = generateReport({
     resume:resume,
     selfDescription:formData.get("selfDescription"),
     jobDescription:formData.get("jobDescription")
@@ -19,6 +22,8 @@ const handleSubmit = (e) => {
    
     e.currentTarget.reset();
     setResume(null);
+
+    navigate("/interview")
 
   }catch(error){
     console.log(error)
