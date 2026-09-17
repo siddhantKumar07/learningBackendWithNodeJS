@@ -3,20 +3,17 @@ import interviewData from "../generateData.json";
 import useInterview from "../hooks/userInterview"
 import { useParams } from "react-router";
 const Interview = () => {
-  const {report,getReportById} = useInterview()
-    const { interviewId } = useParams();
+  const {report,getReportById,Setloading,loading} = useInterview()
   const [activeTab, setActiveTab] = useState("technical");
-useEffect(() => {
-const readReport = async()=>{
-  try{
-    await getReportById(interviewId)
-  }catch(error){
-    throw new Error("something may wrong in interview file",error.message)
+  console.log("report, ",report)
+
+  if(loading){
+    return (
+      <div className='flex justify-center items-center h-screen w-full bg-[#1e1d1d]'>
+        <h1 className='text-white text-4xl font-bold'>Loading...</h1>
+      </div>
+    )
   }
-}
-
-}, [])
-
   const tabs = [
     { id: "technical", label: "Technical questions" },
     { id: "behavioral", label: "Behavioral questions" },

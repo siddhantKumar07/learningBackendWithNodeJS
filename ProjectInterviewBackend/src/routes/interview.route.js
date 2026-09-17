@@ -21,7 +21,7 @@ interviewRouter.post("/",authMiddleware,upload.single("resume"),generateIntervie
 
 
 /**
- * @route GET /api/interview/report/:id
+ * @route GET /api/interview/report/:interviewId
  * @description This route is used to retrieve a previously generated interview report by its ID. It returns the report in the response.
  * @access private
  */

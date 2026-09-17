@@ -26,7 +26,7 @@ const handleSubmit = (e) => {
     navigate(`/interview/${response._id}`)
 
   }catch(error){
-    console.log(error)
+    console.log(error.message)
   }
 
 }

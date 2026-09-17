@@ -27,8 +27,8 @@ const useInterview = () => {
         selfDescription,
         jobDescription,
       });
-      await Setreport(response.report);
-      Setloading(false);
+       Setreport(response.report);
+       console.log("response from generateReport", response.report);
       return response.report;
     } catch (error) {
       Setloading(true);
@@ -39,11 +39,11 @@ const useInterview = () => {
   };
 
   const getReportById = async (interviewId) => {
+          Setloading(true);
     try {
-      Setloading(true);
+
       const response = await getInterviewReportById(interviewId);
-      await Setreport(response.report);
-      Setloading(false);
+       Setreport(response.report);
     } catch (error) {
       Setloading(true);
       throw new Error("something wrong in get Report by id", error.message);
@@ -56,8 +56,7 @@ const useInterview = () => {
     try {
       Setloading(true);
       const response = await getAllInterviewReportsOfLoggedInUser();
-      await Setreports(response.reports);
-      Setloading(false);
+      Setreports(response.reports);
     } catch (error) {
       Setloading(true);
       throw new Error("error in getAllLoggedinReport ", error.message);
@@ -66,6 +65,7 @@ const useInterview = () => {
     }
   };
   return {
+    Setloading,
     loading,
     report,
     reports,
