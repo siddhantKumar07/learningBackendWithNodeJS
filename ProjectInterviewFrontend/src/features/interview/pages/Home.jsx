@@ -23,7 +23,7 @@ const handleSubmit = (e) => {
     e.currentTarget.reset();
     setResume(null);
 
-    navigate("/interview")
+    navigate(`/interview/${response._id}`)
 
   }catch(error){
     console.log(error)

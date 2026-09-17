@@ -1,8 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import interviewData from "../generateData.json";
-
+import useInterview from "../hooks/userInterview"
+import { useParams } from "react-router";
 const Interview = () => {
+  const {report,getReportById} = useInterview()
+    const { interviewId } = useParams();
   const [activeTab, setActiveTab] = useState("technical");
+useEffect(() => {
+const readReport = async()=>{
+  try{
+    await getReportById(interviewId)
+  }catch(error){
+    throw new Error("something may wrong in interview file",error.message)
+  }
+}
+
+}, [])
 
   const tabs = [
     { id: "technical", label: "Technical questions" },
@@ -12,8 +25,8 @@ const Interview = () => {
 
   const questions =
     activeTab === "technical"
-      ? interviewData.technicalQuestions
-      : interviewData.behavioralQuestions;
+      ? report.technicalQuestions
+      : report.behavioralQuestions;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800">
@@ -59,7 +72,7 @@ const Interview = () => {
 
               {activeTab === "technical" && (
                 <span className="rounded-full bg-green-100 px-3 py-2 text-sm font-semibold text-green-700">
-                  Match score: {interviewData.matchScore}%
+                  Match score: {report.matchScore}%
                 </span>
               )}
             </div>
@@ -140,7 +153,7 @@ const Interview = () => {
           </h2>
 
           <div className="flex flex-wrap gap-2">
-            {interviewData.skillGaps.map((item) => (
+            {report.skillGaps.map((item) => (
               <span
                 key={item.skill}
                 className={`rounded-lg border px-3 py-2 text-sm ${

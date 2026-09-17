@@ -29,6 +29,7 @@ const useInterview = () => {
       });
       await Setreport(response.report);
       Setloading(false);
+      return response.report;
     } catch (error) {
       Setloading(true);
       throw new Error("something went wrong", error.message);
