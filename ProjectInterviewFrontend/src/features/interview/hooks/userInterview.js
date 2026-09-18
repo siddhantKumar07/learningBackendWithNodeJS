@@ -4,7 +4,8 @@ import {
   getInterviewReportById,
   getAllInterviewReportsOfLoggedInUser,
 } from "../services/interview.api";
-
+import { useParams } from "react-router";
+import { useEffect } from "react";
 import { interviewContext } from "../Interview.context.jsx";
 
 const useInterview = () => {
@@ -64,6 +65,14 @@ const useInterview = () => {
       Setloading(false);
     }
   };
+  const { interviewId } = useParams();
+
+  useEffect(() => {
+    if (interviewId) {
+      getReportById(interviewId);
+    }
+  }, [interviewId]);
+
   return {
     Setloading,
     loading,

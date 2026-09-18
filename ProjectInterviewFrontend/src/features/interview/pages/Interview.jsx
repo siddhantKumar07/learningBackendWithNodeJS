@@ -6,13 +6,25 @@ const Interview = () => {
   const {report,getReportById,Setloading,loading} = useInterview()
   const [activeTab, setActiveTab] = useState("technical");
   console.log("report, ",report)
+// Get the interviewId from the URL parameters
+  const { interviewId } = useParams();
 
-  if(loading){
+  useEffect(()=>{
+    if(interviewId){
+      getReportById(interviewId)
+    }
+
+  },[interviewId])
+
+
+  if (loading || !report) {
     return (
-      <div className='flex justify-center items-center h-screen w-full bg-[#1e1d1d]'>
-        <h1 className='text-white text-4xl font-bold'>Loading...</h1>
+      <div className="flex h-screen w-full items-center justify-center bg-[#1e1d1d]">
+        <h1 className="text-4xl font-bold text-white">
+          {loading ? "Loading..." : "Report not found"}
+        </h1>
       </div>
-    )
+    );
   }
   const tabs = [
     { id: "technical", label: "Technical questions" },

@@ -7,20 +7,21 @@ const Home = () => {
 
   const [resume, setResume] = useState(null);
 
-const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault();
   // Handle form submission logic here
-  const formData = new FormData(e.currentTarget);
+  const form = e.currentTarget;
+  const formData = new FormData(form);
 
   try{
-   const response = generateReport({
+   const response =await generateReport({
     resume:resume,
     selfDescription:formData.get("selfDescription"),
     jobDescription:formData.get("jobDescription")
    })
 
    
-    e.currentTarget.reset();
+    form.reset();
     setResume(null);
 
     navigate(`/interview/${response._id}`)
@@ -30,7 +31,13 @@ const handleSubmit = (e) => {
   }
 
 }
-
+ if(loading){
+    return (
+      <div className='flex justify-center items-center h-screen w-full bg-[#1e1d1d]'>
+        <h1 className='text-white text-4xl font-bold'>Loading...</h1>
+      </div>
+    )
+  }
 
   return (
     <main className="min-h-screen bg-slate-950 px-4 py-8 text-slate-100 sm:px-8 lg:px-12">
