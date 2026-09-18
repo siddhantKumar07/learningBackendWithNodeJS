@@ -71,6 +71,9 @@ const useInterview = () => {
     if (interviewId) {
       getReportById(interviewId);
     }
+    else{
+      getAllLoggedinReport()
+    }
   }, [interviewId]);
 
   return {
