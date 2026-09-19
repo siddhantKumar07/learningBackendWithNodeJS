@@ -3,9 +3,8 @@ import interviewData from "../generateData.json";
 import useInterview from "../hooks/userInterview"
 import { useParams } from "react-router";
 const Interview = () => {
-  const {report,getReportById,Setloading,loading} = useInterview()
+  const {report,getReportById,generatePdf,loading} = useInterview()
   const [activeTab, setActiveTab] = useState("technical");
-  console.log("report, ",report)
 // Get the interviewId from the URL parameters
   const { interviewId } = useParams();
 
@@ -63,8 +62,12 @@ const Interview = () => {
               </button>
             ))}
           </nav>
-          <button className=" mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-[#f54dac] px-3 py-3 text-xl font-semibold text-black shadow-sm transition hover:bg-[#f52c9e] focus:outline-none  active:scale-95 cursor-pointer">
-            <span className="text-sm font-semibold group-hover:text-slate-100">Download PDF</span>
+          <button 
+          onClick={()=>{
+            generatePdf(interviewId)
+          }}
+          className=" mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-[#cb0d46] px-3 py-3 text-xl font-semibold text-black shadow-sm transition hover:bg-[#c3013b]  focus:outline-none  active:scale-95 cursor-pointer">
+            <span className="text-lg text-white font-semibold ">Download PDF</span>
           </button>
 
           </div>

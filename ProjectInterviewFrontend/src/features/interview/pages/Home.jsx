@@ -35,7 +35,6 @@ const handleSubmit = async (e) => {
   }
 
 }
-console.log("reports, ",reports)
  if(loading||!reports){
     return (
       <div className='flex justify-center items-center h-screen w-full bg-[#1e1d1d]'>

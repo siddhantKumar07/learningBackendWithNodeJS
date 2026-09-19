@@ -107,6 +107,7 @@ const useInterview = () => {
     getAllLoggedinReport,
     getReportById,
     generateReport,
+    generatePdf
   };
 };
 
