@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useInterview from "../hooks/userInterview";
 import {useNavigate} from "react-router"
 const Home = () => {
   const navigate = useNavigate()
-  const {  loading,reports, generateReport,} = useInterview();
+  const {  loading,getAllLoggedinReport,reports, generateReport,} = useInterview();
 
   const [resume, setResume] = useState(null);
 
+useEffect(()=>{
+  getAllLoggedinReport()
+},[])
 const handleSubmit = async (e) => {
+
   e.preventDefault();
   // Handle form submission logic here
   const form = e.currentTarget;
@@ -31,6 +35,7 @@ const handleSubmit = async (e) => {
   }
 
 }
+console.log("reports, ",reports)
  if(loading||!reports){
     return (
       <div className='flex justify-center items-center h-screen w-full bg-[#1e1d1d]'>
@@ -138,32 +143,28 @@ const handleSubmit = async (e) => {
           </section>
         </form>
       </div>
-      {/*  for list of reports */}
+      {/*  for list of reports which shows title and date */}
       <div className="mx-auto mt-12 max-w-6xl">
-        <h2 className="mb-4 text-lg font-semibold text-slate-100">Your interview reports</h2>
-        {reports.length === 0 ? (
-          <p className="text-sm text-slate-400">You have no interview reports yet.</p>
-        ) : (
-          <ul className="space-y-4">
-            {reports.map((report) => (
-              <li key={report._id} className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-2xl shadow-slate-950/40 transition hover:bg-slate-900/90">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-semibold text-slate-100">{report.jobDescription.slice(0, 50)}...</p>
-                    <p className="mt-1 text-xs text-slate-400">Match score: {report.matchScore}%</p>
-                  </div>
-                  <button 
-onClick={() => navigate(`/interview/${report._id}`)} className="text-sm font-semibold text-cyan-400 hover:text-cyan-300">
-                    View report
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+        <h2 className="mb-4 text-lg font-semibold text-slate-300">Your interview reports</h2>
+        <ul className="space-y-4">
+          {reports.map((report) => (
+            <li
+              key={report._id}
+              className="flex items-center justify-between rounded-2xl border cursor-pointer border-slate-800 bg-slate-900/80 p-4 shadow-2xl shadow-slate-950/40 transition hover:bg-slate-950/70"
+              onClick={() => navigate(`/interview/${report._id}`)}
+            >
+              <div>
+                <h3 className="text-sm font-semibold text-slate-100">{report.title}</h3>
+                <p className="mt-1 text-xs text-slate-500">{new Date(report.createdAt).toLocaleDateString()}</p>
+              </div>
+              <span className="text-sm font-semibold text-slate-400">→</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </main>
   );
 }
+
 
 export default Home
