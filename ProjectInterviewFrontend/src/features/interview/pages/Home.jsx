@@ -150,14 +150,14 @@ console.log("reports, ",reports)
           {reports.map((report) => (
             <li
               key={report._id}
-              className="flex items-center justify-between rounded-2xl border cursor-pointer border-slate-800 bg-slate-900/80 p-4 shadow-2xl shadow-slate-950/40 transition hover:bg-slate-950/70"
+              className="flex items-center justify-between group rounded-2xl border cursor-pointer border-slate-800 bg-slate-900/80 p-4 shadow-2xl shadow-slate-950/40 transition hover:bg-slate-950/70"
               onClick={() => navigate(`/interview/${report._id}`)}
             >
               <div>
                 <h3 className="text-sm font-semibold text-slate-100">{report.title}</h3>
                 <p className="mt-1 text-xs text-slate-500">{new Date(report.createdAt).toLocaleDateString()}</p>
               </div>
-              <span className="text-sm font-semibold text-slate-400">→</span>
+              <span className="text-4xl font-semibold  text-white group-hover:scale-120 transition-all duration-200 ease-linear">→</span>
             </li>
           ))}
         </ul>
