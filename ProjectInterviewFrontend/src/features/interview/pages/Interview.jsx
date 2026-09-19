@@ -46,13 +46,14 @@ const Interview = () => {
           <h2 className="mb-8 text-xl font-bold text-slate-900">
             Interview Prep
           </h2>
-
+          <div className="flex flex-col gap-2 justify-between h-[90%] w-full ">
+            
           <nav className="flex gap-2 overflow-x-auto lg:flex-col">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`whitespace-nowrap rounded-lg px-3 py-3 text-left text-sm transition ${
+                className={`whitespace-nowrap cursor-pointer rounded-lg px-3 py-3 text-left text-sm transition ${
                   activeTab === tab.id
                     ? "bg-blue-50 font-semibold text-blue-700"
                     : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
@@ -65,6 +66,8 @@ const Interview = () => {
           <button className=" mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-[#f54dac] px-3 py-3 text-xl font-semibold text-black shadow-sm transition hover:bg-[#f52c9e] focus:outline-none  active:scale-95 cursor-pointer">
             <span className="text-sm font-semibold group-hover:text-slate-100">Download PDF</span>
           </button>
+
+          </div>
         </aside>
 
         {/* Main Content */}
