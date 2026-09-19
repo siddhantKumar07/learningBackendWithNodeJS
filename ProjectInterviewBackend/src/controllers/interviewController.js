@@ -17,6 +17,7 @@ await parser.destroy();
 
 const resume = parsedPdf.text;
 
+// console.log("parsed resume text",resume);
     const report = await generateInterviewReport({
         resume:resume,
         selfDescription,
@@ -30,6 +31,7 @@ const resume = parsedPdf.text;
         ...report
     })
     return res.status(200).json({message:"Interview report generated successfully",report:savedReport});
+    // return res.status(200).json({message:"Interview report generated successfully",report:{resume,selfDescription,jobDescription}});
 
 }catch(error){
     return res.status(500).json({message:"Internal server error",error:error.message});
