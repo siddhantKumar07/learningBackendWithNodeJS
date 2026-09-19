@@ -3,6 +3,7 @@ import {
   generateInterviewReport,
   getInterviewReportById,
   getAllInterviewReportsOfLoggedInUser,
+  generateResumePdf
 } from "../services/interview.api";
 import { useParams } from "react-router";
 import { useEffect } from "react";
@@ -75,6 +76,28 @@ const useInterview = () => {
       getAllLoggedinReport()
     }
   }, [interviewId]);
+
+  const generatePdf = async (interviewId) => {
+      Setloading(true);
+    try {
+      let response = await generateResumePdf(interviewId);
+      const url =window.URL.createObjectURL(new Blob([response],{type:"application/pdf"}))
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `interview_report_${interviewId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+        
+    }
+    catch (error) {
+      Setloading(true);
+      throw new Error("error in generatePdf ", error.message);
+    }
+    finally {
+      Setloading(false);
+    }
+  }
 
   return {
     Setloading,

@@ -13,7 +13,7 @@ const Interview = () => {
     if(interviewId){
       getReportById(interviewId)
     }
-    
+
 
   },[interviewId])
 
@@ -42,7 +42,7 @@ const Interview = () => {
     <div className="min-h-screen bg-slate-50 text-slate-800">
       <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[235px_minmax(0,1fr)_300px]">
         {/* Left Sidebar */}
-        <aside className="border-b border-slate-200 bg-white p-6 lg:border-b-0 lg:border-r">
+        <aside className="border-b  border-slate-200 bg-white p-6 lg:border-b-0 lg:border-r">
           <h2 className="mb-8 text-xl font-bold text-slate-900">
             Interview Prep
           </h2>
@@ -62,10 +62,13 @@ const Interview = () => {
               </button>
             ))}
           </nav>
+          <button className=" mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-[#f54dac] px-3 py-3 text-xl font-semibold text-black shadow-sm transition hover:bg-[#f52c9e] focus:outline-none  active:scale-95 cursor-pointer">
+            <span className="text-sm font-semibold group-hover:text-slate-100">Download PDF</span>
+          </button>
         </aside>
 
         {/* Main Content */}
-        <main className="min-w-0 p-5 sm:p-8 lg:p-12">
+        <main className="min-w-0 p-5 h-screen overflow-scroll scrollbar-none sm:p-8 lg:p-12">
           <div className="mx-auto max-w-4xl">
             <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
               <div>

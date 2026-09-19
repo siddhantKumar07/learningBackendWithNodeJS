@@ -37,6 +37,9 @@ export const getInterviewReportById=async(interviewId)=>{
  }
 }
 
+/**
+ * @description this will return all the reports of the logged in user
+ */
 export const getAllInterviewReportsOfLoggedInUser=async()=>{
     try{
         const response = await api.get("/interview");
@@ -44,4 +47,18 @@ export const getAllInterviewReportsOfLoggedInUser=async()=>{
     }catch(error){
         console.log(error.message)
     }
+}
+
+/**
+ * @description this will generate the pdf of the report according to the interviewId provided
+ */
+export const generateResumePdf = async(interviewId)=>{
+  try{
+    const response = await api.post(`/interview/resume/pdf/${interviewId}`,{},{
+      responseType:"blob"
+    })
+    return response.data;
+  }catch(error){
+    console.log(error.message)
+  }
 }
