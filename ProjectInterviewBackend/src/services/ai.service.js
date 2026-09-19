@@ -1,7 +1,7 @@
 const { GoogleGenAI } = require("@google/genai");
 const { z } = require("zod");
 require("dotenv").config();
-
+const puppeteer = require("puppeteer");
 const ai = new GoogleGenAI({
     apiKey: process.env.GOOGLE_GENAI_API_KEY,
 });
@@ -292,5 +292,65 @@ ${jobDescription}
     }
 }
 
+const generatePdfFromHtml = async (html) => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(html, { waitUntil: "networkidle0" });
 
-module.exports = generateInterviewReport;
+    const pdfBuffer = await page.pdf({ format: "A4" });
+    await browser.close();
+    return pdfBuffer;
+
+}
+
+const resumePdfJsonSchema = {
+    type: "object",
+    properties: {
+        html: {
+            type: "string",
+            description: "Complete HTML resume with inline CSS."
+        }
+    },
+    required: ["html"]
+};
+
+const resumePdfSchema = z.object({
+    html: z.string()
+});
+
+const generateResumePdf = async ({
+    resume,
+    selfDescription,
+    jobDescription
+}) => {
+    const prompt = `generate a resume in HTML format using the following information. The resume should be well-structured, visually appealing, and suitable for professional job applications. Use appropriate HTML tags and inline CSS styles to create a clean and modern design. Ensure that the resume is easy to read and highlights the candidate's skills, experience, and achievements effectively.
+
+Candidate Resume:
+${resume}
+Candidate Self Description:
+${selfDescription}
+Job Description:
+${jobDescription}
+
+`
+const interaction = await ai.interactions.create({
+    model: "gemini-3-flash-preview",
+    input: prompt,
+    response_format: {
+        type: "text",
+        mime_type: "application/json",
+        schema: resumePdfJsonSchema
+    }
+});
+
+const parsedOutput = JSON.parse(interaction.output_text);
+const validatedOutput = resumePdfSchema.parse(parsedOutput);
+
+const pdfBuffer = await generatePdfFromHtml(validatedOutput.html);
+return pdfBuffer;
+};
+
+module.exports = {
+    generateInterviewReport,
+    generateResumePdf,
+};

@@ -1,6 +1,6 @@
 const express = require("express");
 const { authMiddleware } = require("../middleware/authMiddleware");
-const { generateInterviewReportController, getInterviewReportController, getAllInterviewReportsOfLoggedInUserController } = require("../controllers/interviewController");
+const { generateInterviewReportController, getInterviewReportController, getAllInterviewReportsOfLoggedInUserController,generateResumePdfController} = require("../controllers/interviewController");
 const multer =require("multer")
 const interviewRouter = express.Router();
 
@@ -35,6 +35,12 @@ interviewRouter.get("/report/:interviewId",authMiddleware,getInterviewReportCont
 
 interviewRouter.get("/",authMiddleware,getAllInterviewReportsOfLoggedInUserController)
 
+/**
+ * @route GET /api/interview/resume/pdf/:interviewId
+ * @description This route is used to generate a PDF version of a previously generated interview report by its ID. It returns the PDF file in the response.
+ * @access private 
+ */
+interviewRouter.get("/resume/pdf/:interviewId",authMiddleware,generateResumePdfController)
 
 module.exports = interviewRouter;
 

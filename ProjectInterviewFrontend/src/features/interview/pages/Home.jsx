@@ -157,6 +157,7 @@ console.log("reports, ",reports)
                 <h3 className="text-sm font-semibold text-slate-100">{report.title}</h3>
                 <p className="mt-1 text-xs text-slate-500">{new Date(report.createdAt).toLocaleDateString()}</p>
               </div>
+              <span className="text-sm font-semibold text-slate-400 group-hover:text-slate-100">Match score: {report.matchScore}%</span>
               <span className="text-4xl font-semibold  text-white group-hover:scale-120 transition-all duration-200 ease-linear">→</span>
             </li>
           ))}

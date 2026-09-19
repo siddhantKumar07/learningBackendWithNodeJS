@@ -1,4 +1,4 @@
-const generateInterviewReport = require("../services/ai.service")
+const {generateInterviewReport,generateResumePdf } = require("../services/ai.service")
 const { PDFParse } = require("pdf-parse");
 const interviewReportModel = require("../model/interviewReportSchema")
 const generateInterviewReportController = async(req,res)=>{
@@ -59,7 +59,7 @@ const getInterviewReportController = async(req,res)=>{
 const getAllInterviewReportsOfLoggedInUserController=async(req,res)=>{
     const userId = req.user.id;
     try{
-      const reports = await interviewReportModel.find({user:userId}).sort({createdAt:-1}).select("title createdAt");
+      const reports = await interviewReportModel.find({user:userId}).sort({createdAt:-1}).select("title createdAt matchScore");
       if(!reports || reports.length === 0){
         return res.status(404).json({message:"No reports found for the user"});
       }
@@ -68,4 +68,25 @@ const getAllInterviewReportsOfLoggedInUserController=async(req,res)=>{
         return res.status(500).json({message:"Internal server error",error:error.message});
     }
 }
-module.exports = {generateInterviewReportController,getInterviewReportController,getAllInterviewReportsOfLoggedInUserController}
+
+const generateResumePdfController = async(req,res)=>{
+    const {interviewId} = req.params;
+
+    const interviewReport = await interviewReportModel.findById(interviewId);
+    if(!interviewReport){
+        return res.status(404).json({message:"Report not found"});
+    }
+    const {resume,selfDescription,jobDescription}= interviewReport;
+    const pdfBuffer = await generateResumePdf({resume,selfDescription,jobDescription});
+    if(!pdfBuffer){
+        return res.status(500).json({message:"Failed to generate PDF"});
+    }
+    res.set({
+        "Content-Type":"application/pdf",
+        "Content-Disposition":`attachment; filename=interview_report_${interviewId}.pdf`,
+        "Content-Length":pdfBuffer.length
+    })
+    res.send(pdfBuffer)
+    
+}
+module.exports = {generateInterviewReportController,getInterviewReportController,getAllInterviewReportsOfLoggedInUserController,generateResumePdfController}
