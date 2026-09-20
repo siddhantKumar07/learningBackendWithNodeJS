@@ -3,18 +3,18 @@ import interviewData from "../generateData.json";
 import useInterview from "../hooks/userInterview"
 import { useParams } from "react-router";
 const Interview = () => {
-  const {report,getReportById,generatePdf,loading} = useInterview()
+  const { report, getReportById, generatePdf, loading } = useInterview()
   const [activeTab, setActiveTab] = useState("technical");
-// Get the interviewId from the URL parameters
+  // Get the interviewId from the URL parameters
   const { interviewId } = useParams();
 
-  useEffect(()=>{
-    if(interviewId){
+  useEffect(() => {
+    if (interviewId) {
       getReportById(interviewId)
     }
 
 
-  },[interviewId])
+  }, [interviewId])
 
 
   if (loading || !report) {
@@ -46,29 +46,28 @@ const Interview = () => {
             Interview Prep
           </h2>
           <div className="flex flex-col gap-2 justify-between h-[90%] w-full ">
-            
-          <nav className="flex gap-2 overflow-x-auto lg:flex-col">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`whitespace-nowrap cursor-pointer rounded-lg px-3 py-3 text-left text-sm transition ${
-                  activeTab === tab.id
-                    ? "bg-blue-50 font-semibold text-blue-700"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </nav>
-          <button 
-          onClick={()=>{
-            generatePdf(interviewId)
-          }}
-          className=" mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-[#cb0d46] px-3 py-3 text-xl font-semibold text-black shadow-sm transition hover:bg-[#c3013b]  focus:outline-none  active:scale-95 cursor-pointer">
-            <span className="text-lg text-white font-semibold ">Download PDF</span>
-          </button>
+
+            <nav className="flex gap-2 overflow-x-auto lg:flex-col">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`whitespace-nowrap cursor-pointer rounded-lg px-3 py-3 text-left text-sm transition ${activeTab === tab.id
+                      ? "bg-blue-50 font-semibold text-blue-700"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                    }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </nav>
+            <button
+              onClick={() => {
+                generatePdf(interviewId)
+              }}
+              className=" mt-6 flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-[#cb0d46] px-3 py-3 text-xl font-semibold text-black shadow-sm transition hover:bg-[#c3013b]  focus:outline-none  active:scale-95 cursor-pointer">
+              <span className="text-lg text-white font-semibold ">Download PDF</span>
+            </button>
 
           </div>
         </aside>
@@ -175,13 +174,12 @@ const Interview = () => {
             {report.skillGaps.map((item) => (
               <span
                 key={item.skill}
-                className={`rounded-lg border px-3 py-2 text-sm ${
-                  item.severity === "high"
+                className={`rounded-lg border px-3 py-2 text-sm ${item.severity === "high"
                     ? "border-red-200 bg-red-50 text-red-700"
                     : item.severity === "medium"
                       ? "border-yellow-200 bg-yellow-50 text-yellow-700"
                       : "border-green-200 bg-green-50 text-green-700"
-                }`}
+                  }`}
               >
                 {item.skill}
               </span>
