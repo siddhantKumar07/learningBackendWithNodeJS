@@ -49,7 +49,6 @@ const [formData, setFormData] = React.useState({
               <h3 className='text-xl'>Don't have an account ? <Link className='text-pink-700 cursor-pointer font-bold hover:underline ' to="/register">Register</Link></h3>
             </div>
       </form>
-
     </main>
   )
 }
