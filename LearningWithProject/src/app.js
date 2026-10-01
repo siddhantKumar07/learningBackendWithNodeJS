@@ -8,7 +8,7 @@ const cors = require("cors");
 const isAllowedOrigin = (origin) =>
     !origin ||
     origin === "http://localhost:5173" ||
-    origin === "https://learning-backend-with-node-js-g1um.vercel.app";
+    /^https:\/\/learning-backend-with-node-js-g1um(?:-[\w-]+)?\.vercel\.app$/.test(origin);
 
 const corsOptions = {
     origin: (origin, callback) => {
