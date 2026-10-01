@@ -6,7 +6,7 @@ const User = require("../model/user");
 const isAllowedOrigin = (origin) =>
   !origin ||
   origin === "http://localhost:5173" ||
-  /^https:\/\/learning-backend-with-node-js(?:-[\w-]+)?\.vercel\.app$/.test(origin);
+  origin === "https://learning-backend-with-node-js-g1um-5heao5cg7.vercel.app";
 
 const createRoomId = (senderId, receiverId) =>
   crypto
