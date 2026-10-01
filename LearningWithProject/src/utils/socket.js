@@ -1,56 +1,109 @@
 const socket = require("socket.io");
-const cors = require("cors");
 const crypto = require("crypto");
-const { createRequire } = require("module");
 const chatModel = require("../model/chat");
-const createRoomId=(senderId,receiverId)=>{
-    return crypto.createHash("sha256").update([senderId,receiverId].sort().join("_")).digest("hex");
-}
 
-const intializeSocket = (server)=>{
- 
-const io = socket(server,{
-cors:{
-    origin:"http://localhost:5173",
-}
-});
-io.on("connection",(socket)=>{
-   
-    socket.on("joinChat",({senderId,receiverId})=>{
-        const roomId = createRoomId(senderId,receiverId);
-        socket.join(roomId);
-    })
+const createRoomId = (senderId, receiverId) =>
+  crypto
+    .createHash("sha256")
+    .update([senderId, receiverId].sort().join("_"))
+    .digest("hex");
 
-    socket.on("sendMessage", async ({ senderName, senderId, receiverId,receiverName, message }) => {
+const intializeSocket = (server) => {
+  const io = socket(server, {
+    cors: {
+      origin: "http://localhost:5173",
+      credentials: true,
+    },
+  });
+
+  // userId -> connected socket IDs
+  const onlineUsers = new Map();
+
+  const broadcastPresence = () => {
+    io.emit("presence:update", Array.from(onlineUsers.keys()));
+  };
+
+  io.on("connection", (socket) => {
+    socket.on("registerPresence", (userId) => {
+      if (!userId) return;
+
+      socket.userId = String(userId);
+
+      const userSockets = onlineUsers.get(socket.userId) || new Set();
+      userSockets.add(socket.id);
+      onlineUsers.set(socket.userId, userSockets);
+
+      broadcastPresence();
+    });
+
+    socket.on("joinChat", ({ senderId, receiverId }) => {
+      const roomId = createRoomId(senderId, receiverId);
+      socket.join(roomId);
+    });
+
+    socket.on(
+      "sendMessage",
+      async ({
+        senderName,
+        senderId,
+        receiverId,
+        receiverName,
+        message,
+        attachment,
+      }) => {
         const roomId = createRoomId(senderId, receiverId);
+
         try {
-            const user = await chatModel.findOne({ participants: { $all: [senderId, receiverId] } });
+          const messageData = {
+            senderId,
+            message: message || "",
+            attachment: attachment || null,
+          };
 
-            if (user) {
-                user.messages.push({ senderId, message: message });
-                await user.save();
-            } else {
-                const newChat = new chatModel({
-                    participants: [senderId, receiverId],
-                    messages: [{ senderId, message: message }]
-                });
-                await newChat.save();
-            }
+          const chat = await chatModel.findOne({
+            participants: { $all: [senderId, receiverId] },
+          });
 
-            io.to(roomId).emit("receiveMessage", {
-                senderName,
-                senderId,
-                receiverName,
-                message,
-                timestamp: new Date().toISOString()
+          if (chat) {
+            chat.messages.push(messageData);
+            await chat.save();
+          } else {
+            await chatModel.create({
+              participants: [senderId, receiverId],
+              messages: [messageData],
             });
-        } catch (err) {
-            console.log(err);
+          }
+
+          io.to(roomId).emit("receiveMessage", {
+            senderName,
+            senderId,
+            receiverName,
+            message: message || "",
+            attachment: attachment || null,
+            timestamp: new Date().toISOString(),
+          });
+        } catch (error) {
+          console.error("Message save error:", error);
         }
-    })
+      },
+    );
 
-    socket.on("disconnect",()=>{})
-})
+    socket.on("disconnect", () => {
+      if (!socket.userId) return;
 
-}
+      const userSockets = onlineUsers.get(socket.userId);
+
+      if (!userSockets) return;
+
+      userSockets.delete(socket.id);
+
+      if (userSockets.size === 0) {
+        onlineUsers.delete(socket.userId);
+      }
+
+      broadcastPresence();
+    });
+  });
+};
+
 module.exports = intializeSocket;

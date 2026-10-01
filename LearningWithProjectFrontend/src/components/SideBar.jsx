@@ -35,9 +35,12 @@ const SideBar = () => {
     },
   ];
 
+  const isActive = (path) =>
+    path === "/" ? location.pathname === "/" : location.pathname.startsWith(path);
+
   const linkClass = (path) =>
     `group flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition-all duration-300 ${
-      location.pathname === path
+      isActive(path)
         ? "bg-gradient-to-r from-primary to-secondary text-white shadow-lg shadow-primary/25"
         : "text-slate-300 hover:translate-x-1 hover:bg-white/10 hover:text-white"
     }`;
@@ -54,7 +57,7 @@ const SideBar = () => {
           <Link
             key={path}
             to={path}
-            aria-current={location.pathname === path ? "page" : undefined}
+            aria-current={isActive(path) ? "page" : undefined}
             className={linkClass(path)}
           >
             <Icon
@@ -70,7 +73,7 @@ const SideBar = () => {
       <div className="mt-auto border-t border-white/10 pt-5">
         <button
           onClick={handleLogOut}
-          className="group flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-300 transition-all duration-300 hover:bg-red-500/10 hover:text-red-400"
+          className="cursor-pointer group flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-300 transition-all duration-300 hover:bg-red-500/10 hover:text-red-400"
         >
           <LogOut
             size={21}

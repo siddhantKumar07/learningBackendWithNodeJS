@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import {
   Bell,
@@ -18,6 +18,7 @@ import { clearFeed } from "../utils/feedSlice";
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const loggedInData = useSelector((store) => store.user);
   const [open, setOpen] = useState(false);
 
@@ -37,6 +38,18 @@ const Navbar = () => {
     }
   };
 
+  const isDiscoverActive =
+    location.pathname === "/" || location.pathname.startsWith("/profile");
+
+  const isChatActive = location.pathname.startsWith("/chat");
+
+  const navClass = (active) =>
+    `flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition ${
+      active
+        ? "bg-primary/15 text-primary"
+        : "text-slate-300 hover:bg-white/10 hover:text-white"
+    }`;
+
   if (!loggedInData) return null;
 
   return (
@@ -53,14 +66,16 @@ const Navbar = () => {
         <nav className="hidden items-center gap-2 md:flex">
           <Link
             to="/"
-            className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
+            className={navClass(isDiscoverActive)}
+            aria-current={isDiscoverActive ? "page" : undefined}
           >
             Discover
           </Link>
 
           <Link
             to="/chat"
-            className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
+            className={navClass(isChatActive)}
+            aria-current={isChatActive ? "page" : undefined}
           >
             <MessageCircle size={18} />
             Chat

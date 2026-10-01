@@ -2,15 +2,17 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { base_url } from "../utils/constants";
 import { addUser, removeUser } from "../utils/userSlice";
 import SideBar from "../components/SideBar";
+import { startPresence, stopPresence } from "../utils/socketClient";
 
 const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const user = useSelector((store) => store.user);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -30,6 +32,16 @@ const Home = () => {
 
     fetchProfile();
   }, [dispatch, navigate]);
+
+  useEffect(() => {
+    if (!user?._id) return;
+
+    startPresence(user._id);
+
+    return () => {
+      stopPresence();
+    };
+  }, [user?._id]);
 
   if (isLoading) {
     return (

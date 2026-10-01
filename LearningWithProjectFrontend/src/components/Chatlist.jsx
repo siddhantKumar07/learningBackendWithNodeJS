@@ -5,10 +5,13 @@ import { Search, Users } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { base_url } from "../utils/constants";
 import { addConnection } from "../utils/connectionSlice";
+import { createConnection } from "../utils/socketClient";
+import {
+  subscribeToPresence,
+} from "../utils/socketClient";
 
 const Chatlist = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const location = useLocation();
 
   const user = useSelector((store) => store.user);
@@ -16,6 +19,7 @@ const Chatlist = () => {
 
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
   useEffect(() => {
     const loadConnections = async () => {
@@ -38,6 +42,45 @@ const Chatlist = () => {
       setLoading(false);
     }
   }, [dispatch, connections.length]);
+
+  useEffect(() => {
+    const checkOnlineStatus = async () => {
+      try {
+        const response = await axios.get(`${base_url}/user/online-status`, {
+          withCredentials: true,
+        });
+
+        setOnlineUsers(response.data.onlineUsers || []);
+      } catch (error) {
+        console.error(error.response?.data?.message);
+      }
+    };
+
+    checkOnlineStatus();
+  }, [base_url]);
+
+  useEffect(() => {
+    if (!user?._id) return;
+
+    const socket = createConnection();
+
+    socket.emit("registerPresence", user._id);
+
+    socket.on("presence:update", (userIds) => {
+      setOnlineUsers(userIds.map(String));
+    });
+
+    return () => {
+      socket.off("presence:update");
+      socket.disconnect();
+    };
+  }, [user?._id]);
+
+  useEffect(() => {
+    return subscribeToPresence((users) => {
+      setOnlineUsers(users);
+    });
+  }, []);
 
   const filteredConnections = useMemo(() => {
     const value = search.toLowerCase().trim();
@@ -93,6 +136,8 @@ const Chatlist = () => {
               const chatPath = `/chat/${connection._id}`;
               const isSelected = location.pathname === chatPath;
 
+              const isOnline = onlineUsers.includes(String(connection._id));
+
               return (
                 <Link
                   key={connection._id}
@@ -103,14 +148,25 @@ const Chatlist = () => {
                       : "border-transparent hover:bg-white/[0.06]"
                   }`}
                 >
-                  <img
-                    src={connection.photoUrl}
-                    alt={`${connection.firstName} ${connection.lastName}`}
-                    loading="lazy"
-                    className={`h-12 w-12 shrink-0 rounded-full object-cover ${
-                      isSelected ? "ring-2 ring-primary ring-offset-2 ring-offset-[#080d1d]" : ""
-                    }`}
-                  />
+                  <div className="relative shrink-0">
+                    <img
+                      src={connection.photoUrl}
+                      alt={`${connection.firstName} ${connection.lastName}`}
+                      loading="lazy"
+                      className={`h-12 w-12 rounded-full object-cover ${
+                        isSelected
+                          ? "ring-2 ring-primary ring-offset-2 ring-offset-[#080d1d]"
+                          : ""
+                      }`}
+                    />
+
+                    {isOnline && (
+                      <span
+                        title="Online"
+                        className="absolute bottom-0 right-0 h-3.5 w-3.5 rounded-full border-2 border-[#080d1d] bg-emerald-400"
+                      />
+                    )}
+                  </div>
 
                   <div className="min-w-0">
                     <p
@@ -128,9 +184,9 @@ const Chatlist = () => {
                     </p>
                   </div>
 
-                  {isSelected && (
+                  {/* {isSelected && (
                     <span className="ml-auto h-2 w-2 shrink-0 rounded-full bg-primary" />
-                  )}
+                  )} */}
                 </Link>
               );
             })}

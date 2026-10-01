@@ -28,4 +28,20 @@ app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
 
+app.use((error, req, res, next) => {
+  if (error.code === "LIMIT_FILE_SIZE") {
+    return res.status(413).json({
+      message: "File size must be 5 MB or smaller.",
+    });
+  }
+
+  if (error.message?.includes("Only images")) {
+    return res.status(400).json({
+      message: error.message,
+    });
+  }
+
+  next(error);
+});
+
 module.exports = app;

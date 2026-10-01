@@ -20,6 +20,8 @@ const ChatSection = () => {
   const [receiver, setReceiver] = useState(null);
   const [newMessage, setNewMessage] = useState("");
   const [storeMessage, setStoreMessage] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     setReceiver(null);
@@ -58,19 +60,29 @@ const ChatSection = () => {
       receiverId: receiver._id,
     });
 
-    socketRef.current.on("receiveMessage", ({ senderId, senderName, receiverName, message, timestamp }) => {
-      
-      setStoreMessage((prev) => [
-        ...prev,
-        {
-          senderId,
-          senderName,
-          receiverName,
-          message,
-          timestamp,
-        },
-      ]);
-    });
+    socketRef.current.on(
+      "receiveMessage",
+      ({
+        senderId,
+        senderName,
+        receiverName,
+        message,
+        attachment,
+        timestamp,
+      }) => {
+        setStoreMessage((previous) => [
+          ...previous,
+          {
+            senderId,
+            senderName,
+            receiverName,
+            message,
+            attachment,
+            timestamp,
+          },
+        ]);
+      },
+    );
 
     const fetchMessageOnLoad = async () => {
       try {
@@ -79,9 +91,10 @@ const ChatSection = () => {
           { withCredentials: true }
         );
         const messages = (res.data.chat.messages || []).map((msg) => ({
-          senderId: msg.senderId._id || msg.senderId,
-          senderName: msg.senderId.firstName || "",
-          message: msg.message || msg.text,
+          senderId: msg.senderId?._id || msg.senderId,
+          senderName: msg.senderId?.firstName || "",
+          message: msg.message || "",
+          attachment: msg.attachment || null,
           timestamp: msg.createdAt || new Date().toISOString(),
         }));
 
@@ -113,18 +126,66 @@ const ChatSection = () => {
     });
   }, [storeMessage]);
 
-  const sendMessage = () => {
-    if (!socketRef.current || !sender?._id || !receiver?._id || !newMessage.trim()) return;
-    socketRef.current.emit("sendMessage", {
-      senderName: sender.firstName,
-      senderId: sender._id,
-      receiverId: receiver._id,
-      receiverName: receiver.firstName,
-      timestamp: new Date().toISOString(),
-      message: newMessage,
-    });
+  const sendMessage = async () => {
+    if (
+      !socketRef.current ||
+      !sender?._id ||
+      !receiver?._id ||
+      (!newMessage.trim() && !selectedFile)
+    ) {
+      return;
+    }
 
-    setNewMessage("");
+    setIsUploading(true);
+
+    try {
+      let attachment = null;
+
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+
+        const response = await axios.post(
+          `${base_url}/messages/upload`,
+          formData,
+          {
+            withCredentials: true,
+          },
+        );
+
+        attachment = response.data.attachment;
+      }
+
+      socketRef.current.emit("sendMessage", {
+        senderName: sender.firstName,
+        senderId: sender._id,
+        receiverId: receiver._id,
+        receiverName: receiver.firstName,
+        message: newMessage.trim(),
+        attachment,
+      });
+
+      setNewMessage("");
+      setSelectedFile(null);
+    } catch (error) {
+      alert(error.response?.data?.message || "File upload failed");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("File size must be 5 MB or smaller.");
+      event.target.value = "";
+      return;
+    }
+
+    setSelectedFile(file);
   };
 
   if (!sender) {
@@ -214,7 +275,36 @@ const ChatSection = () => {
                             : "rounded-bl-md bg-[#293653] text-white"
                         }`}
                       >
-                        {data.message}
+                        {data.message && <p>{data.message}</p>}
+
+                        {data.attachment?.type?.startsWith("image/") && (
+                          <img
+                            src={data.attachment.url}
+                            alt={data.attachment.name}
+                            className="mt-2 max-h-64 max-w-full rounded-xl object-cover"
+                          />
+                        )}
+
+                        {data.attachment?.type?.startsWith("audio/") && (
+                          <audio
+                            controls
+                            src={data.attachment.url}
+                            className="mt-2 max-w-full"
+                          />
+                        )}
+
+                        {data.attachment &&
+                          !data.attachment.type?.startsWith("image/") &&
+                          !data.attachment.type?.startsWith("audio/") && (
+                            <a
+                              href={data.attachment.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="mt-2 block break-all underline"
+                            >
+                              {data.attachment.name}
+                            </a>
+                          )}
                       </div>
                     </div>
 
@@ -255,6 +345,28 @@ const ChatSection = () => {
             <Images size={21} />
           </button>
 
+          <label
+            htmlFor="chat-file"
+            className="cursor-pointer rounded-xl p-2 text-slate-300 transition hover:bg-white/10 hover:text-white"
+            title="Attach file"
+          >
+            <Images size={21} />
+          </label>
+
+          <input
+            id="chat-file"
+            type="file"
+            hidden
+            accept="image/*,audio/*,.pdf,.txt"
+            onChange={handleFileChange}
+          />
+
+          {selectedFile && (
+            <span className="max-w-36 truncate text-xs text-primary">
+              {selectedFile.name}
+            </span>
+          )}
+
           <div className="flex min-w-0 flex-1 items-center rounded-2xl border border-white/10 bg-[#0b1224] px-4 focus-within:border-primary/70 focus-within:ring-2 focus-within:ring-primary/20">
             <input
               value={newMessage}
@@ -267,10 +379,12 @@ const ChatSection = () => {
 
           <button
             type="submit"
-            disabled={!newMessage.trim()}
-            className="h-12 shrink-0 rounded-2xl bg-primary px-6 font-bold text-white transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
+            disabled={
+              isUploading || (!newMessage.trim() && !selectedFile)
+            }
+            className="h-12 shrink-0 rounded-2xl cursor-pointer bg-primary px-6 font-bold text-white transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
           >
-            Send
+            {isUploading ? "Uploading..." : "Send"}
           </button>
         </form>
       </div>
