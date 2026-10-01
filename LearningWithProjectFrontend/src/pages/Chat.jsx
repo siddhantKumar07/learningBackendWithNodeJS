@@ -3,10 +3,10 @@ import axios from "axios";
 import { Outlet } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { MessageCircle } from "lucide-react";
-import Navbar from "../components/Navbar";
-import Chatlist from "../components/Chatlist";
-import { addUser } from "../utils/userSlice";
-import { base_url } from "../utils/constants";
+import Navbar from "../components/Navbar.jsx";
+import Chatlist from "../components/Chatlist.jsx";
+import { addUser } from "../utils/userSlice.js";
+import { base_url } from "../utils/constants.js";
 
 const Chat = () => {
   const dispatch = useDispatch();

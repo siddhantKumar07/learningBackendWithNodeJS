@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams,useNavigate } from "react-router-dom";
 import axios from "axios";
-import { base_url } from "../utils/constants";
-import { createConnection } from "../utils/socketClient";
+import { base_url } from "../utils/constants.js";
+import { createConnection } from "../utils/socketClient.js";
 import { Images, Smile, Camera } from "lucide-react";
-import AboutSection from "./aboutSection";
+import AboutSection from "./AboutSection.jsx";
   import { useDispatch } from "react-redux";
-import { markChatRead } from "../utils/unreadMessageSlice";
+import { markChatRead } from "../utils/unreadMessageSlice.js";
 
 const EMPTY_CONNECTIONS = [];
 

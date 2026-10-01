@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Mail, UserRound, LockKeyhole, BriefcaseBusiness } from "lucide-react";
-import EditProfile from "../components/EditProfile";
-import ChangePassword from "../components/ChangePassword";
+import EditProfile from "../components/EditProfile.jsx";
+import ChangePassword from "../components/ChangePassword.jsx";
 
 const Profile = () => {
   const user = useSelector((store) => store.user);

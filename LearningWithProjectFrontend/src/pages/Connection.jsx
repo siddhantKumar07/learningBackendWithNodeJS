@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { base_url } from "../utils/constants";
+import { base_url } from "../utils/constants.js";
 import { useDispatch} from "react-redux";
-import { addConnection } from "../utils/connectionSlice";
-import Card from "../components/Card";
+import { addConnection } from "../utils/connectionSlice.js";
+import Card from "../components/Card.jsx";
 
 const Connection = () => {
     const [data, setData] = useState([]);

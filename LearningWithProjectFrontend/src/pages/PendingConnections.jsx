@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Check, Clock3, UserRound, X } from "lucide-react";
-import { base_url } from "../utils/constants";
+import { base_url } from "../utils/constants.js";
 
 const PendingConnection = () => {
   const [connections, setConnections] = useState([]);

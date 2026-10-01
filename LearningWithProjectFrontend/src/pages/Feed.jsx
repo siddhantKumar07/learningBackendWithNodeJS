@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { AnimatePresence, motion as Motion } from "framer-motion";
 import { Compass, Heart, X } from "lucide-react";
 import axios from "axios";
-import Card from "../components/Card";
-import { base_url } from "../utils/constants";
-import { addFeed, removeFeedUser } from "../utils/feedSlice";
+import Card from "../components/Card.jsx";
+import { base_url } from "../utils/constants.js";
+import { addFeed, removeFeedUser } from "../utils/feedSlice.js";
 
 const Feed = () => {
   const dispatch = useDispatch();

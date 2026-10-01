@@ -3,9 +3,9 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { toast, Bounce, ToastContainer } from "react-toastify";
 import { ImagePlus, Save, X } from "lucide-react";
-import Card from "./Card";
-import { base_url } from "../utils/constants";
-import { addUser } from "../utils/userSlice";
+import Card from "./Card.jsx";
+import { base_url } from "../utils/constants.js";
+import { addUser } from "../utils/userSlice.js";
 
 const EditProfile = ({ user, setIsEditing }) => {
   const dispatch = useDispatch();

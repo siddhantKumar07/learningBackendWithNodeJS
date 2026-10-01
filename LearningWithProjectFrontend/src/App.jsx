@@ -1,18 +1,18 @@
 import React from "react";
-import Home from "./pages/home";
-import Login from "./pages/login";
-import Signup from "./pages/signup";
-import Profile from "./pages/profile";
+import Home from "./pages/Home.jsx";
+import Login from "./pages/Login.jsx";
+import Signup from "./pages/Signup.jsx";
+import Profile from "./pages/Profile.jsx";
 import { Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import { store } from "./utils/appStore";
-import Feed from "./pages/feed";
-import Chat from "./pages/chat";
-import PendingConnection from "./pages/PendingConnections";
-import ChatSection from "./components/ChatSection";
+import { store } from "./utils/appStore.js";
+import Feed from "./pages/Feed.jsx";
+import Chat from "./pages/Chat.jsx";
+import PendingConnection from "./pages/PendingConnections.jsx";
+import ChatSection from "./components/ChatSection.jsx";
 import { ToastContainer, Bounce } from "react-toastify";
-import Connections from "./pages/Connection";
-import DescChat from "./components/DescChat";
+import Connections from "./pages/Connection.jsx";
+import DescChat from "./components/DescChat.jsx";
 import { Toaster } from "react-hot-toast";
 
 const App = () => {

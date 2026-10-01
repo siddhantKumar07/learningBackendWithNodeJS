@@ -3,10 +3,10 @@ import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
 import { Search, Users } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { base_url } from "../utils/constants";
-import { addConnection } from "../utils/connectionSlice";
-import { markChatRead } from "../utils/unreadMessageSlice";
-import { subscribeToPresence } from "../utils/socketClient";
+import { base_url } from "../utils/constants.js";
+import { addConnection } from "../utils/connectionSlice.js";
+import { markChatRead } from "../utils/unreadMessageSlice.js";
+import { subscribeToPresence } from "../utils/socketClient.js";
 
 const Chatlist = () => {
   const dispatch = useDispatch();

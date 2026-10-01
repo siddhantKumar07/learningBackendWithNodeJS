@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { ToastContainer, Bounce, toast } from "react-toastify";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { base_url } from "../utils/constants";
+import { base_url } from "../utils/constants.js";
 import { useDispatch } from "react-redux";
-import { addUser } from "../utils/userSlice";
-import { addFeed } from "../utils/feedSlice";
+import { addUser } from "../utils/userSlice.js";
+import { addFeed } from "../utils/feedSlice.js";
 
 const Login = () => {
   const navigate = useNavigate();

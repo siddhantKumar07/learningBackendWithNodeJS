@@ -11,15 +11,15 @@ import {
   User,
   X,
 } from "lucide-react";
-import { base_url } from "../utils/constants";
-import { removeUser } from "../utils/userSlice";
-import { clearFeed } from "../utils/feedSlice";
+import { base_url } from "../utils/constants.js";
+import { removeUser } from "../utils/userSlice.js";
+import { clearFeed } from "../utils/feedSlice.js";
 import {
   createConnection,
   startPresence,
 } from "../utils/socketClient";
-import { addUnreadMessage } from "../utils/unreadMessageSlice";
-import { updateChatPreview } from "../utils/chatPreviewSlice";
+import { addUnreadMessage } from "../utils/unreadMessageSlice.js";
+import { updateChatPreview } from "../utils/chatPreviewSlice.js";
 import toast from "react-hot-toast";
 
 const Navbar = () => {

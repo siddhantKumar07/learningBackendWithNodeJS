@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { base_url } from "../utils/constants";
+import { base_url } from "../utils/constants.js";
 import { toast, Bounce, ToastContainer,Flip} from "react-toastify";
 const ChangePassword = ({ setIsEditing }) => {
   const [updatePass, setupdatePass] = useState({});

@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Compass, User, Heart, MessageSquare, Radio, LogOut, Sparkles } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { removeUser } from "../utils/userSlice";
-import { clearFeed } from "../utils/feedSlice";
-import { base_url } from "../utils/constants";
+import { removeUser } from "../utils/userSlice.js";
+import { clearFeed } from "../utils/feedSlice.js";
+import { base_url } from "../utils/constants.js";
 import axios from "axios";
 
 const SideBar = () => {

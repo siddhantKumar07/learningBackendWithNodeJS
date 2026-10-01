@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/Navbar.jsx";
 import { Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { base_url } from "../utils/constants";
-import { addUser, removeUser } from "../utils/userSlice";
-import SideBar from "../components/SideBar";
-import { startPresence, stopPresence } from "../utils/socketClient";
+import { base_url } from "../utils/constants.js";
+import { addUser, removeUser } from "../utils/userSlice.js";
+import SideBar from "../components/SideBar.jsx";
+import { startPresence, stopPresence } from "../utils/socketClient.js";
 
 const Home = () => {
   const dispatch = useDispatch();
