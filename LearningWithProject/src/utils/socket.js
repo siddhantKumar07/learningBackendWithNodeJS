@@ -3,6 +3,11 @@ const crypto = require("crypto");
 const chatModel = require("../model/chat");
 const User = require("../model/user");
 
+const isAllowedOrigin = (origin) =>
+  !origin ||
+  origin === "http://localhost:5173" ||
+  /^https:\/\/learning-backend-with-node-js(?:-[\w-]+)?\.vercel\.app$/.test(origin);
+
 const createRoomId = (senderId, receiverId) =>
   crypto
     .createHash("sha256")
@@ -12,10 +17,10 @@ const createRoomId = (senderId, receiverId) =>
 const intializeSocket = (server) => {
   const io = socket(server, {
     cors: {
-      origin: [
-  "http://localhost:5173",
-  "https://learning-backend-with-node-js-g1um.vercel.app",
-],
+      origin: (origin, callback) => {
+        if (isAllowedOrigin(origin)) return callback(null, true);
+        return callback(new Error("Not allowed by CORS"));
+      },
       credentials: true,
     },
   });
