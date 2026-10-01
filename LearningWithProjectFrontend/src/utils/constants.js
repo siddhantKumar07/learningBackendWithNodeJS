@@ -1,1 +1,1 @@
-export const base_url= location.hostname==="localhost"?"http://localhost:3000":"https://learning-backend-with-node-2h8ikcvxu.vercel.app";
+export const base_url= location.hostname==="localhost"?"http://localhost:3000":"https://learning-backend-with-node-ol39yrep0.vercel.app";
