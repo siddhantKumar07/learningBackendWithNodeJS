@@ -5,21 +5,26 @@ require("dotenv").config();
 const app = express();
 
 const cors = require("cors");
-const isAllowedOrigin = (origin) =>
-    !origin ||
-    origin === "http://localhost:5173" ||
-    /^https:\/\/learning-backend-with-node-js-g1um(?:-[\w-]+)?\.vercel\.app$/.test(origin);
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://learning-backend-with-node-js-g1um.vercel.app",
+];
 
 const corsOptions = {
-    origin: (origin, callback) => {
-        if (isAllowedOrigin(origin)) return callback(null, true);
-        return callback(new Error("Not allowed by CORS"));
-    },
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    credentials: true
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    console.error("Blocked CORS origin:", origin);
+    return callback(new Error("Not allowed by CORS"));
+  },
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use(express.json());
 app.use(cookieParser());
