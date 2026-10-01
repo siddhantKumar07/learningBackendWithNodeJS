@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Compass, User, Heart, MessageSquare, Radio, LogOut, Sparkles } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { removeUser } from "../utils/userSlice";
 import { clearFeed } from "../utils/feedSlice";
 import { base_url } from "../utils/constants";
@@ -45,6 +45,9 @@ const SideBar = () => {
         : "text-slate-300 hover:translate-x-1 hover:bg-white/10 hover:text-white"
     }`;
 
+  const unread = useSelector((store) => store.unread || {});
+  const unreadTotal = Object.values(unread).reduce((total, count) => total + count, 0);
+
   return (
     <aside className="flex h-full w-full flex-col border-r border-white/10 bg-slate-950/95 px-4 py-6 text-white shadow-2xl backdrop-blur-xl lg:w-72">
 
@@ -58,14 +61,20 @@ const SideBar = () => {
             key={path}
             to={path}
             aria-current={isActive(path) ? "page" : undefined}
-            className={linkClass(path)}
+            className={`${linkClass(path)} relative`}
           >
             <Icon
               size={21}
               strokeWidth={location.pathname === path ? 2.5 : 1.8}
-              className="transition-transform duration-300 group-hover:scale-110"
             />
+
             <span>{label}</span>
+
+            {label === "Messages" && unreadTotal > 0 && (
+              <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                {unreadTotal > 99 ? "99+" : unreadTotal}
+              </span>
+            )}
           </Link>
         ))}
       </nav>
@@ -81,6 +90,11 @@ const SideBar = () => {
           />
           Logout
         </button>
+      </div>
+
+      <div className="mt-3 flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-300 transition-all duration-300 hover:bg-white/10 hover:text-white">
+        <Sparkles size={21} strokeWidth={1.8} />
+        <span>{unreadTotal} unread messages</span>
       </div>
     </aside>
   );

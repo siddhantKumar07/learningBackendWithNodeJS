@@ -19,7 +19,10 @@ export const startPresence = (userId) => {
 
     presenceSocket.on("presence:update", (userIds) => {
       onlineUsers = userIds.map(String);
-      listeners.forEach((listener) => listener(onlineUsers));
+
+      listeners.forEach((listener) => {
+        listener(onlineUsers);
+      });
     });
   }
 

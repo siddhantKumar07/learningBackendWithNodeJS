@@ -1,17 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Search, Users } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { base_url } from "../utils/constants";
 import { addConnection } from "../utils/connectionSlice";
-import { createConnection } from "../utils/socketClient";
-import {
-  subscribeToPresence,
-} from "../utils/socketClient";
+import { markChatRead } from "../utils/unreadMessageSlice";
+import { subscribeToPresence } from "../utils/socketClient";
 
 const Chatlist = () => {
   const dispatch = useDispatch();
+  const unread = useSelector((store) => store.unread || {});
   const location = useLocation();
 
   const user = useSelector((store) => store.user);
@@ -44,55 +43,40 @@ const Chatlist = () => {
   }, [dispatch, connections.length]);
 
   useEffect(() => {
-    const checkOnlineStatus = async () => {
-      try {
-        const response = await axios.get(`${base_url}/user/online-status`, {
-          withCredentials: true,
-        });
-
-        setOnlineUsers(response.data.onlineUsers || []);
-      } catch (error) {
-        console.error(error.response?.data?.message);
-      }
-    };
-
-    checkOnlineStatus();
-  }, [base_url]);
-
-  useEffect(() => {
-    if (!user?._id) return;
-
-    const socket = createConnection();
-
-    socket.emit("registerPresence", user._id);
-
-    socket.on("presence:update", (userIds) => {
-      setOnlineUsers(userIds.map(String));
+    const unsubscribe = subscribeToPresence((users) => {
+      setOnlineUsers(users.map(String));
     });
 
-    return () => {
-      socket.off("presence:update");
-      socket.disconnect();
-    };
-  }, [user?._id]);
-
-  useEffect(() => {
-    return subscribeToPresence((users) => {
-      setOnlineUsers(users);
-    });
+    return unsubscribe;
   }, []);
+
+  const chatPreview = useSelector((store) => store.chatPreview || {});
+
+  const sortedConnections = useMemo(() => {
+    return [...connections].sort((first, second) => {
+      const firstDate = chatPreview[String(first._id)]?.timestamp;
+      const secondDate = chatPreview[String(second._id)]?.timestamp;
+
+      return (
+        new Date(secondDate || 0).getTime() -
+        new Date(firstDate || 0).getTime()
+      );
+    });
+  }, [connections, chatPreview]);
 
   const filteredConnections = useMemo(() => {
     const value = search.toLowerCase().trim();
 
-    if (!value) return connections;
+    const result = value
+      ? sortedConnections.filter((connection) =>
+          `${connection.firstName} ${connection.lastName}`
+            .toLowerCase()
+            .includes(value),
+        )
+      : sortedConnections;
 
-    return connections.filter((connection) =>
-      `${connection.firstName} ${connection.lastName}`
-        .toLowerCase()
-        .includes(value),
-    );
-  }, [connections, search]);
+    return result;
+  }, [sortedConnections, search]);
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-[#080d1d] text-[#dae2fd]">
@@ -133,6 +117,11 @@ const Chatlist = () => {
         ) : (
           <div className="space-y-1">
             {filteredConnections.map((connection) => {
+              const preview = chatPreview[String(connection._id)];
+              const previewText =
+                preview?.message ||
+                (preview?.attachment ? "Attachment received" : "Start a conversation");
+
               const chatPath = `/chat/${connection._id}`;
               const isSelected = location.pathname === chatPath;
 
@@ -142,6 +131,7 @@ const Chatlist = () => {
                 <Link
                   key={connection._id}
                   to={chatPath}
+                  onClick={() => dispatch(markChatRead(String(connection._id)))}
                   className={`flex w-full items-center gap-3 rounded-2xl border p-3 transition-colors duration-200 ${
                     isSelected
                       ? "border-primary/40 bg-primary/10 shadow-lg shadow-primary/10"
@@ -168,7 +158,7 @@ const Chatlist = () => {
                     )}
                   </div>
 
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <p
                       className={`truncate capitalize ${
                         isSelected
@@ -180,13 +170,17 @@ const Chatlist = () => {
                     </p>
 
                     <p className="mt-1 truncate text-xs text-slate-500">
-                      Start a conversation
+                      {previewText}
                     </p>
                   </div>
 
-                  {/* {isSelected && (
-                    <span className="ml-auto h-2 w-2 shrink-0 rounded-full bg-primary" />
-                  )} */}
+                  {unread[String(connection._id)] > 0 && (
+                    <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                      {unread[String(connection._id)] > 99
+                        ? "99+"
+                        : unread[String(connection._id)]}
+                    </span>
+                  )}
                 </Link>
               );
             })}

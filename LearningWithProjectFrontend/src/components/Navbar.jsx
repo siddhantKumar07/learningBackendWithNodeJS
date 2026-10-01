@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
@@ -14,6 +14,12 @@ import {
 import { base_url } from "../utils/constants";
 import { removeUser } from "../utils/userSlice";
 import { clearFeed } from "../utils/feedSlice";
+import {
+  createConnection,
+  startPresence,
+} from "../utils/socketClient";
+import { addUnreadMessage } from "../utils/unreadMessageSlice";
+import { updateChatPreview } from "../utils/chatPreviewSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -21,6 +27,49 @@ const Navbar = () => {
   const location = useLocation();
   const loggedInData = useSelector((store) => store.user);
   const [open, setOpen] = useState(false);
+  const unread = useSelector((store) => store.unread || {});
+  const unreadTotal = Object.values(unread).reduce(
+    (total, count) => total + count,
+    0,
+  );
+
+  useEffect(() => {
+    if (!loggedInData?._id) return;
+
+    startPresence(String(loggedInData._id));
+
+    const notificationSocket = createConnection();
+
+    notificationSocket.emit(
+      "registerPresence",
+      String(loggedInData._id),
+    );
+
+    const handleNotification = (message) => {
+      const senderId = String(message.senderId);
+
+      dispatch(
+        updateChatPreview({
+          ...message,
+          senderId,
+          timestamp: message.timestamp || new Date().toISOString(),
+        }),
+      );
+
+      const currentChatId = window.location.pathname.split("/")[2];
+
+      if (currentChatId !== senderId) {
+        dispatch(addUnreadMessage({ ...message, senderId }));
+      }
+    };
+
+    notificationSocket.on("newMessageNotification", handleNotification);
+
+    return () => {
+      notificationSocket.off("newMessageNotification", handleNotification);
+      notificationSocket.disconnect();
+    };
+  }, [loggedInData?._id, dispatch]);
 
   const handleLogOut = async () => {
     try {
@@ -74,11 +123,16 @@ const Navbar = () => {
 
           <Link
             to="/chat"
-            className={navClass(isChatActive)}
-            aria-current={isChatActive ? "page" : undefined}
+            className={`${navClass(isChatActive)} relative`}
           >
             <MessageCircle size={18} />
             Chat
+
+            {unreadTotal > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                {unreadTotal > 99 ? "99+" : unreadTotal}
+              </span>
+            )}
           </Link>
         </nav>
 

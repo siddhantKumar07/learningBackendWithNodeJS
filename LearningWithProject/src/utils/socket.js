@@ -25,9 +25,8 @@ const intializeSocket = (server) => {
 
   io.on("connection", (socket) => {
     socket.on("registerPresence", (userId) => {
-      if (!userId) return;
-
       socket.userId = String(userId);
+      socket.join(String(userId));
 
       const userSockets = onlineUsers.get(socket.userId) || new Set();
       userSockets.add(socket.id);
@@ -74,14 +73,18 @@ const intializeSocket = (server) => {
             });
           }
 
-          io.to(roomId).emit("receiveMessage", {
+          const notification = {
+            senderId: String(senderId),
             senderName,
-            senderId,
+            receiverId: String(receiverId),
             receiverName,
             message: message || "",
             attachment: attachment || null,
             timestamp: new Date().toISOString(),
-          });
+          };
+
+          io.to(roomId).emit("receiveMessage", notification);
+          io.to(String(receiverId)).emit("newMessageNotification", notification);
         } catch (error) {
           console.error("Message save error:", error);
         }

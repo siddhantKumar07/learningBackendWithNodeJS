@@ -6,16 +6,22 @@ import { base_url } from "../utils/constants";
 import { createConnection } from "../utils/socketClient";
 import { Images, Smile, Camera } from "lucide-react";
 import AboutSection from "./aboutSection";
+  import { useDispatch } from "react-redux";
+import { markChatRead } from "../utils/unreadMessageSlice";
+
 const EMPTY_CONNECTIONS = [];
 
 const ChatSection = () => {
+  const dispatch = useDispatch();
+
   const chatRef = useRef(null);
   const socketRef = useRef(null);
   const navigate = useNavigate();
-
   const { id } = useParams();
-  const allConnections = useSelector((store) => store.connections) ?? EMPTY_CONNECTIONS;
+
   const sender = useSelector((store) => store.user);
+  const allConnections =
+    useSelector((store) => store.connection) || EMPTY_CONNECTIONS;
 
   const [receiver, setReceiver] = useState(null);
   const [newMessage, setNewMessage] = useState("");
@@ -51,46 +57,36 @@ const ChatSection = () => {
   }, [id, allConnections]);
 
   useEffect(() => {
+    if (receiver?._id) {
+      dispatch(markChatRead(String(receiver._id)));
+    }
+  }, [receiver?._id, dispatch]);
+
+  useEffect(() => {
     if (!sender?._id || !receiver?._id) return;
 
-    socketRef.current = createConnection();
+    const chatSocket = createConnection();
+    socketRef.current = chatSocket;
 
-    socketRef.current.emit("joinChat", {
+    chatSocket.emit("joinChat", {
       senderId: sender._id,
       receiverId: receiver._id,
     });
 
-    socketRef.current.on(
-      "receiveMessage",
-      ({
-        senderId,
-        senderName,
-        receiverName,
-        message,
-        attachment,
-        timestamp,
-      }) => {
-        setStoreMessage((previous) => [
-          ...previous,
-          {
-            senderId,
-            senderName,
-            receiverName,
-            message,
-            attachment,
-            timestamp,
-          },
-        ]);
-      },
-    );
+    const handleReceiveMessage = (data) => {
+      setStoreMessage((previous) => [...previous, data]);
+    };
+
+    chatSocket.on("receiveMessage", handleReceiveMessage);
 
     const fetchMessageOnLoad = async () => {
       try {
         const res = await axios.get(
-          base_url + `/messages/${sender._id}/${receiver._id}`,
-          { withCredentials: true }
+          `${base_url}/messages/${sender._id}/${receiver._id}`,
+          { withCredentials: true },
         );
-        const messages = (res.data.chat.messages || []).map((msg) => ({
+
+        const messages = (res.data.chat?.messages || []).map((msg) => ({
           senderId: msg.senderId?._id || msg.senderId,
           senderName: msg.senderId?.firstName || "",
           message: msg.message || "",
@@ -99,20 +95,19 @@ const ChatSection = () => {
         }));
 
         setStoreMessage(messages);
-      } catch (err) {
-        if(err.response?.status ===404){
-          setStoreMessage([]);
-          return
-        }
-        console.log(err.response?.data?.message || "Failed to load messages");
+      } catch (error) {
+        console.error(
+          error.response?.data?.message || "Failed to load messages",
+        );
       }
     };
 
     fetchMessageOnLoad();
 
     return () => {
-      socketRef.current?.off("receiveMessage");
-      socketRef.current?.disconnect();
+      chatSocket.off("receiveMessage", handleReceiveMessage);
+      chatSocket.disconnect();
+      socketRef.current = null;
     };
   }, [sender?._id, receiver?._id]);
 
