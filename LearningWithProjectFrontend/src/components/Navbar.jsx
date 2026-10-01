@@ -20,6 +20,7 @@ import {
 } from "../utils/socketClient";
 import { addUnreadMessage } from "../utils/unreadMessageSlice";
 import { updateChatPreview } from "../utils/chatPreviewSlice";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -47,6 +48,7 @@ const Navbar = () => {
 
     const handleNotification = (message) => {
       const senderId = String(message.senderId);
+      const currentChatId = window.location.pathname.split("/")[2];
 
       dispatch(
         updateChatPreview({
@@ -56,10 +58,9 @@ const Navbar = () => {
         }),
       );
 
-      const currentChatId = window.location.pathname.split("/")[2];
-
       if (currentChatId !== senderId) {
         dispatch(addUnreadMessage({ ...message, senderId }));
+        showMessageToast(message, senderId);
       }
     };
 
@@ -98,6 +99,63 @@ const Navbar = () => {
         ? "bg-primary/15 text-primary"
         : "text-slate-300 hover:bg-white/10 hover:text-white"
     }`;
+
+  const showMessageToast = (message, senderId) => {
+    toast.custom(
+      (toastItem) => (
+        <button
+          type="button"
+          onClick={() => {
+            toast.dismiss(toastItem.id);
+            navigate(`/chat/${senderId}`);
+          }}
+          className={`flex w-[350px] items-center gap-3 rounded-2xl border border-white/10 bg-[#151e34] p-3 text-left shadow-2xl shadow-black/40 transition ${
+            toastItem.visible
+              ? "animate-in slide-in-from-right-5"
+              : "animate-out fade-out"
+          }`}
+        >
+          <img
+            src={message.senderPhotoUrl || "/default-avatar.png"}
+            alt=""
+            onError={(event) => {
+              event.currentTarget.src = "/default-avatar.png";
+            }}
+            className="h-11 w-11 shrink-0 rounded-full object-cover ring-2 ring-primary/40"
+          />
+
+          <span className="min-w-0 flex-1">
+            <span className="flex items-center justify-between gap-2">
+              <strong className="truncate text-sm text-white">
+                {message.senderName || "New message"}
+              </strong>
+
+              <span className="text-[10px] text-slate-500">now</span>
+            </span>
+
+            <span className="mt-1 block truncate text-xs text-slate-400">
+              {message.message || "Sent an attachment"}
+            </span>
+          </span>
+
+          <span
+            onClick={(event) => {
+              event.stopPropagation();
+              toast.dismiss(toastItem.id);
+            }}
+            className="rounded-lg p-1 text-slate-500 hover:bg-white/10 hover:text-white"
+          >
+            <X size={16} />
+          </span>
+        </button>
+      ),
+      {
+        id: `message-${senderId}-${message.timestamp}`,
+        duration: 5000,
+        position: "top-right",
+      },
+    );
+  };
 
   if (!loggedInData) return null;
 

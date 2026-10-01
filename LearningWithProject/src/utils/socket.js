@@ -1,6 +1,7 @@
 const socket = require("socket.io");
 const crypto = require("crypto");
 const chatModel = require("../model/chat");
+const User = require("../model/user");
 
 const createRoomId = (senderId, receiverId) =>
   crypto
@@ -47,9 +48,23 @@ const intializeSocket = (server) => {
         senderId,
         receiverId,
         receiverName,
+        senderPhotoUrl,
         message,
         attachment,
       }) => {
+        const sender = await User.findById(senderId).select("photoUrl");
+
+        const notification = {
+          senderId: String(senderId),
+          senderName,
+          senderPhotoUrl: senderPhotoUrl || sender?.photoUrl || "",
+          receiverId: String(receiverId),
+          receiverName,
+          message: message || "",
+          attachment: attachment || null,
+          timestamp: new Date().toISOString(),
+        };
+
         const roomId = createRoomId(senderId, receiverId);
 
         try {
@@ -72,16 +87,6 @@ const intializeSocket = (server) => {
               messages: [messageData],
             });
           }
-
-          const notification = {
-            senderId: String(senderId),
-            senderName,
-            receiverId: String(receiverId),
-            receiverName,
-            message: message || "",
-            attachment: attachment || null,
-            timestamp: new Date().toISOString(),
-          };
 
           io.to(roomId).emit("receiveMessage", notification);
           io.to(String(receiverId)).emit("newMessageNotification", notification);

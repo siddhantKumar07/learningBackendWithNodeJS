@@ -13,10 +13,13 @@ import ChatSection from "./components/ChatSection";
 import { ToastContainer, Bounce } from "react-toastify";
 import Connections from "./pages/Connection";
 import DescChat from "./components/DescChat";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
-    <div>
+    <>
+      <Toaster position="top-right" />
+
       <Provider store={store}>
         <Routes>
           <Route path="/" element={<Home />}>
@@ -49,7 +52,7 @@ const App = () => {
         theme="light"
         transition={Bounce}
       />
-    </div>
+    </>
   );
 };
 

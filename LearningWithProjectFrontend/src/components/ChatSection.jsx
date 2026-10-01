@@ -154,6 +154,7 @@ const ChatSection = () => {
       socketRef.current.emit("sendMessage", {
         senderName: sender.firstName,
         senderId: sender._id,
+        senderPhotoUrl: sender.photoUrl,
         receiverId: receiver._id,
         receiverName: receiver.firstName,
         message: newMessage.trim(),
