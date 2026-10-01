@@ -1,5 +1,5 @@
 import axios from "axios"
-import { baseUrl } from "../../../utils/constants"
+import { baseUrl } from "../../../utils/constants.js"
 
 export async function RegisterApi({username,email,password}){
     console.log("RegisterApi called")

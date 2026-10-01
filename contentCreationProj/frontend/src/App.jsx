@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route,Routes } from 'react-router-dom'
-import CreatePost from './pages/CreatePost'
-import Feed from './pages/Feed'
+import CreatePost from './pages/CreatePost.jsx'
+import Feed from './pages/Feed.jsx'
 const App = () => {
   return (
     <Routes>

@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-import { base_url } from "./constants";
+import { base_url } from "./constants.js";
 
 let presenceSocket = null;
 let onlineUsers = [];

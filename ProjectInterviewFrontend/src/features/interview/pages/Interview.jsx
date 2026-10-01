@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import interviewData from "../generateData.json";
-import useInterview from "../hooks/userInterview"
+import useInterview from "../hooks/userInterview.js"
 import { useParams } from "react-router";
 const Interview = () => {
   const { report, getReportById, generatePdf, loading } = useInterview()

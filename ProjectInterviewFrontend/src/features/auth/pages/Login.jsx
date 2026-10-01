@@ -1,8 +1,8 @@
 import React from 'react'
-import InputAndLable from '../components/InputAndLable'
+import InputAndLable from '../components/InputAndLable.jsx'
 import { Link, useNavigate } from 'react-router'
-import { useAuth } from '../hooks/useAuth'
-import { loginValidation } from '../validation/authValidation'
+import { useAuth } from '../hooks/useAuth.js'
+import { loginValidation } from '../validation/authValidation.js'
 const Login = () => {
   const navigate = useNavigate()
   const{loading,handleLogin} = useAuth()

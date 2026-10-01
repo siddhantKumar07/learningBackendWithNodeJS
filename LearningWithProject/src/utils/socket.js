@@ -12,7 +12,10 @@ const createRoomId = (senderId, receiverId) =>
 const intializeSocket = (server) => {
   const io = socket(server, {
     cors: {
-      origin: "http://localhost:5173",
+      origin: [
+  "http://localhost:5173",
+  "https://learning-backend-with-node-js-g1um.vercel.app",
+],
       credentials: true,
     },
   });

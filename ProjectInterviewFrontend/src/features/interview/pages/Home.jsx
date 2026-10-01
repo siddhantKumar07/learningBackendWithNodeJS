@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import useInterview from "../hooks/userInterview";
+import useInterview from "../hooks/userInterview.js";
 import {useNavigate} from "react-router"
 const Home = () => {
   const navigate = useNavigate()
