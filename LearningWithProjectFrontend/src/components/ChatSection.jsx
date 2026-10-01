@@ -144,102 +144,142 @@ const ChatSection = () => {
   }
 
   return (
-    <div className="h-full w-full flex backdrop-blur-3xl bg-white/5  border-l-2 border-black  ">
-<div className="h-full w-full flex flex-col backdrop-blur-3xl bg-white/5 justify-between   overflow-auto scrollbar-thumb-white/50">
-        <nav className="w-full flex items-center justify-start gap-8 h-16 backdrop-blur-3xl bg-black/40 border-transparent border-2 px-5">
-        <div className="w-14 h-14 rounded-full border-2">
+    <div className="grid h-full min-h-0 w-full min-w-0 grid-cols-[minmax(0,1fr)_320px] overflow-hidden bg-[#11182b] text-[#dae2fd]">
+      <div className="flex min-h-0 min-w-0 flex-col overflow-hidden">
+        <header className="flex h-[72px] shrink-0 items-center gap-4 border-b border-white/10 bg-[#151e34] px-5">
           <img
-            className="rounded-full h-14 w-14 object-cover border"
             src={receiver.photoUrl}
-            alt=""
+            alt={`${receiver.firstName} profile`}
+            className="h-12 w-12 rounded-full object-cover ring-2 ring-primary/50"
           />
-        </div>
-        <h1 className="text-2xl font-semibold text-white capitalize">
-          {receiver.firstName} {receiver.lastName}
-        </h1>
-        <button onClick={()=>{navigate('/')}} className="bg-black/10 backdrop-blur-3xl px-4 py-2 rounded-xl text-lg active:scale-95 cursor-pointer ml-auto">Home</button>
-      </nav>
 
-      <section
-        ref={chatRef}
-        className="h-[80%] w-full px-7 py-5 flex flex-col gap-3 overflow-auto text-black text-xl"
-      >
-     {!storeMessage||storeMessage.length===0 ?(
-     <div className="h-full w-full flex items-center justify-center text-purple-950 text-3xl font-semibold">
-        No messages yet. Start the conversation!
-      </div>
+          <h1 className="truncate text-xl font-bold capitalize text-white">
+            {receiver.firstName} {receiver.lastName}
+          </h1>
 
-     ):(
-      storeMessage.map((data, index) =>
-          data.senderId === sender._id ? (
-            <div className="chat chat-end" key={index}>
-              <div className="chat-image avatar">
-                <div className="w-10 rounded-full">
-                  <img alt="img" src={sender.photoUrl} />
-                </div>
-              </div>
-              <div className="chat-header">
-                {sender.firstName || "You"}
-                <time className="text-xs opacity-50">{data.timestamp}</time>
-              </div>
-              <div className="chat-bubble bg-red-700 backdrop-blur-3xl shadow-2xl font-semibold max-w-120">
-                {data.message}
-              </div>
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            className="ml-auto rounded-xl border border-white/10 bg-white/10 px-5 cursor-pointer py-2.5 font-semibold text-white transition hover:bg-white/20 active:scale-95"
+          >
+            Home
+          </button>
+        </header>
+
+        <section
+          ref={chatRef}
+          className="min-h-0 flex-1 overflow-y-auto bg-[#11182b] px-5 py-6 sm:px-8"
+        >
+          {!storeMessage.length ? (
+            <div className="flex h-full items-center justify-center text-center text-base font-medium text-slate-400">
+              No messages yet. Start the conversation!
             </div>
           ) : (
-            <div className="chat chat-start" key={index}>
-              <div className="chat-image avatar">
-                <div className="w-10 rounded-full">
-                  <img
-                    alt="img"
-                    src={receiver.photoUrl || "https://via.placeholder.com/150"}
-                  />
-                </div>
-              </div>
-              <div className="chat-header">
-                {receiver.firstName || "User"}
-                <time className="text-xs opacity-50">{data.timestamp}</time>
-              </div>
-              <div className="chat-bubble backdrop-blur-3xl bg-purple-700 max-w-120 font-semibold shadow-2xl">
-                {data.message}
-              </div>
+            <div className="space-y-5">
+              {storeMessage.map((data, index) => {
+                const isSender = data.senderId === sender._id;
+
+                return (
+                  <div
+                    key={`${data.timestamp}-${index}`}
+                    className={`flex items-end gap-2 ${
+                      isSender ? "justify-end" : "justify-start"
+                    }`}
+                  >
+                    {!isSender && (
+                      <img
+                        src={receiver.photoUrl}
+                        alt=""
+                        className="h-9 w-9 rounded-full object-cover"
+                      />
+                    )}
+
+                    <div
+                      className={`max-w-[75%] ${
+                        isSender ? "items-end" : "items-start"
+                      }`}
+                    >
+                      <p
+                        className={`mb-1 text-xs text-slate-500 ${
+                          isSender ? "text-right" : ""
+                        }`}
+                      >
+                        {isSender ? "You" : receiver.firstName}
+                      </p>
+
+                      <div
+                        className={`rounded-2xl px-4 py-3 text-sm leading-6 shadow-md ${
+                          isSender
+                            ? "rounded-br-md bg-primary text-white"
+                            : "rounded-bl-md bg-[#293653] text-white"
+                        }`}
+                      >
+                        {data.message}
+                      </div>
+                    </div>
+
+                    {isSender && (
+                      <img
+                        src={sender.photoUrl}
+                        alt=""
+                        className="h-9 w-9 rounded-full object-cover"
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </div>
-          )
-        )
-     )}
+          )}
+        </section>
 
-      </section>  
-
-      <section className="h-16 px-5 py-2 backdrop-blur-3xl bg-black/40">
-        <div className="w-full h-full rounded-4xl flex items-center text-black px-5 gap-10">
-          <div><Camera className="cursor-pointer" size={24} strokeWidth={1.75} /></div>
-          <div><Images className="cursor-pointer" size={24} strokeWidth={1.75} /></div>
-          <div className="w-[70%] backdrop-blur-3xl bg-black/40 rounded-full text-white h-[90%] flex items-center gap-3 px-5">
-            <input
-           onKeyDown={(e)=>{
-           if(e.key === "Enter") {
-            e.preventDefault();
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
             sendMessage();
-           }
-           }}
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              className="w-[95%] rounded-full px-7 text-white font-semibold text-2xl outline-none h-[90%]"
-              type="text"
-              placeholder="Enter your Message!!!!!!"
-            />
-            <Smile className="cursor-pointer" size={24} />
-          </div>
+          }}
+          className="flex min-w-0 shrink-0 items-center gap-3 border-t border-white/10 bg-[#151e34] p-4"
+        >
           <button
-            onClick={sendMessage}
-            className="h-[80%] w-35 font-semibold rounded-3xl bg-blue-400 ml-auto text-2xl cursor-pointer active:scale-90"
+            type="button"
+            aria-label="Camera"
+            className="hidden rounded-xl p-2 text-slate-300 transition hover:bg-white/10 hover:text-white sm:block"
+          >
+            <Camera size={21} />
+          </button>
+
+          <button
+            type="button"
+            aria-label="Add image"
+            className="hidden rounded-xl p-2 text-slate-300 transition hover:bg-white/10 hover:text-white sm:block"
+          >
+            <Images size={21} />
+          </button>
+
+          <div className="flex min-w-0 flex-1 items-center rounded-2xl border border-white/10 bg-[#0b1224] px-4 focus-within:border-primary/70 focus-within:ring-2 focus-within:ring-primary/20">
+            <input
+              value={newMessage}
+              onChange={(event) => setNewMessage(event.target.value)}
+              placeholder="Write a message..."
+              className="h-12 min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-slate-500"
+            />
+            <Smile size={21} className="shrink-0 text-slate-400" />
+          </div>
+
+          <button
+            type="submit"
+            disabled={!newMessage.trim()}
+            className="h-12 shrink-0 rounded-2xl bg-primary px-6 font-bold text-white transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-slate-700 disabled:text-slate-400"
           >
             Send
           </button>
+        </form>
+      </div>
+
+      <aside className="hidden h-full min-h-0 min-w-0 overflow-y-auto overflow-x-hidden border-l border-white/10 bg-[#151e34] lg:block">
+        <div className="w-full max-w-full overflow-hidden p-5">
+          <AboutSection receiver={receiver} />
         </div>
-      </section>
-</div>
-   <AboutSection receiver={receiver}/>
+      </aside>
     </div>
   );
 };

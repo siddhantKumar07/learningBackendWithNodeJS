@@ -1,71 +1,78 @@
 import React from "react";
 import { motion as Motion } from "framer-motion";
 import { useSelector } from "react-redux";
+import { Heart, X } from "lucide-react";
 
-const Card = ({ user,show,size}) => {
+const Card = ({ user, show = false, size }) => {
   const storedUser = useSelector((store) => store.user);
+
+  const firstName = user?.firstName || storedUser?.firstName || "";
+  const lastName = user?.lastName || storedUser?.lastName || "";
+
   return (
-    <Motion.div
-      className={`${size} hover-3d relative bg-cover rounded-2xl bg-white shadow-lg overflow-hidden`}
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.2 }}
+    <article
+      className={`group relative overflow-hidden rounded-[2rem] bg-slate-900 shadow-2xl shadow-black/40 ${size}`}
+      style={{ contain: "layout paint", willChange: "transform" }}
     >
-      <figure className="relative w-full h-full rounded-2xl overflow-hidden ">
-        <img
-          className="w-full h-full object-cover rounded-2xl"
-          src={user.photoUrl}
-          alt="profile"
-        />
-        <div className="absolute inset-x-0 top-0  p-4 rounded-b-2xl">
-{
-  show&&(
-              <div className={`flex justify-between text-white  font-semibold mt-1 gap-2 `}>
-            <span className="px-3 py-2 border-2 border-emerald-600 backdrop-blur-3xl bg-white/2 rounded-2xl text-green-900 font-bold text-xl"><i className="ri-arrow-left-long-line text-2xl font-bold"></i> Interested</span>
-            <span className="px-4 py-2 border-2 border-orange-600 backdrop-blur-3xl  bg-white/2 rounded-2xl text-red-700 font-bold text-xl">Ignore <i className="ri-arrow-right-long-line text-2xl font-bold"></i></span>
-          </div>
-  )
-}
-        </div>
+      <img
+        src={user?.photoUrl}
+        alt={`${firstName} ${lastName}`}
+        draggable="false"
+        loading="eager"
+        className="absolute inset-0 h-full w-full select-none object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+      />
 
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 rounded-b-2xl">
-          <h1 className="text-cyan-900 text-3xl font-bold capitalize underline">
-            {user.firstName?user.firstName:storedUser.firstName} {user.lastName?user.lastName:storedUser.lastName}
-          </h1>
-          <h1 className="text-white font-bold capitalize">{user.about}</h1>
-          <div>
-            {Array.isArray(user.skills) && user.skills.length > 0 ? (
-              <div className="flex flex-wrap gap-2 mt-2">
-                {user.skills.map((skill, index) => (
-                  <span
-                    key={index}
-                    className="bg-blue-500/30 backdrop-blur-3xl text-white px-3 py-1 rounded-full text-lg"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            ) : (
-              <p className="text-white mt-2">No skills listed</p>
-            )}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/90" />
+
+      {show && (
+        <div className="absolute left-4 right-4 top-4 flex justify-between">
+          <div className="flex items-center gap-2 rounded-full border border-emerald-300/30 bg-emerald-500/20 px-3 py-2 text-sm font-bold text-emerald-100 backdrop-blur-md">
+            <Heart size={16} />
+            Interested
           </div>
-          <div className="flex justify-between text-white font-semibold border-t-2 mt-2 px-3.5">
-            <span className="text-lg">{user.age} years</span>
-            <span className="capitalize text-lg">{user.gender}</span>
+
+          <div className="flex items-center gap-2 rounded-full border border-red-300/30 bg-red-500/20 px-3 py-2 text-sm font-bold text-red-100 backdrop-blur-md">
+            Ignore
+            <X size={16} />
           </div>
         </div>
-      </figure>
+      )}
 
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </Motion.div>
+      <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+        <h2 className="text-3xl font-black capitalize tracking-tight">
+          {firstName} {lastName}
+        </h2>
+
+        {user?.about && (
+          <p className="mt-1 line-clamp-2 text-sm text-white/75">
+            {user.about}
+          </p>
+        )}
+
+        <div className="mt-3 flex flex-wrap gap-2">
+          {Array.isArray(user?.skills) && user.skills.length > 0 ? (
+            user.skills.slice(0, 5).map((skill, index) => (
+              <Motion.span
+                key={`${skill}-${index}`}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                className="rounded-full border border-white/15 bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur-md"
+              >
+                {skill}
+              </Motion.span>
+            ))
+          ) : (
+            <span className="text-sm text-white/60">No skills listed</span>
+          )}
+        </div>
+
+        <div className="mt-4 flex justify-between border-t border-white/20 pt-3 text-sm font-semibold text-white/80">
+          <span>{user?.age ? `${user.age} years` : "Age unavailable"}</span>
+          <span className="capitalize">{user?.gender || "Not specified"}</span>
+        </div>
+      </div>
+    </article>
   );
 };
 

@@ -1,78 +1,142 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Search, Users } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
 import { base_url } from "../utils/constants";
-import { Navigate, useNavigate,Link} from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { addConnection } from "../utils/connectionSlice";
-import { useSelector } from "react-redux";
+
 const Chatlist = () => {
-    const dispatch = useDispatch();
-    const user = useSelector((store) => store.user);
-    const connections = useSelector((store) => store.connection);
-const [data, setData] = useState(null)
-const navigate = useNavigate();
-   const handleClick=(id)=>{
-    navigate(`/chat/${id}`);
-    
-   }
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const user = useSelector((store) => store.user);
+  const connections = useSelector((store) => store.connection) || [];
+
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadConnections = async () => {
       try {
-        const res = await axios.get(base_url + "/user/connections", {
+        const response = await axios.get(`${base_url}/user/connections`, {
           withCredentials: true,
         });
-        setData(res.data.allConnections);
-        dispatch(addConnection(res.data.allConnections));
-      } catch (err) {
-        console.log(err.response?.data?.message || "Failed to load connections");
+
+        dispatch(addConnection(response.data.allConnections || []));
+      } catch (error) {
+        console.error(error.response?.data?.message);
+      } finally {
+        setLoading(false);
       }
     };
-    loadConnections();
-  }, []);
 
-  const handleSearch = (e) => {
-    const value = e.target.value.toLowerCase();
-const data = connections.filter((connection)=>{
-return connection.firstName.toLowerCase().includes(value) || connection.lastName.toLowerCase().includes(value)
-})
-setData(data);
-  }
+    if (!connections.length) {
+      loadConnections();
+    } else {
+      setLoading(false);
+    }
+  }, [dispatch, connections.length]);
+
+  const filteredConnections = useMemo(() => {
+    const value = search.toLowerCase().trim();
+
+    if (!value) return connections;
+
+    return connections.filter((connection) =>
+      `${connection.firstName} ${connection.lastName}`
+        .toLowerCase()
+        .includes(value),
+    );
+  }, [connections, search]);
 
   return (
-    <div className="w-[30%] h-screen backdrop-blur-3xl relative bg-white/5 flex items-center scrollbar-none flex-col pb-4 justify-start overflow-auto gap-2">
-      <div className="h-36 px-4 bg-black/40 backdrop-blur-3xl fixed to-0 w-full flex items-start justify-center gap-4 flex-col">
-        <div className="flex items-center justify-center overflow-hidden gap-4">
-          <div className="rounded-full h-14 w-14 bg-amber-500 ">
-           {user?.photoUrl && <img className="rounded-full h-14 w-14 object-cover" src={user.photoUrl} alt="profile" />}
-          </div>
-            <Link to={'/'} className="text-white font-semibold text-3xl">Chats</Link>
+    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-[#080d1d] text-[#dae2fd]">
+      <header className="shrink-0 border-b border-white/10 p-4">
+        <div className="mb-4 flex items-center gap-3">
+          <img
+            src={user?.photoUrl}
+            alt="Your profile"
+            className="h-11 w-11 rounded-full object-cover ring-2 ring-primary/30"
+          />
 
-        </div>
-     <input onChange={handleSearch} className="py-3 text-lg w-full rounded-4xl px-4 h-12 bg-black/50 backdrop-blur-3xl text-white outline-none" type="text" placeholder="Search For user!" />
-      </div>
-<div className="w-full h-full flex-col overflow-scroll scrollbar-none gap-2 flex items-center justify-start mt-40">
-        {data && data.length > 0 ? (
-        data.map((connection) => (
-          <div
-          onClick={()=>{handleClick(connection._id)}}
-            key={connection._id}
-            className={`w-[96%] cursor-pointer backdrop-blur-3xl bg-black/40 shrink-0 h-20 border-2  border-transparent flex items-center gap-4 px-4 rounded-lg`}
-          >
-            <img
-              src={connection.photoUrl}
-              alt={`${connection.firstName} ${connection.lastName}`}
-              className="rounded-full h-16 w-16 object-cover border"
-            />
-            <h1 className="text-xl text-white font-semibold capitalize">
-              {connection.firstName} {connection.lastName}
-            </h1>
+          <div className="min-w-0">
+            <h2 className="truncate text-lg font-bold text-[#dae2fd]">Chats</h2>
+            <p className="text-xs text-slate-400">
+              {connections.length} conversations
+            </p>
           </div>
-        ))
-      ) : (
-        <p className="text-lg text-black">No connections available</p>
-      )}
-</div>
+        </div>
+
+        <label className="flex items-center gap-2 rounded-xl border border-white/10 bg-[#11182b] px-3 transition focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/20">
+          <Search size={17} className="shrink-0 text-slate-400" />
+
+          <input
+            type="search"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search conversations"
+            className="h-11 min-w-0 flex-1 bg-transparent text-sm text-[#dae2fd] outline-none placeholder:text-slate-500"
+          />
+        </label>
+      </header>
+
+      <div className="min-h-0 flex-1 overflow-y-auto p-3">
+        {loading ? (
+          <div className="flex justify-center py-8">
+            <span className="loading loading-spinner text-slate-500" />
+          </div>
+        ) : (
+          <div className="space-y-1">
+            {filteredConnections.map((connection) => {
+              const chatPath = `/chat/${connection._id}`;
+              const isSelected = location.pathname === chatPath;
+
+              return (
+                <Link
+                  key={connection._id}
+                  to={chatPath}
+                  className={`flex w-full items-center gap-3 rounded-2xl border p-3 transition-colors duration-200 ${
+                    isSelected
+                      ? "border-primary/40 bg-primary/10 shadow-lg shadow-primary/10"
+                      : "border-transparent hover:bg-white/[0.06]"
+                  }`}
+                >
+                  <img
+                    src={connection.photoUrl}
+                    alt={`${connection.firstName} ${connection.lastName}`}
+                    loading="lazy"
+                    className={`h-12 w-12 shrink-0 rounded-full object-cover ${
+                      isSelected ? "ring-2 ring-primary ring-offset-2 ring-offset-[#080d1d]" : ""
+                    }`}
+                  />
+
+                  <div className="min-w-0">
+                    <p
+                      className={`truncate capitalize ${
+                        isSelected
+                          ? "font-bold text-[#dae2fd]"
+                          : "font-semibold text-slate-300"
+                      }`}
+                    >
+                      {connection.firstName} {connection.lastName}
+                    </p>
+
+                    <p className="mt-1 truncate text-xs text-slate-500">
+                      Start a conversation
+                    </p>
+                  </div>
+
+                  {isSelected && (
+                    <span className="ml-auto h-2 w-2 shrink-0 rounded-full bg-primary" />
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

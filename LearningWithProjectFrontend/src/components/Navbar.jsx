@@ -1,82 +1,181 @@
-import React, { useState ,useRef} from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { base_url } from '../utils/constants';
-import {  removeUser } from '../utils/userSlice';
-import { X } from 'lucide-react';
-import {clearFeed} from '../utils/feedSlice'
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import {
+  Bell,
+  ChevronDown,
+  Heart,
+  LogOut,
+  MessageCircle,
+  User,
+  X,
+} from "lucide-react";
+import { base_url } from "../utils/constants";
+import { removeUser } from "../utils/userSlice";
+import { clearFeed } from "../utils/feedSlice";
+
 const Navbar = () => {
-  const selected = useRef(null)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const loggedInData = useSelector((store) => store.user);
-  const [open, setOpen] = useState(false)
-  
-  const handleLogOut =async()=>{
-    dispatch(removeUser())
-    dispatch(clearFeed())
-    const response =await axios.post(base_url+"/logout",{},{
-      withCredentials:true
-    })
-    console.log(response.data);
-    return navigate("/login")
+  const [open, setOpen] = useState(false);
 
-  }
+  const handleLogOut = async () => {
+    try {
+      await axios.post(
+        `${base_url}/logout`,
+        {},
+        { withCredentials: true },
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      dispatch(removeUser());
+      dispatch(clearFeed());
+      navigate("/login");
+    }
+  };
+
+  if (!loggedInData) return null;
+
   return (
-<div className="h-15 bg-[#0B1326] border-b-2 border-[#293058] flex items-center justify-between w-full">
-  <div className="flex px-20 h-full items-center w-[25%] ">
-    <Link to={'/'} className="hover:scale-105 transition-all duration-400 ease-in-out py-2 px-3 text-2xl">AnnonymousChat</Link>
-  </div>
-  <div className=" gap-2  px-10 w-[60%] h-full flex items-center">
- {loggedInData&&(
-     <div className="dropdown dropdown-end w-full  mr-4 flex gap-2 items-center justify-between  ">
-     <div ref={selected}className="flex gap-4 items-center justify-between w-[25%]">
-       <Link className='hover:scale-110 hover:border-b-4 transition-all duration-300 backdrop-blur-3xl text-2xl text-white font-semibold' to={"/"}>Discover</Link>
-      <Link className='hover:scale-110 hover:border-b-4 transition-all duration-300  text-2xl text-white font-semibold' to={"/chat"}>Chat</Link>
-     </div>
-      <p className='px-4 font-bold text-2xl capitalize ml-auto'>Welcome {loggedInData.firstName}</p>
-      <div onClick={()=>{setOpen(!open)}} tabIndex={0} role="button" className="btn btn-ghost btn-circle  avatar">
-        <div className="w-10 rounded-full">
-          <img
-          className='bg-cover bg-top'
-            alt="Profile pic"
-            src={loggedInData.photoUrl} />
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/90 px-4 text-white shadow-xl backdrop-blur-xl sm:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between">
+        <Link
+          to="/"
+          className="text-xl font-black tracking-tight transition hover:scale-105 sm:text-2xl"
+        >
+          <span className="text-primary">Anonymous</span>
+          <span className="text-white">Chat</span>
+        </Link>
+
+        <nav className="hidden items-center gap-2 md:flex">
+          <Link
+            to="/"
+            className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
+          >
+            Discover
+          </Link>
+
+          <Link
+            to="/chat"
+            className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
+          >
+            <MessageCircle size={18} />
+            Chat
+          </Link>
+        </nav>
+
+        <div className="flex items-center gap-3">
+          <p className="hidden text-sm text-slate-300 lg:block">
+            Welcome,{" "}
+            <span className="font-bold capitalize text-white">
+              {loggedInData.firstName}
+            </span>
+          </p>
+
+          <button
+            aria-label="Notifications"
+            className="hidden rounded-xl p-2 text-slate-300 transition hover:bg-white/10 hover:text-white sm:block"
+          >
+            <Bell size={20} />
+          </button>
+
+          <div className="relative">
+            <button
+              onClick={() => setOpen((value) => !value)}
+              aria-expanded={open}
+              className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 p-1 pr-3 transition hover:border-primary/60 hover:bg-white/10"
+            >
+              <img
+                src={loggedInData.photoUrl}
+                alt={`${loggedInData.firstName}'s profile`}
+                className="h-10 w-10 rounded-full object-cover"
+              />
+              <ChevronDown
+                size={16}
+                className={`hidden transition-transform sm:block ${
+                  open ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {open && (
+              <>
+                <button
+                  aria-label="Close menu"
+                  onClick={() => setOpen(false)}
+                  className="fixed inset-0 z-40 h-full w-full cursor-default"
+                />
+
+                <div className="absolute right-0 top-14 z-50 w-64 overflow-hidden rounded-2xl border border-white/10 bg-slate-900 p-2 shadow-2xl shadow-black/40">
+                  <div className="flex items-center gap-3 border-b border-white/10 px-3 py-3">
+                    <img
+                      src={loggedInData.photoUrl}
+                      alt=""
+                      className="h-11 w-11 rounded-full object-cover"
+                    />
+                    <div className="min-w-0">
+                      <p className="truncate font-bold capitalize">
+                        {loggedInData.firstName} {loggedInData.lastName}
+                      </p>
+                      <p className="truncate text-xs text-slate-400">
+                        {loggedInData.emailId}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setOpen(false)}
+                      className="ml-auto rounded-lg p-1 text-slate-400 hover:bg-white/10 hover:text-white"
+                    >
+                      <X size={18} />
+                    </button>
+                  </div>
+
+                  <div className="mt-2 space-y-1">
+                    <Link
+                      to="/profile"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-300 transition hover:bg-white/10 hover:text-white"
+                    >
+                      <User size={18} />
+                      Profile
+                    </Link>
+
+                    <Link
+                      to="/pendingConnections"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-300 transition hover:bg-white/10 hover:text-white"
+                    >
+                      <Bell size={18} />
+                      Pending connections
+                    </Link>
+
+                    <Link
+                      to="/connections"
+                      onClick={() => setOpen(false)}
+                      className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-300 transition hover:bg-white/10 hover:text-white"
+                    >
+                      <Heart size={18} />
+                      Connections
+                    </Link>
+
+                    <button
+                      onClick={handleLogOut}
+                      className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-red-400 transition hover:bg-red-500/10"
+                    >
+                      <LogOut size={18} />
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
-{open&&(
-        <ul
-        tabIndex="-1"
-        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-42 w-60 p-2 shadow">
-        <li>
-          <li className="ml-auto text-lg" onClick={()=>{setOpen(false)}}>
-         <X size={42} strokeWidth={2.25} />
-          </li>
-        </li>
-        <li>
-          <Link to="/profile" className="justify-between text-lg" onClick={()=>{setOpen(false)}}>
-            Profile
-          </Link>
-        </li>
-        <li >
-          <Link className='text-lg' to="/pendingConnections" onClick={()=>{setOpen(false)}}>
-            Pending Connections
-          </Link>
-        </li>
-        <li >
-          <Link className='text-lg' to="/connections" onClick={()=>{setOpen(false)}}>
-            Connections
-          </Link>
-        </li>
-        <li><a className='text-lg' onClick={handleLogOut}>Logout</a></li>
-      </ul>
+    </header>
+  );
+};
 
-)}
-    </div>
- )}
-  </div>
-</div>
-  )
-}
-
-export default Navbar
+export default Navbar;
