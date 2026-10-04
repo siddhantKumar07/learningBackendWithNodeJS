@@ -7,7 +7,6 @@ const path = require('path')
 if (!process.env.BOT_TOKEN) {
   throw new Error('BOT_TOKEN is missing from telegramBot/.env')
 }
-
 bot.start((ctx) => ctx.reply('Welcome to the siddhant\'s bot! Type /help to see available commands.'))
 bot.on(message('sticker'), (ctx) => ctx.reply('👍'))
 bot.command('help', (ctx) => {
