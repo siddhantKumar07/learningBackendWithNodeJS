@@ -213,14 +213,6 @@ const ChatSection = () => {
           <h1 className="truncate text-xl font-bold capitalize text-white">
             {receiver.firstName} {receiver.lastName}
           </h1>
-
-          <button
-            type="button"
-            onClick={() => navigate("/")}
-            className="ml-auto rounded-xl border border-white/10 bg-white/10 px-5 cursor-pointer py-2.5 font-semibold text-white transition hover:bg-white/20 active:scale-95"
-          >
-            Home
-          </button>
         </header>
 
         <section

@@ -167,7 +167,10 @@ const Navbar = () => {
       .filter((user) =>
         `${user.firstName} ${user.lastName || ""}`
           .toLowerCase()
-          .includes(normalizedTerm),
+          .includes(normalizedTerm) ||
+        user.skills?.some((skill) =>
+          skill.toLowerCase().includes(normalizedTerm),
+        ),
       )
       .slice(0, 8);
   }, [allUsers, searchTerm]);
@@ -246,20 +249,27 @@ const Navbar = () => {
                 setSearchTerm("");
               }}
               className={navClass(searchOpen)}
-              aria-label="Search users"
+              aria-label={searchOpen ? "Close user search" : "Search users"}
               aria-expanded={searchOpen}
             >
-              <Search size={18} />
-              Search
+              {searchOpen ? <X size={18} /> : <Search size={18} />}
+              {searchOpen ? "Close" : "Search"}
             </button>
 
             {searchOpen && (
-              <div className="absolute right-0 top-12 z-50 w-80 rounded-2xl border border-white/10 bg-slate-900 p-3 shadow-2xl shadow-black/40">
+              <>
+                <button
+                  type="button"
+                  aria-label="Close user search"
+                  onClick={() => setSearchOpen(false)}
+                  className="fixed inset-0 z-40 h-full w-full cursor-default"
+                />
+                <div className="absolute right-0 top-12 z-50 w-80 rounded-2xl border border-white/10 bg-slate-900 p-3 shadow-2xl shadow-black/40">
                 <input
                   autoFocus
                   value={searchTerm}
                   onChange={(event) => setSearchTerm(event.target.value)}
-                  placeholder="Search by name..."
+                  placeholder="Search by name or skill..."
                   className="input input-sm w-full rounded-xl border-white/10 bg-white/5 text-white placeholder:text-slate-500 focus:border-primary focus:outline-none"
                 />
 
@@ -318,7 +328,8 @@ const Navbar = () => {
                     )}
                   </div>
                 )}
-              </div>
+                </div>
+              </>
             )}
           </div>
         </nav>
