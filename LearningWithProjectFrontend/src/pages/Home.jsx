@@ -5,6 +5,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { base_url } from "../utils/constants.js";
 import { addUser, removeUser } from "../utils/userSlice.js";
+import { setAllUsers } from "../utils/allUsersSlice.js";
 import SideBar from "../components/SideBar.jsx";
 import { startPresence, stopPresence } from "../utils/socketClient.js";
 
@@ -32,6 +33,26 @@ const Home = () => {
 
     fetchProfile();
   }, [dispatch, navigate]);
+
+  useEffect(() => {
+    if (!user?._id) return;
+
+    const fetchAllUsers = async () => {
+      try {
+        const response = await axios.get(`${base_url}/user/all`, {
+          withCredentials: true,
+        });
+        dispatch(setAllUsers(response.data.users || []));
+      } catch (error) {
+        console.error(
+          "Unable to load users for local search:",
+          error.response?.data?.message || error.message,
+        );
+      }
+    };
+
+    fetchAllUsers();
+  }, [dispatch, user?._id]);
 
   useEffect(() => {
     if (!user?._id) return;

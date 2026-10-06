@@ -13,6 +13,102 @@ const userSafeData = [
   "skills",
   "about",
 ];
+
+const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+// Return the users used by the frontend's local search cache.
+userRouter.get("/user/all", userAuth, async (req, res) => {
+  try {
+    const users = await userModel
+      .find({ _id: { $ne: req.user._id } })
+      .select(userSafeData)
+      .sort({ firstName: 1, lastName: 1 });
+
+    const userIds = users.map((user) => user._id);
+    const requests = await ConnectionRequestModel.find({
+      $or: [
+        { senderId: req.user._id, receiverId: { $in: userIds } },
+        { receiverId: req.user._id, senderId: { $in: userIds } },
+      ],
+    }).select("senderId receiverId status");
+
+    const statusByUserId = new Map();
+    const statusPriority = {
+      ignored: 1,
+      interested: 2,
+      accepted: 3,
+    };
+    requests.forEach((request) => {
+      const otherUserId =
+        request.senderId.toString() === req.user._id.toString()
+          ? request.receiverId.toString()
+          : request.senderId.toString();
+      const currentStatus = statusByUserId.get(otherUserId);
+
+      if (
+        !currentStatus ||
+        statusPriority[request.status] > statusPriority[currentStatus]
+      ) {
+        statusByUserId.set(otherUserId, request.status);
+      }
+    });
+
+    return res.status(200).json({
+      message: "users fetched successfully",
+      users: users.map((user) => ({
+        ...user.toObject(),
+        connectionStatus: statusByUserId.get(user._id.toString()) || "none",
+      })),
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
+// Search users by first name, last name, or email address.
+userRouter.get("/user/search", userAuth, async (req, res) => {
+  try {
+    const query = req.query.query?.trim();
+
+    if (!query) {
+      return res.status(400).json({
+        message: "query is required",
+      });
+    }
+
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+    const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 10, 1), 50);
+    const skip = (page - 1) * limit;
+    const searchRegex = new RegExp(escapeRegex(query), "i");
+
+    const users = await userModel
+      .find({
+        _id: { $ne: req.user._id },
+        $or: [
+          { firstName: searchRegex },
+          { lastName: searchRegex },
+          { emailId: searchRegex },
+        ],
+      })
+      .select(userSafeData)
+      .skip(skip)
+      .limit(limit);
+
+    return res.status(200).json({
+      message: "users fetched successfully",
+      users,
+      page,
+      limit,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
 // it will return all the connection which is accepted
 userRouter.get("/user/connections", userAuth, async (req, res) => {
   try {
