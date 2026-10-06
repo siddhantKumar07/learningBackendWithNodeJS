@@ -34,6 +34,12 @@ requestRouter.post(
        }
 
     } catch (error) {
+      if (error.code === 11000) {
+        return res.status(409).json({
+          message: "a connection request already exists between these users",
+        });
+      }
+
       res.status(500).json({
         message: error.message,
       });
