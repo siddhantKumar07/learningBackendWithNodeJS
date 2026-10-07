@@ -214,8 +214,8 @@ const Navbar = () => {
           to="/"
           className="text-xl font-black tracking-tight transition hover:scale-105 sm:text-2xl"
         >
-          <span className="text-primary">Anonymous</span>
-          <span className="text-white">Chat</span>
+          <span className="text-primary">Dev</span>
+          <span className="text-white">Collab</span>
         </Link>
 
         <nav className="flex items-center gap-2">
