@@ -1,3 +1,9 @@
-import exprees from "express";
+import type {Todo} from "../../validation/todo.schema.js";
 
-const todoRouter = exprees.Router()
+class TodoController {
+    private _db:Todo[];
+
+    constructor(){
+        this._db=[];
+    }
+}
