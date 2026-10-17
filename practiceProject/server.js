@@ -1,6 +1,6 @@
 import "dotenv/config";
 import app from "./src/app.js";
-import connnectDB from "./src/config/db.js";
+import connnectDB from "./src/common/config/db.js";
 
 const start = async () => {
 try{
@@ -10,8 +10,7 @@ await connnectDB();
 })
 }catch(err){
     console.log("something went wrong while starting the server", err);
+    process.exit(1);
 }
 }
-start().catch((err) => {
-    console.log("something went wrong while starting the server", err);
-})
+start()

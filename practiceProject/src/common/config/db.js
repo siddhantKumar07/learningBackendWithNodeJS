@@ -5,8 +5,8 @@ import "dotenv/config";
 const connnectDB = async()=>{
     try{
     const URL = process.env.MONGO_URI;
-    await mongoose.connect(URL, { dbName: 'LearnFromHitesh' });
-    console.log("connected to database successfully");
+    const connection =await mongoose.connect(URL, { dbName: 'LearnFromHitesh' });
+    console.log(`connected to database successfully : ${connection.connection.host}`);
     }catch(err){
         console.log("error while connecting to database", err);
     }
