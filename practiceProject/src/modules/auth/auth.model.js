@@ -31,8 +31,31 @@ required:[true,"Password is required"],
 validate:{
     validator:validator.isStrongPassword,
     message:"Password must be at least 6 characters and must contain at least one uppercase letter, one lowercase letter, one number and one special character"
+},
+role:{
+    enum:["customer","seller","admin"],
+    defualt:"customer"
+},
+isVerified:{
+    type:Boolean,
+    default:false
+},
+verificationToken:{
+    type:String,
+    select:false
+},
+refreshToken:{
+    type:String,
+    select:false
+},
+resetPasswordToken:{
+    type:String,
+    select:false
+},
+resetPasswordExpires:{
+    type:Date,
+    select:false
 }
-
 }
 })
 
