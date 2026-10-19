@@ -58,7 +58,7 @@ resetPasswordExpires:{
 }
 }
 },{
-    timestamps:true J
+    timestamps:true 
 })
 
 
