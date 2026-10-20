@@ -2,6 +2,7 @@ import BaseDTO from "../../../common/dto/base.dto.js";
 import joi from "joi";
 
 class registerDTO extends BaseDTO{
+    
     static schema = joi.object({
         name:joi.string().min(3).max(30).required().trim().lowercase(),
         email:joi.string().email().required().trim().lowercase(),
