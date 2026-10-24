@@ -3,5 +3,5 @@ const registerController = async ()=>{
 }
 
 export {
-    register
+    registerController
 }
