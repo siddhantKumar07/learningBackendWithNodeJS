@@ -1,4 +1,4 @@
-const register = async ()=>{
+const registerController = async ()=>{
 
 }
 
