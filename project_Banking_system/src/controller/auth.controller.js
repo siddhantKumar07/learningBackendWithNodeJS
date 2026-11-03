@@ -24,7 +24,6 @@ try{
         name:name,
         password:password
     })
-
     await user.save()
     const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:"3d"})
     res.cookie("token",token)
