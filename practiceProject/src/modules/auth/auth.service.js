@@ -7,4 +7,12 @@ const registerService = async ({name, email, password,role})=>{
     if(isAlreadyRegistered){
        return res.status(400).json({message:"User with this email is already registered"});
     }
+    const user = new userModel({
+        name,
+        email,
+        password,
+        role
+    })
+   await user.save();
+    return user;
 }
