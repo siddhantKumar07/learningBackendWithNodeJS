@@ -73,5 +73,5 @@ return ;
 
 })
 
-const authModel = mongoose.model("User", userSchema);
-export default authModel;
+const userModel = mongoose.model("User", userSchema);
+export default userModel;
