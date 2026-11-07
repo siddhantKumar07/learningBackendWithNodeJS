@@ -14,7 +14,9 @@ static badRequest(message="Bad Request"){
 static unAuthorized(message="UnAuthorized"){
     return new apiError(401,message);
 }
-
+static conflict(message="Conflict"){
+    return new apiError(409,message);
+}
 
 
 }
