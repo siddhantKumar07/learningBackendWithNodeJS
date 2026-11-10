@@ -23,6 +23,10 @@ const registerService = async ({name, email, password,role})=>{
     return user;
 }
 
+const loginService = async({email,password})=>{
+    
+}
+
 export {
     registerService
 }
