@@ -17,7 +17,7 @@ const registerService = async ({name, email, password,role})=>{
         email,
         password,
         role,
-        verificationToken:hashedToken
+        verificationToken:hashedToken // token
     })
    await user.save();
     return user;
