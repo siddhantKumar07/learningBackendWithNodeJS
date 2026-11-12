@@ -3,6 +3,7 @@ import {registerService} from "./auth.service.js"
 const registerController = async ()=>{
 
 const {value } = req.body
+
 const user = await registerService(value)
 
 return res.status(201).json({
