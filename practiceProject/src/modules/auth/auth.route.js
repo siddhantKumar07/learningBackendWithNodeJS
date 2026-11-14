@@ -6,5 +6,6 @@ const authRouter = router();
 
 authRouter.post("/register", validate(registerDTO), registerController);
 
+authRouter.post("/login")
 
 export default authRouter;

@@ -17,7 +17,15 @@ static unAuthorized(message="UnAuthorized"){
 static conflict(message="Conflict"){
     return new apiError(409,message);
 }
-
+static notFound(message="Not Found"){
+    return new apiError(404,message);
+}
+static passwordMismatch(message="Password Mismatch"){
+    return new apiError(400,message);
+}
+static forbidden(message="Forbidden"){
+    return new apiError(403,message);
+}
 
 }
 export default apiError;
