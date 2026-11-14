@@ -1,6 +1,6 @@
 import UserModel from "./auth.model.js";
 import ApiError from "../../common/utils/api-error.js";
-import { generateResetToken } from "../../common/utils/jwt-token.js";
+import { generateAccessToken, generateRefreshToken, generateResetToken } from "../../common/utils/jwt-token.js";
 
 const registerService = async ({name, email, password,role})=>{
     // checking whether the user is already registerred
@@ -26,6 +26,7 @@ const registerService = async ({name, email, password,role})=>{
 
 // hashing through crypto 
 const hashToken = (token)=>  crypto.createHash("sha256").update(token).digest("hex");
+
 const loginService = async({email,password})=>{
     try{
         // step 1: check whether the user is registered or not
@@ -44,6 +45,13 @@ const loginService = async({email,password})=>{
         }
         const accessToken = generateAccessToken({id:user._id,role:user.role});
         const refreshToken = generateRefreshToken({id:user._id});
+
+        user.refreshToken = hashToken(refreshToken);
+        await user.save({validateBeforeSave:false});
+
+        delete user.password;
+        delete user.refreshToken;
+        return {user,accessToken,refreshToken};
 
     }catch(error){
         throw error;
