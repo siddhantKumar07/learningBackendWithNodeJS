@@ -68,16 +68,48 @@ const refresh = async(refreshToken)=>{
    // step 3: check whether the user is registered or not
     const user = await UserModel.findOne({_id:decoded.id}).select("+refreshToken");
     if(!user) throw apiError.notFound("User not found");
-    if(!user.refreshToken) throw apiError.unAuthorized("Refresh token is not valid");
+    if(!user.refreshToken) throw apiError.forbidden("user is not logged in");
     
     // step 4: check whether the refresh token is valid
     if(user.refreshToken !== hashToken(refreshToken)) throw apiError.unAuthorized("Refresh token is not valid");
     
     // step 5: generate a new access token
     const accessToken = generateAccessToken({id:user._id,role:user.role});
+
+    //step 6 : generate a new refresh token
+    const newRefreshToken = generateRefreshToken({id:user._id});
+    user.refreshToken = hashToken(newRefreshToken);
+    await user.save({validateBeforeSave:false});
+
+    // step 7: return the new access token and refresh token
     return accessToken;
 }
 
+// logout service
+const logoutService = async(userId)=>{
+    await UserModel.findByIdAndUpdate(userId,{refreshToken:null})
+}
+
+// forgot password service
+const forgotPasswordService = async(email)=>{
+    // step 1: check whether the user is registered or not
+    const user = await UserModel.findOne({email});
+    if(!user) throw apiError.notFound("User with this email is not registered");
+
+    // step 2: generate a reset token
+    const {rawToken, hashedToken} = generateResetToken();
+    user.resetPasswordToken = hashedToken;
+    user.resetPasswordExpires = Date.now() + 10 * 60 * 1000;
+
+    await user.save({validateBeforeSave:false});
+
+    // step 3: send the reset token to the user's email
+    // (You would implement the email sending logic here)
+
+
+    // step 4: return the raw token
+    return rawToken;
+}
 export {
     registerService,
     loginService
