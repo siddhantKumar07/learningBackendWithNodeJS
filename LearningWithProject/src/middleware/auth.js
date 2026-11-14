@@ -34,14 +34,14 @@ const signupAuth=async (req, res, next) => {
     const data = req.body;
     const existingUser = await userModel.findOne({ emailId: data.emailId });
     if (existingUser) {
-      res.status(400).json({
+     return res.status(400).json({
         message: "user with this email already exist",
       });
     } else {
       next();
     }
   } catch (error) {
-    res.status(500).json({
+   return  res.status(500).json({
       message: error.message,
     });
   }
