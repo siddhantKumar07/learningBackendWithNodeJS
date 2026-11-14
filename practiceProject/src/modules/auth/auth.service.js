@@ -1,13 +1,13 @@
 import UserModel from "./auth.model.js";
-import ApiError from "../../common/utils/api-error.js";
-import { generateAccessToken, generateRefreshToken, generateResetToken } from "../../common/utils/jwt-token.js";
+import apiError from "../../common/utils/api-error.js";
+import { generateAccessToken, generateRefreshToken, generateResetToken, verifyRefreshToken } from "../../common/utils/jwt-token.js";
 
 const registerService = async ({name, email, password,role})=>{
     // checking whether the user is already registerred
     const isAlreadyRegistered = await UserModel.findOne({email});
     
     if(isAlreadyRegistered){
-       throw ApiError.conflict("User with this email is already registered");
+       throw apiError.conflict("User with this email is already registered");
     //    return res.status(400).json({message:"User with this email is already registered"});
     }
 
@@ -33,15 +33,15 @@ const loginService = async({email,password})=>{
         const user = await UserModel.findOne({email}).select("+password");
         // step 2: if user is not registered then throw error
         if(!user){
-            throw ApiError.notFound("User with this email is not registered");
+            throw apiError.notFound("User with this email is not registered");
         }
         // step 3: if user is registered then check whether the password is correct or not
         const isPasswordCorrect = await user.comparePassword(password);
         if(!isPasswordCorrect){
-            throw ApiError.passwordMismatch("Password is incorrect");
+            throw apiError.passwordMismatch("Password is incorrect");
         }
         if(!user.isVerified){
-            throw ApiError.forbidden("User is not verified");
+            throw apiError.forbidden("User is not verified");
         }
         const accessToken = generateAccessToken({id:user._id,role:user.role});
         const refreshToken = generateRefreshToken({id:user._id});
@@ -58,6 +58,27 @@ const loginService = async({email,password})=>{
     }
 }
 
+// refreshing the access token using the refresh token
+const refresh = async(refreshToken)=>{
+    // step 1: check whether the refresh token is provided or not
+    if(!refreshToken) throw apiError.unAuthorized("Refresh token is required");
+    // step 2: verify the refresh token
+    const decoded = verifyRefreshToken(refreshToken);
+    if(!decoded) throw apiError.unAuthorized("Invalid refresh token");
+   // step 3: check whether the user is registered or not
+    const user = await UserModel.findOne({_id:decoded.id}).select("+refreshToken");
+    if(!user) throw apiError.notFound("User not found");
+    if(!user.refreshToken) throw apiError.unAuthorized("Refresh token is not valid");
+    
+    // step 4: check whether the refresh token is valid
+    if(user.refreshToken !== hashToken(refreshToken)) throw apiError.unAuthorized("Refresh token is not valid");
+    
+    // step 5: generate a new access token
+    const accessToken = generateAccessToken({id:user._id,role:user.role});
+    return accessToken;
+}
+
 export {
-    registerService
+    registerService,
+    loginService
 }
