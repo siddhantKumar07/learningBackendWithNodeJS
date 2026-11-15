@@ -110,7 +110,36 @@ const forgotPasswordService = async(email)=>{
     // step 4: return the raw token
     return rawToken;
 }
+
+const resetPasswordService = async(resetToken, newPassword)=>{
+// step 1: hash the reset token
+const hashedToken = hashToken(resetToken);
+
+// step 2: find the user with the hashed reset token and check if the token is not expired
+const user = await UserModel.findOne({
+    resetPasswordToken:hashedToken,
+    resetPasswordExpires:{$gt:Date.now()}
+});
+if(!user) throw apiError.notFound("Invalid or expired reset token");
+
+// step 3: update the user's password and clear the reset token fields
+user.password = newPassword;
+user.resetPasswordToken = undefined;
+user.resetPasswordExpires = undefined;
+
+// step 4: save the updated user   and also it will hash the password before saving it to the database because of the pre save hook in the user model 
+await user.save();
+
+// step 5: return the updated user
+return user;
+
+
+}
 export {
     registerService,
-    loginService
+    loginService,
+    forgotPasswordService,
+    resetPasswordService,
+    refresh,
+    logoutService
 }
