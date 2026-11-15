@@ -1,6 +1,7 @@
 import authModel from "./auth.model"
 import {registerService} from "./auth.service.js"
-const registerController = async ()=>{
+import { loginService } from "./auth.service.js"
+const registerController = async (req,res)=>{
 
 const {value } = req.body
 
@@ -14,10 +15,26 @@ return res.status(201).json({
 
 }
 
-const loginController = async()=>{
+const loginController = async(req,res)=>{
+    const {value} = req.body;
+
+    const {user,accessToken,refreshToken} = await loginService(value)
+    res.cookie("accessToken",accessToken)
+    res.cookie("refreshToken",refreshToken)
+
+    req.headers.authorization =`Bearer ${accessToken}`
     
+    return res.status(200).json({
+        success:true,
+        message:"User logged in successfully",
+        data:user
+    })
+    
+
+
 }
 
 export {
-    registerController
+    registerController,
+    loginController
 }

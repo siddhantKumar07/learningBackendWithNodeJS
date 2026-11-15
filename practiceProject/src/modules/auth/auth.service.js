@@ -38,10 +38,10 @@ const loginService = async({email,password})=>{
         // step 3: if user is registered then check whether the password is correct or not
         const isPasswordCorrect = await user.comparePassword(password);
         if(!isPasswordCorrect){
-            throw apiError.passwordMismatch("Password is incorrect");
+            throw apiError.passwordMismatch("email or password is incorrect");
         }
         if(!user.isVerified){
-            throw apiError.forbidden("User is not verified");
+            throw apiError.forbidden("User is not verified first verify your account then login");
         }
         const accessToken = generateAccessToken({id:user._id,role:user.role});
         const refreshToken = generateRefreshToken({id:user._id});
