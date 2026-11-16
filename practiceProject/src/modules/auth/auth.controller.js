@@ -1,5 +1,5 @@
 import authModel from "./auth.model"
-import {registerService} from "./auth.service.js"
+import {logoutService, registerService} from "./auth.service.js"
 import { loginService } from "./auth.service.js"
 const registerController = async (req,res)=>{
 
@@ -19,11 +19,11 @@ const loginController = async(req,res)=>{
     const {value} = req.body;
 
     const {user,accessToken,refreshToken} = await loginService(value)
-    res.cookie("accessToken",accessToken)
-    res.cookie("refreshToken",refreshToken)
+    res.cookie("accessToken",accessToken,{ httpOnly:true, maxAge:15*60*1000}) // 
+    res.cookie("refreshToken",refreshToken,{ httpOnly:true, maxAge:7*24*60*60*1000})
 
-    req.headers.authorization =`Bearer ${accessToken}`
-    
+    // req.headers.authorization =`Bearer ${accessToken}`
+
     return res.status(200).json({
         success:true,
         message:"User logged in successfully",
@@ -32,6 +32,16 @@ const loginController = async(req,res)=>{
     
 
 
+}
+const logoutController = async(req,res)=>{
+    const {user} = req;
+    logoutService(user._id)
+    res.clearCookie("accessToken")
+    // res.clearCookie("refreshToken")
+    return res.status(200).json({
+        success:true,
+        message:"User logged out successfully"
+    })
 }
 
 export {
