@@ -145,7 +145,7 @@ await user.save();
 // verify email service
 const verifyEmailService = async(token)=>{
     const hashedToken = hashToken(token);
-    const user = await UserModel.findOne({verificationToken:hashedToken});
+    const user = await UserModel.findOne({verificationToken:hashedToken}).select("+verificationToken");
     if(!user) throw apiError.notFound("Invalid or expired verification token");
     user.isVerified = true;
     user.verificationToken = undefined;
