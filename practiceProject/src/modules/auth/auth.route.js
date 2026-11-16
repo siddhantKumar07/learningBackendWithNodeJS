@@ -3,11 +3,9 @@ import {forgotPasswordController, getMeController, registerController} from "./a
 import validate from "../../common/middleware/validate.middleware";
 import registerDTO from "./register.dto.js";
 import loginDTO from "./dto/login.dto";
-import validateDTO from "../../common/middleware/validate.middleware.js";
 import {loginController} from "./auth.controller.js";
 import { authenticate } from "./auth.middleware.js";
 import { logoutController,resetPasswordController } from "./auth.controller.js";
-import { getMeService } from "./auth.service.js";
 import { verifyEmailController } from "./auth.controller.js";
 import forgotPasswordDTO from "./dto/forgotPassword.dto.js";
 
