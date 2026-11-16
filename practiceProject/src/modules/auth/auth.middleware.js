@@ -7,11 +7,14 @@ const authenticate = async(req,res,next)=>{
         try{
             // step 1: get the token from the request header
             let token;
-            if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
+            if(req.headers.authorization && req.headers.authorization.startsWith("Bearer ")){
                 token = req.headers.authorization.split(" ")[1];
             }
             if(!token){
-                throw apiError.unAuthorized("Unauthorized");
+                token = req.cookies.accessToken;
+            }
+            if(!token){
+                throw apiError.unAuthorized("No token provided");
             }
             // step 2: verify the token
             const decoded = verifyAccessToken(token);
@@ -26,7 +29,7 @@ const authenticate = async(req,res,next)=>{
             next();
 
         }catch(error){
-            throw apiError.unAuthorized("Unauthorized");
+            next(error);
         }
 
 }

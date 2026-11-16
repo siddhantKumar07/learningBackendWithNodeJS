@@ -23,7 +23,7 @@ const loginController = async(req,res)=>{
     res.cookie("accessToken",accessToken,{ httpOnly:true, maxAge:15*60*1000}) // 
     res.cookie("refreshToken",refreshToken,{ httpOnly:true, maxAge:7*24*60*60*1000})
 
-    // req.headers.authorization =`Bearer ${accessToken}`
+    res.setHeader("Authorization", `Bearer ${accessToken}`);
 
     return res.status(200).json({
         success:true,
