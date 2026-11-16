@@ -57,7 +57,7 @@ return res.status(200).json({
 }
 
 const verifyEmailController = async(req,res)=>{
-   const {token} = req.params;
+   const {token} = req.query;
     const user = await verifyEmailService(token);
     return res.status(200).json({
         success:true,
