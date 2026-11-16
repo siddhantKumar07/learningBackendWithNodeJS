@@ -135,11 +135,13 @@ return user;
 
 
 }
+
 export {
     registerService,
     loginService,
     forgotPasswordService,
     resetPasswordService,
     refresh,
-    logoutService
+    logoutService,
+    getMeService
 }

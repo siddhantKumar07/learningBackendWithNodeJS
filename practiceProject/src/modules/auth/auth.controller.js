@@ -1,6 +1,7 @@
 import authModel from "./auth.model"
 import {logoutService, registerService} from "./auth.service.js"
 import { loginService } from "./auth.service.js"
+import { getMeService } from "./auth.service.js"
 const registerController = async (req,res)=>{
 
 const {value } = req.body
@@ -35,16 +36,28 @@ const loginController = async(req,res)=>{
 }
 const logoutController = async(req,res)=>{
     const {user} = req;
-    logoutService(user._id)
+    await logoutService(user._id)
     res.clearCookie("accessToken")
-    // res.clearCookie("refreshToken")
+    res.clearCookie("refreshToken")
     return res.status(200).json({
         success:true,
         message:"User logged out successfully"
     })
 }
 
+const getMeController = async(req,res)=>{
+const {user} = req;
+return res.status(200).json({
+    success:true,
+    message:"User fetched successfully",
+    data:user
+});
+
+
+}
 export {
     registerController,
-    loginController
+    loginController,
+    logoutController,
+    getMeController
 }
