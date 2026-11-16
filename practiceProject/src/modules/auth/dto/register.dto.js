@@ -1,4 +1,4 @@
-import BaseDTO from "../../../common/dto/base.dto.js";
+import BaseDTO from "../../common/dto/base.dto.js";
 import joi from "joi";
 
 class registerDTO extends BaseDTO{

@@ -27,7 +27,14 @@ const sendVerificationEmail = async({to,token})=>{
   await sendEmail({to,subject,html});
 }
 
+const sendResetPasswordEmail = async({to,token})=>{
+    const resetPasswordUrl = `http://localhost:3000/api/v1/auth/reset-password?token=${token}`;
+    const subject = "Reset your password";
+    const html = `<p>Please click the following link to reset your password:</p><a href="${resetPasswordUrl}">${resetPasswordUrl}</a>`;
+    await sendEmail({to,subject,html});
+}
 
 export {
-sendVerificationEmail
+sendVerificationEmail,
+sendResetPasswordEmail
 }

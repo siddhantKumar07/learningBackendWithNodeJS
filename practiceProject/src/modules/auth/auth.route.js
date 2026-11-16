@@ -1,14 +1,15 @@
 import {router} from "express";
-import {getMeController, registerController} from "./auth.controller";
+import {forgotPasswordController, getMeController, registerController} from "./auth.controller";
 import validate from "../../common/middleware/validate.middleware";
-import registerDTO from "./dto/register.dto";
+import registerDTO from "./register.dto.js";
 import loginDTO from "./dto/login.dto";
 import validateDTO from "../../common/middleware/validate.middleware.js";
 import {loginController} from "./auth.controller.js";
 import { authenticate } from "./auth.middleware.js";
-import { logoutController } from "./auth.controller.js";
+import { logoutController,resetPasswordController } from "./auth.controller.js";
 import { getMeService } from "./auth.service.js";
-
+import { verifyEmailController } from "./auth.controller.js";
+import forgotPasswordDTO from "./dto/forgotPassword.dto.js";
 
 const authRouter = router();
 
@@ -20,4 +21,10 @@ authRouter.post("/login",validate(loginDTO),loginController)
 authRouter.post("/logout",authenticate,logoutController)
 
 authRouter.get("/me",authenticate,getMeController)
+
+
+// forgot password route
+authRouter.post("/forgot-password/:email",forgotPasswordController)
+// reset password route
+authRouter.post("/reset-password/:Token",validate(forgotPasswordDTO),resetPasswordController)
 export default authRouter;

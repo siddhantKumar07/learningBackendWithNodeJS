@@ -1,5 +1,5 @@
 import authModel from "./auth.model"
-import {logoutService, registerService, verifyEmailService} from "./auth.service.js"
+import {forgotPasswordService, logoutService, registerService, resetPasswordService, verifyEmailService} from "./auth.service.js"
 import { loginService } from "./auth.service.js"
 import { getMeService } from "./auth.service.js"
 const registerController = async (req,res)=>{
@@ -57,16 +57,41 @@ return res.status(200).json({
 }
 
 const verifyEmailController = async(req,res)=>{
-   const {token} = req.query;
-    const user = await verifyEmailService(token);
+   const {token} = req.params;
+     await verifyEmailService(token);
     return res.status(200).json({
         success:true,
         message:"Email verified successfully"
     })
 }
+
+// forgot password controller
+const forgotPasswordController = async(req,res)=>{
+    const {email} = req.params;
+    await forgotPasswordService(email);
+    return res.status(200).json({
+        success:true,
+        message:"Reset password link sent to your email"
+    })
+}
+
+const resetPasswordController = async(req,res)=>{
+     const {Token} = req.params;
+    const {value} = req.body;
+    await resetPasswordService(Token,value.password);
+    return res.status(200).json({
+        success:true,
+        message:"Password reset successfully and you can now login with your new password"
+    })
+
+}
+
 export {
     registerController,
     loginController,
     logoutController,
-    getMeController
+    getMeController,
+    verifyEmailController,
+    forgotPasswordController,
+    resetPasswordController
 }

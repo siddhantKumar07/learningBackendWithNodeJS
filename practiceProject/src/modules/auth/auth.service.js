@@ -1,7 +1,7 @@
 import UserModel from "./auth.model.js";
 import apiError from "../../common/utils/api-error.js";
 import { generateAccessToken, generateRefreshToken, generateResetToken, verifyRefreshToken } from "../../common/utils/jwt-token.js";
-import { sendVerificationEmail } from "../../common/config/email.js";
+import { sendVerificationEmail,sendResetPasswordEmail} from "../../common/config/email.js";
 
 const registerService = async ({name, email, password,role})=>{
     // checking whether the user is already registerred
@@ -112,11 +112,10 @@ const forgotPasswordService = async(email)=>{
     await user.save({validateBeforeSave:false});
 
     // step 3: send the reset token to the user's email
-    // (You would implement the email sending logic here)
-
+    sendResetPasswordEmail({to:email, token:rawToken});
 
     // step 4: return the raw token
-    return rawToken;
+    // return rawToken;
 }
 
 const resetPasswordService = async(resetToken, newPassword)=>{
@@ -139,8 +138,7 @@ user.resetPasswordExpires = undefined;
 await user.save();
 
 // step 5: return the updated user
-return user;
-
+// return user;
 
 }
 
@@ -152,6 +150,7 @@ const verifyEmailService = async(token)=>{
     user.isVerified = true;
     user.verificationToken = undefined;
     await user.save({validateBeforeSave:false});
+    return;
 }
 
 export {
