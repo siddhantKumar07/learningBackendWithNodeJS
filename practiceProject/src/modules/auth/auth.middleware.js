@@ -1,4 +1,4 @@
-import apiError from "../../common/utils/api-error";
+import apiError from "../../common/utils/api-error.js";
 import { verifyAccessToken } from "../../common/utils/jwt-token.js";
 import UserModel from "./auth.model.js";
 
@@ -29,7 +29,7 @@ const authenticate = async(req,res,next)=>{
             next();
 
         }catch(error){
-            next(error);
+          console.log(error);
         }
 
 }

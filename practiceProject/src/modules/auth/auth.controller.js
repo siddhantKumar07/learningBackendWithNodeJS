@@ -1,7 +1,6 @@
-import authModel from "./auth.model"
+import authModel from "./auth.model.js"
 import {forgotPasswordService, logoutService, registerService, resetPasswordService, verifyEmailService} from "./auth.service.js"
 import { loginService } from "./auth.service.js"
-import { getMeService } from "./auth.service.js"
 const registerController = async (req,res)=>{
 
 const {value } = req.body

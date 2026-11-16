@@ -5,12 +5,13 @@ import cookieParser from "cookie-parser"
 
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 
 /**
  * authentication routes
  * public routes
- * api - /auth/register
+ * api - /api/auth/
  */
-app.use("/auth", authRouter);
+app.use("/api/auth", authRouter);
 export default app;

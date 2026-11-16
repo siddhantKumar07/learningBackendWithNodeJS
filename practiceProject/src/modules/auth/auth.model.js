@@ -25,7 +25,7 @@ email:{
 password:{
 type:String,
 trim:true,
-minlength:[6,"Password must be at least 6 characters"],
+minlength:[8,"Password must be at least 8 characters"],
 maxlength:[200,"Password must be at most 200 characters"],
 required:[true,"Password is required"],
 validate:{
@@ -35,8 +35,9 @@ validate:{
 select:false
 },
 role:{
+    type:String,
     enum:["customer","seller","admin"],
-    defualt:"customer"
+    default:"customer"
 },
 isVerified:{
     type:Boolean,

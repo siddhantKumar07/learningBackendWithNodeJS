@@ -10,7 +10,7 @@ const verifyAccessToken = (token)=>{
         const decoded = jwt.verify(token,process.env.JWT_ACCESS_SECRET);
         return decoded;
     }catch(error){
-        throw new Error("Invalid token");
+        next(error);
     }
 }
 const generateRefreshToken = (payload)=>{

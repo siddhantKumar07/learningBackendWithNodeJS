@@ -160,6 +160,5 @@ export {
     resetPasswordService,
     refresh,
     logoutService,
-    getMeService,
     verifyEmailService
 }
