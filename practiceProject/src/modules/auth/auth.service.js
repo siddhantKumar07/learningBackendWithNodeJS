@@ -1,6 +1,7 @@
 import UserModel from "./auth.model.js";
 import apiError from "../../common/utils/api-error.js";
 import { generateAccessToken, generateRefreshToken, generateResetToken, verifyRefreshToken } from "../../common/utils/jwt-token.js";
+import { sendVerificationEmail } from "../../common/config/email.js";
 
 const registerService = async ({name, email, password,role})=>{
     // checking whether the user is already registerred
@@ -13,6 +14,13 @@ const registerService = async ({name, email, password,role})=>{
 
     const {rawToken, hashedToken} = generateResetToken();
 
+    try{
+
+     await sendVerificationEmail(email, rawToken);
+
+    }catch(error){
+        console.log(error);
+    }
     const user = new UserModel({
         name,
         email,
@@ -136,6 +144,16 @@ return user;
 
 }
 
+// verify email service
+const verifyEmailService = async(token)=>{
+    const hashedToken = hashToken(token);
+    const user = await UserModel.findOne({verificationToken:hashedToken});
+    if(!user) throw apiError.notFound("Invalid or expired verification token");
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    await user.save({validateBeforeSave:false});
+}
+
 export {
     registerService,
     loginService,
@@ -143,5 +161,6 @@ export {
     resetPasswordService,
     refresh,
     logoutService,
-    getMeService
+    getMeService,
+    verifyEmailService
 }

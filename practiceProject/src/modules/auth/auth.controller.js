@@ -1,5 +1,5 @@
 import authModel from "./auth.model"
-import {logoutService, registerService} from "./auth.service.js"
+import {logoutService, registerService, verifyEmailService} from "./auth.service.js"
 import { loginService } from "./auth.service.js"
 import { getMeService } from "./auth.service.js"
 const registerController = async (req,res)=>{
@@ -54,6 +54,15 @@ return res.status(200).json({
 });
 
 
+}
+
+const verifyEmailController = async(req,res)=>{
+   const {token} = req.params;
+    const user = await verifyEmailService(token);
+    return res.status(200).json({
+        success:true,
+        message:"Email verified successfully"
+    })
 }
 export {
     registerController,

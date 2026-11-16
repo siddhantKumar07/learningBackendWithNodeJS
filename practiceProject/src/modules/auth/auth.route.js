@@ -13,6 +13,7 @@ import { getMeService } from "./auth.service.js";
 const authRouter = router();
 
 authRouter.post("/register", validate(registerDTO), registerController);
+authRouter.get("/verify-email/:token", verifyEmailController);
 
 authRouter.post("/login",validate(loginDTO),loginController)
 
