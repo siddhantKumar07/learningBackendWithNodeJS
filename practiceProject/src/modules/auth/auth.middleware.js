@@ -6,7 +6,9 @@ const authenticate = async(req,res,next)=>{
  
         try{
             // step 1: get the token from the request header
+
             let token;
+            
             if(req.headers.authorization && req.headers.authorization.startsWith("Bearer ")){
                 token = req.headers.authorization.split(" ")[1];
             }
