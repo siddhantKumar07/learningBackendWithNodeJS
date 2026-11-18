@@ -31,11 +31,7 @@ profileRouter.patch(
       const loggedInUser = req.user;
       const data = req.body;
       const image = req.file;
-      // if(!req.file){
-      //   return res.status(400).json({
-      //     message:"Image is required"
-      //   })
-      // }
+
       checkChanges(data); //it will check whether the data is allowed to update or not if not then it will throw an error
 
       if (image) {
