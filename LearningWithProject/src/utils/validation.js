@@ -2,10 +2,9 @@ const validator = require("validator");
 
 const checkChanges=(data)=>{
   const notAllowed=[
-      // "photoUrl","skills","about","age","gender"
       "emailId","password","firstName","lastName"
     ]
-    const isNotAllowedUpdate = Object.keys(data).some((k)=>notAllowed.includes(k));// it will return true if evry keys are available in allowedUpdates
+    const isNotAllowedUpdate = Object.keys(data).some((k)=>notAllowed.includes(k));
 
     if(isNotAllowedUpdate){
       throw new Error("Updates are not allowed for some field")
