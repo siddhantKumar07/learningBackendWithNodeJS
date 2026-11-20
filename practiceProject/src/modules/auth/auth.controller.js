@@ -3,20 +3,25 @@ import {forgotPasswordService, logoutService, registerService, resetPasswordServ
 import { loginService } from "./auth.service.js"
 const registerController = async (req,res)=>{
 
-const {value } = req.body
-
+const value = req.body;
+console.log("value",value)
 const user = await registerService(value)
-
+delete user.password;
 return res.status(201).json({
     success:true,
     message:"User registered successfully",
-    data:user
+    data:{
+        name:user.name,
+        email:user.email,
+        role:user.role,
+        isVerified:user.isVerified
+    }
 })
 
 }
 
 const loginController = async(req,res)=>{
-    const {value} = req.body;
+    const value = req.body;
 
     const {user,accessToken,refreshToken} = await loginService(value)
     res.cookie("accessToken",accessToken,{ httpOnly:true, maxAge:15*60*1000}) // 
@@ -76,7 +81,7 @@ const forgotPasswordController = async(req,res)=>{
 
 const resetPasswordController = async(req,res)=>{
      const {Token} = req.query;
-    const {value} = req.body;
+    const value = req.body;
     await resetPasswordService(Token,value.password);
     return res.status(200).json({
         success:true,

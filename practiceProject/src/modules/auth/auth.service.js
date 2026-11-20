@@ -6,7 +6,6 @@ import { sendVerificationEmail,sendResetPasswordEmail} from "../../common/config
 const registerService = async ({name, email, password,role})=>{
     // checking whether the user is already registerred
     const isAlreadyRegistered = await UserModel.findOne({email});
-    
     if(isAlreadyRegistered){
        throw apiError.conflict("User with this email is already registered");
     //    return res.status(400).json({message:"User with this email is already registered"});
@@ -16,7 +15,7 @@ const registerService = async ({name, email, password,role})=>{
 
     try{
 
-     await sendVerificationEmail(email, rawToken);
+    await sendVerificationEmail({ to: email, token: rawToken });
 
     }catch(error){
         console.log(error);

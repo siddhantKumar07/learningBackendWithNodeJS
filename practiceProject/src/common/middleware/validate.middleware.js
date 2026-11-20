@@ -8,6 +8,7 @@ const validate =(dtoClass)=>{
             throw apiError.badRequest(errors.join(", "));
         }
         req.body = value;
+        console.log("validated data",value)
         next();
     }
 }
