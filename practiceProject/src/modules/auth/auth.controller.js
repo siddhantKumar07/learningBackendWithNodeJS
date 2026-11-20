@@ -24,15 +24,19 @@ const loginController = async(req,res)=>{
     const value = req.body;
 
     const {user,accessToken,refreshToken} = await loginService(value)
-    res.cookie("accessToken",accessToken,{ httpOnly:true, maxAge:15*60*1000}) // 
-    res.cookie("refreshToken",refreshToken,{ httpOnly:true, maxAge:7*24*60*60*1000})
+    res.cookie("accessToken",accessToken,{ httpOnly:true}) // 
+    res.cookie("refreshToken",refreshToken,{ httpOnly:true})
 
     res.setHeader("Authorization", `Bearer ${accessToken}`);
 
     return res.status(200).json({
         success:true,
         message:"User logged in successfully",
-        data:user
+        data:{
+            name:user.name,
+            email:user.email,
+            role:user.role
+        }
     })
     
 
@@ -61,7 +65,7 @@ return res.status(200).json({
 }
 
 const verifyEmailController = async(req,res)=>{
-   const {token} = req.params;
+   const {token} = req.query;
      await verifyEmailService(token);
     return res.status(200).json({
         success:true,

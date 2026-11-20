@@ -12,7 +12,7 @@ import forgotPasswordDTO from "./dto/forgotPassword.dto.js";
 const authRouter = Router();
 
 authRouter.post("/register", validate(registerDTO), registerController);
-authRouter.get("/verify-email/:token", verifyEmailController);
+authRouter.get("/verify-email", verifyEmailController);
 
 authRouter.post("/login",validate(loginDTO),loginController)
 

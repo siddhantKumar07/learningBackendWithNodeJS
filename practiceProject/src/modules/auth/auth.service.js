@@ -2,7 +2,7 @@ import UserModel from "./auth.model.js";
 import apiError from "../../common/utils/api-error.js";
 import { generateAccessToken, generateRefreshToken, generateResetToken, verifyRefreshToken } from "../../common/utils/jwt-token.js";
 import { sendVerificationEmail,sendResetPasswordEmail} from "../../common/config/email.js";
-
+import crypto from "crypto";
 const registerService = async ({name, email, password,role})=>{
     // checking whether the user is already registerred
     const isAlreadyRegistered = await UserModel.findOne({email});

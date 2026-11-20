@@ -1,0 +1,19 @@
+#1st- run npm init -y 
+#2nd- run npx gitignore node -> to create the gitignore file
+#3rd- tsc --init -> to create the tsconfig.json file
+#4th- create a src folder 
+#5th - set    "rootDir": "./src",
+              "outDir": "./dist",
+       in tsconfig file
+#6th setup package.json to run the server 
+    "start": "node dist/index",
+    "build": "tsc -p .",
+    "dev": "tsc-watch --onSuccess \"node dist/index.js\"" 
+
+#7th- to run the server after updation(like nodemon) -> install as a devDependency -> npm i tsc-watch -D
+#8th - instan express and types with -> npm i express
+                                        npm i @types/express -D (for to work fine express in typeScript)
+#9th install -> npm i @types/node -D
+#10 uncomment this ->     "lib": ["esnext"],
+                          "types": ["node"],
+                 from tsconfig file
