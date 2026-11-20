@@ -1,8 +1,8 @@
 import nodemailer from "nodemailer"
 
 const transporter = nodemailer.createTransport({
-  host: "sandbox.smtp.mailtrap.io",
-  port: 2525,
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
   secure: false, // use STARTTLS (upgrade connection to TLS after connecting)
   auth: {
     user: process.env.SMTP_USER,
@@ -21,16 +21,16 @@ const sendEmail = async({to,subject,html})=>{
 }
 
 const sendVerificationEmail = async({to,token})=>{
-  const verificationUrl = `http://localhost:3000/api/v1/auth/verify-email?token=${token}`;
+  const verificationUrl = `${process.env.CLIENT_URL}/verify-email?token=${token}`;
   const subject = "Verify your email";
   const html = `<p>Please click the following link to verify your email:</p><a href="${verificationUrl}">${verificationUrl}</a>`;
   await sendEmail({to,subject,html});
 }
 
 const sendResetPasswordEmail = async({to,token})=>{
-    const resetPasswordUrl = `http://localhost:3000/api/v1/auth/reset-password?token=${token}`;
+    const resetPasswordUrl = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
     const subject = "Reset your password";
-    const html = `<p>Please click the following link to reset your password:</p><a href="${resetPasswordUrl}">${resetPasswordUrl}</a>`;
+    const html = `<p>Please click the following link to reset your password:</p><a href="${resetPasswordUrl}">${resetPasswordUrl}</a> <br> <p> this link expires in 15 minutes </p>`;
     await sendEmail({to,subject,html});
 }
 
