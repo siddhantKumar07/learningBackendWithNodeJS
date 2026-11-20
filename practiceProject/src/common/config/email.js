@@ -34,6 +34,13 @@ const sendResetPasswordEmail = async({to,token})=>{
     await sendEmail({to,subject,html});
 }
 
+const sendOrderConfirmationEmail = async({to,order})=>{
+  const subject = `Order Confirmation - ${order?.orderNumber}`;
+  const itemList = order.items.map(item => `<li>${item?.title} - ${item?.quantity} x $${item?.price}</li>`).join('');
+  const html = `<p>Thank you for your order and the order number - ${order?.orderNumber} !</p><ul>${itemList}</ul><p>Total: $${order?.total}</p>`;
+  await sendEmail({to,subject,html});
+}
+
 export {
 sendVerificationEmail,
 sendResetPasswordEmail

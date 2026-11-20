@@ -22,7 +22,7 @@ authRouter.get("/me",authenticate,getMeController)
 
 
 // forgot password route
-authRouter.post("/forgot-password/:email",forgotPasswordController)
+authRouter.post("/forgot-password",forgotPasswordController)
 // reset password route
-authRouter.post("/reset-password/:Token",validate(forgotPasswordDTO),resetPasswordController)
+authRouter.post("/reset-password",validate(forgotPasswordDTO),resetPasswordController)
 export default authRouter;

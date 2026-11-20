@@ -66,7 +66,7 @@ const verifyEmailController = async(req,res)=>{
 
 // forgot password controller
 const forgotPasswordController = async(req,res)=>{
-    const {email} = req.params;
+    const {email} = req.query;
     await forgotPasswordService(email);
     return res.status(200).json({
         success:true,
@@ -75,7 +75,7 @@ const forgotPasswordController = async(req,res)=>{
 }
 
 const resetPasswordController = async(req,res)=>{
-     const {Token} = req.params;
+     const {Token} = req.query;
     const {value} = req.body;
     await resetPasswordService(Token,value.password);
     return res.status(200).json({
