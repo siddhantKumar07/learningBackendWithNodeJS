@@ -8,8 +8,11 @@ async function main() {
     server.listen(PORT,()=>{
         console.log(`Server is running on port ${PORT}`)
     })
+
    }catch(err){
+
     console.error(err)
+    
     throw err
    }
 
