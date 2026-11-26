@@ -1,6 +1,7 @@
 import {createServer} from "node:http";
 import { createExpresApp } from "./app/index";
 async function main() {
+    
    try{
      const server = createServer(createExpresApp())
     const PORT : number = 3000;
