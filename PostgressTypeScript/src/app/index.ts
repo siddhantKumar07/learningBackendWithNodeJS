@@ -1,6 +1,5 @@
 import express from "express";
 import type { Express } from "express";
-
 export function createExpresApp(): Express {
   const app = express();
   app.get("/", (req, res) => {
